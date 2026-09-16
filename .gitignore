@@ -1,0 +1,119 @@
+# ==========================================
+# Environment Variables & Secrets (NEVER COMMIT)
+# ==========================================
+.env
+.env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+**/.env
+**/.env.*
+!.env.example
+!**/.env.example
+
+# Credentials, Keys & Certificates
+*.pem
+*.key
+*.cert
+*.crt
+*.pfx
+*.p12
+credentials.json
+service-account*.json
+
+# ==========================================
+# Dependencies & Package Managers
+# ==========================================
+node_modules/
+frontend/node_modules/
+
+# Python Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# ==========================================
+# Python Cache & Compiled Code
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# ==========================================
+# Frontend Build Outputs & Cache
+# ==========================================
+dist/
+frontend/dist/
+dist-ssr/
+*.local
+.eslintcache
+
+# ==========================================
+# Local Media, Uploads & Asset Dumps
+# ==========================================
+backend/uploads/
+uploads/
+Products/
+
+# Local Databases, Storage & Dumps
+*.db
+*.sqlite
+*.sqlite3
+*.sql
+*.dump
+dumps/
+
+# ==========================================
+# Logs & Temporary Files
+# ==========================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ==========================================
+# IDE, Editor & OS Artifacts
+# ==========================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
