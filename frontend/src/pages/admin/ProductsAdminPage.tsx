@@ -10,6 +10,7 @@ import {
   XCircle,
   Star,
   Sparkles,
+  Loader2,
 } from "lucide-react";
 import { productsService } from "../../services/products";
 import type { Product } from "../../types";
@@ -20,6 +21,8 @@ export default function ProductsAdminPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [togglingId, setTogglingId] = useState<string | null>(null);
+  const [toast, setToast] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   const fetchProducts = () => {
     setLoading(true);
@@ -38,15 +41,21 @@ export default function ProductsAdminPage() {
     fetchProducts();
   }, []);
 
+  // Auto-dismiss toast
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(null), 3500);
+    return () => clearTimeout(t);
+  }, [toast]);
+
   const handleDelete = async (id: string, name: string) => {
-    if (!window.confirm(`Are you sure you want to permanently delete "${name}"?`)) {
-      return;
-    }
+    if (!window.confirm(`Are you sure you want to permanently delete "${name}"?`)) return;
     setDeletingId(id);
     try {
       const res = await productsService.adminDelete(id);
       if (res.success) {
         setProducts((prev) => prev.filter((p) => p.id !== id));
+        setToast({ type: "success", text: `"${name}" deleted.` });
       } else {
         alert(res.message || "Failed to delete product");
       }
@@ -57,6 +66,30 @@ export default function ProductsAdminPage() {
     }
   };
 
+  const handleToggleFeatured = async (item: Product) => {
+    setTogglingId(item.id);
+    try {
+      const res = await productsService.adminUpdate(item.id, { featured: !item.featured });
+      if (res.success && res.data) {
+        setProducts((prev) =>
+          prev.map((p) => (p.id === item.id ? { ...p, featured: !item.featured } : p))
+        );
+        setToast({
+          type: "success",
+          text: item.featured
+            ? `"${item.name}" removed from Featured Pieces.`
+            : `"${item.name}" added to Featured Pieces on homepage.`,
+        });
+      } else {
+        setToast({ type: "error", text: "Failed to update featured status." });
+      }
+    } catch {
+      setToast({ type: "error", text: "Network error while updating featured status." });
+    } finally {
+      setTogglingId(null);
+    }
+  };
+
   const filtered = products.filter(
     (p) =>
       p.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -64,8 +97,24 @@ export default function ProductsAdminPage() {
       p.color?.toLowerCase().includes(search.toLowerCase())
   );
 
+  const featuredCount = products.filter((p) => p.featured).length;
+
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
+      {/* Toast notification */}
+      {toast && (
+        <div
+          className={`fixed top-5 right-5 z-50 px-4 py-3 text-xs border-l-4 shadow-md flex items-center gap-2 max-w-xs ${
+            toast.type === "success"
+              ? "bg-emerald-50 border-emerald-500 text-emerald-800"
+              : "bg-red-50 border-red-500 text-red-800"
+          }`}
+        >
+          {toast.type === "success" ? <CheckCircle size={14} /> : <XCircle size={14} />}
+          <span>{toast.text}</span>
+        </div>
+      )}
+
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
@@ -75,14 +124,37 @@ export default function ProductsAdminPage() {
           <h1 className="text-2xl font-semibold text-[#1C1814]" style={{ fontFamily: "var(--font-display)" }}>
             Products Catalog
           </h1>
-          <p className="text-xs text-[#9B8B7E] mt-0.5">
-            Total {products.length} luxury creations in boutique database
-          </p>
+          <div className="flex items-center gap-4 mt-1">
+            <p className="text-xs text-[#9B8B7E]">
+              {products.length} pieces in boutique
+            </p>
+            {/* Featured count badge */}
+            <span
+              className={`inline-flex items-center gap-1 text-[0.7rem] font-semibold px-2 py-0.5 ${
+                featuredCount > 0
+                  ? "bg-[#C9A96E]/15 text-[#A8844A]"
+                  : "bg-[#FAF8F5] text-[#9B8B7E] border border-[#E0D8CE]"
+              }`}
+            >
+              <Star size={11} className={featuredCount > 0 ? "fill-[#C9A96E] text-[#C9A96E]" : ""} />
+              {featuredCount} featured on homepage
+            </span>
+          </div>
         </div>
         <Link to="/admin/products/new" className="btn-gold btn-sm flex items-center gap-1.5">
           <Plus size={16} /> Add New Design
         </Link>
       </div>
+
+      {/* Featured info banner when no featured products */}
+      {!loading && featuredCount === 0 && (
+        <div className="bg-amber-50 border border-amber-200 p-4 text-xs text-amber-800 flex items-start gap-2">
+          <Star size={14} className="text-amber-500 flex-shrink-0 mt-0.5" />
+          <span>
+            No products are currently featured on the homepage. Use the <Star size={11} className="inline" /> toggle in the Featured column below to add pieces to the homepage "Featured Pieces" section.
+          </span>
+        </div>
+      )}
 
       {/* Filter Bar */}
       <div className="bg-white border border-[#E0D8CE] p-4 rounded-xs flex items-center gap-3">
@@ -96,6 +168,9 @@ export default function ProductsAdminPage() {
             className="form-input pl-10 text-xs"
           />
         </div>
+        {search && (
+          <span className="text-xs text-[#9B8B7E]">{filtered.length} result{filtered.length !== 1 ? "s" : ""}</span>
+        )}
       </div>
 
       {/* Table */}
@@ -115,15 +190,24 @@ export default function ProductsAdminPage() {
                 <tr>
                   <th className="py-3.5 px-5 font-semibold">Piece</th>
                   <th className="py-3.5 px-5 font-semibold">Category</th>
-                  <th className="py-3.5 px-5 font-semibold">Fabric & Craft</th>
+                  <th className="py-3.5 px-5 font-semibold">Fabric &amp; Craft</th>
                   <th className="py-3.5 px-5 font-semibold">Pricing</th>
                   <th className="py-3.5 px-5 font-semibold text-center">Status</th>
+                  {/* ─── Featured column ─── */}
+                  <th className="py-3.5 px-5 font-semibold text-center">
+                    <span className="flex items-center justify-center gap-1">
+                      <Star size={12} className="text-[#C9A96E]" /> Featured
+                    </span>
+                  </th>
                   <th className="py-3.5 px-5 font-semibold text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#E0D8CE]">
                 {filtered.map((item) => (
-                  <tr key={item.id} className="hover:bg-[#FAF8F5]/80 transition-colors">
+                  <tr
+                    key={item.id}
+                    className={`hover:bg-[#FAF8F5]/80 transition-colors ${item.featured ? "bg-[#C9A96E]/5" : ""}`}
+                  >
                     {/* Piece Thumbnail & Name */}
                     <td className="py-4 px-5">
                       <div className="flex items-center gap-3">
@@ -133,16 +217,11 @@ export default function ProductsAdminPage() {
                           className="w-12 h-16 object-cover object-top border border-[#E0D8CE] rounded-xs flex-shrink-0"
                         />
                         <div>
-                          <div className="font-semibold text-sm text-[#1C1814] flex items-center gap-1.5">
+                          <div className="font-semibold text-sm text-[#1C1814]">
                             {item.name}
-                            {item.featured && (
-                              <span title="Featured on Homepage" className="text-[#C9A96E]">
-                                <Star size={13} className="fill-[#C9A96E]" />
-                              </span>
-                            )}
                           </div>
                           <div className="text-[0.7rem] text-[#9B8B7E] mt-0.5">
-                            Slug: {item.slug}
+                            {item.slug}
                           </div>
                         </div>
                       </div>
@@ -172,7 +251,7 @@ export default function ProductsAdminPage() {
                       )}
                     </td>
 
-                    {/* Status */}
+                    {/* Availability Status */}
                     <td className="py-4 px-5 text-center">
                       {item.available ? (
                         <span className="inline-flex items-center gap-1 text-emerald-700 text-[0.7rem] font-medium">
@@ -183,6 +262,30 @@ export default function ProductsAdminPage() {
                           <XCircle size={13} /> Archived
                         </span>
                       )}
+                    </td>
+
+                    {/* Featured Toggle */}
+                    <td className="py-4 px-5 text-center">
+                      <button
+                        type="button"
+                        onClick={() => handleToggleFeatured(item)}
+                        disabled={togglingId === item.id}
+                        title={item.featured ? "Remove from Featured Pieces" : "Add to Featured Pieces on homepage"}
+                        className={`inline-flex flex-col items-center gap-1 cursor-pointer transition-all group ${
+                          togglingId === item.id ? "opacity-40 pointer-events-none" : ""
+                        }`}
+                      >
+                        {togglingId === item.id ? (
+                          <Loader2 size={18} className="animate-spin text-[#C9A96E]" />
+                        ) : item.featured ? (
+                          <Star size={18} className="fill-[#C9A96E] text-[#C9A96E] group-hover:fill-transparent transition-all" />
+                        ) : (
+                          <Star size={18} className="text-[#CFC5B8] group-hover:text-[#C9A96E] transition-colors" />
+                        )}
+                        <span className={`text-[0.6rem] font-medium ${item.featured ? "text-[#A8844A]" : "text-[#9B8B7E]"}`}>
+                          {item.featured ? "Featured" : "Not Featured"}
+                        </span>
+                      </button>
                     </td>
 
                     {/* Actions */}

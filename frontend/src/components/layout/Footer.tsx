@@ -5,7 +5,7 @@ import { BRAND, CITIES, NAV_LINKS, WHATSAPP_URL } from "../../data/constants";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#1C1814] text-[#F2EDE6]">
+    <footer className="bg-[#1C1814] text-[#F2EDE6] border-t border-[#3A3028]">
       {/* Main footer */}
       <div className="container-main py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">

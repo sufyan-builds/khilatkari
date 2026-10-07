@@ -29,6 +29,11 @@ export const productsService = {
     return res.data;
   },
 
+  async adminGetById(id: string): Promise<ApiResponse<Product>> {
+    const res = await api.get(`/admin/products/${id}`);
+    return res.data;
+  },
+
   async adminCreate(data: Partial<Product>): Promise<ApiResponse<Product>> {
     const res = await api.post("/admin/products", data);
     return res.data;

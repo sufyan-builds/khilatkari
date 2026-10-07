@@ -2,7 +2,7 @@ import re
 from typing import Optional, List
 from datetime import datetime, timezone
 from bson import ObjectId
-from app.database import get_products_collection
+from app.database import get_products_collection, get_categories_collection
 from app.schemas.product import ProductCreate, ProductUpdate
 
 
@@ -20,6 +20,8 @@ def doc_to_dict(doc: dict) -> dict:
     doc["id"] = str(doc.pop("_id"))
     if not doc.get("availability"):
         doc["availability"] = "available"
+    if "videos" not in doc or doc.get("videos") is None:
+        doc["videos"] = []
     return doc
 
 
@@ -34,12 +36,24 @@ async def get_all_products(
     col = get_products_collection()
     query: dict = {}
     if category and category != "All":
-        query["category"] = category
-    if search:
+        clean_cat = category.strip()
+        cat_col = get_categories_collection()
+        cat_doc = await cat_col.find_one({
+            "$or": [
+                {"slug": clean_cat.lower()},
+                {"name": {"$regex": f"^{re.escape(clean_cat)}$", "$options": "i"}}
+            ]
+        })
+        if cat_doc:
+            query["category"] = cat_doc["name"]
+        else:
+            query["category"] = {"$regex": f"^{re.escape(clean_cat)}$", "$options": "i"}
+    if search and search.strip():
+        safe_search = re.escape(search.strip())
         query["$or"] = [
-            {"name": {"$regex": search, "$options": "i"}},
-            {"description": {"$regex": search, "$options": "i"}},
-            {"color": {"$regex": search, "$options": "i"}},
+            {"name": {"$regex": safe_search, "$options": "i"}},
+            {"description": {"$regex": safe_search, "$options": "i"}},
+            {"color": {"$regex": safe_search, "$options": "i"}},
         ]
     if featured is not None:
         query["featured"] = featured

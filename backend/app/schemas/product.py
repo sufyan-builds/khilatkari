@@ -2,6 +2,7 @@ from typing import Optional, List, Union
 from pydantic import BaseModel, Field, field_validator
 from datetime import datetime
 from enum import Enum
+from app.utils.url_validator import validate_media_url
 
 
 class PriceDisplayMode(str, Enum):
@@ -28,9 +29,19 @@ class ProductBase(BaseModel):
     occasion: Optional[str] = None
     sizes: List[str] = ["Free Size"]
     images: List[str] = []
+    videos: List[str] = []
     featured: bool = False
     available: bool = True
     availability: ProductAvailability = ProductAvailability.available
+
+    @field_validator("images", "videos", mode="before")
+    @classmethod
+    def clean_media_list(cls, v):
+        if not v:
+            return []
+        if isinstance(v, list):
+            return [validate_media_url(item) for item in v if isinstance(item, str) and item.strip()]
+        return v
 
     @field_validator("category", mode="before")
     @classmethod
@@ -81,6 +92,7 @@ class ProductUpdate(BaseModel):
     occasion: Optional[str] = None
     sizes: Optional[List[str]] = None
     images: Optional[List[str]] = None
+    videos: Optional[List[str]] = None
     featured: Optional[bool] = None
     available: Optional[bool] = None
     availability: Optional[ProductAvailability] = None
@@ -103,6 +115,15 @@ class ProductUpdate(BaseModel):
             return float(v)
         except (ValueError, TypeError):
             return None
+
+    @field_validator("images", "videos", mode="before")
+    @classmethod
+    def clean_update_media_list(cls, v):
+        if v is None:
+            return None
+        if isinstance(v, list):
+            return [validate_media_url(item) for item in v if isinstance(item, str) and item.strip()]
+        return v
 
     @field_validator("availability", mode="before")
     @classmethod

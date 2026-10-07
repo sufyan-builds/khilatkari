@@ -31,16 +31,23 @@ export default function Navbar() {
         <div className="container-main">
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
-            <Link to="/" className="flex flex-col items-start">
-              <span
-                className="font-display text-xl md:text-2xl font-semibold tracking-wide text-[#1C1814]"
-                style={{ fontFamily: "var(--font-display)" }}
-              >
-                MS Fashions
-              </span>
-              <span className="text-[0.6rem] tracking-[0.2em] uppercase text-[#C9A96E] hidden md:block">
-                Luxury Traditional Wear
-              </span>
+            <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group">
+              <img
+                src="/images/logo.jpg"
+                alt="MS Fashions Closet"
+                className="w-10 h-10 md:w-12 md:h-12 rounded-full object-contain shrink-0 shadow-xs border border-[#C9A96E]/40 group-hover:border-[#C9A96E] transition-colors"
+              />
+              <div className="flex flex-col items-start">
+                <span
+                  className="font-display text-lg sm:text-xl md:text-2xl font-semibold tracking-wide text-[#1C1814] leading-tight"
+                  style={{ fontFamily: "var(--font-display)" }}
+                >
+                  MS Fashions
+                </span>
+                <span className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.2em] uppercase text-[#C9A96E] hidden sm:block font-medium">
+                  Luxury Traditional Wear
+                </span>
+              </div>
             </Link>
 
             {/* Desktop Nav */}

@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { CITIES, CATEGORIES, BRAND, WHATSAPP_URL, APPOINTMENT_PROCESS } from "../data/constants";
 import { appointmentsService } from "../services/appointments";
+import { categoriesService } from "../services/categories";
 import type { AppointmentCreate } from "../types";
 
 export default function AppointmentPage() {
@@ -23,6 +24,9 @@ export default function AppointmentPage() {
   const preselectedCollection = searchParams.get("collection") || "";
   const preselectedProductId = searchParams.get("product") || "";
   const preselectedProductName = searchParams.get("productName") || "";
+  const [categoryOptions, setCategoryOptions] = useState<string[]>(
+    CATEGORIES.filter((c) => c !== "All")
+  );
 
   const [formData, setFormData] = useState<AppointmentCreate>({
     customerName: "",
@@ -36,6 +40,17 @@ export default function AppointmentPage() {
     productId: preselectedProductId || undefined,
     message: "",
   });
+
+  useEffect(() => {
+    categoriesService
+      .getAll()
+      .then((res) => {
+        if (res.success && res.data && res.data.length > 0) {
+          setCategoryOptions(res.data.map((c) => c.name));
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -268,7 +283,7 @@ export default function AppointmentPage() {
                         onChange={(e) => setFormData({ ...formData, collection: e.target.value })}
                         className="form-input pl-10 cursor-pointer"
                       >
-                        {CATEGORIES.filter((c) => c !== "All").map((c) => (
+                        {categoryOptions.map((c) => (
                           <option key={c} value={c}>{c}</option>
                         ))}
                         <option value="Not Sure Yet">Not Sure Yet</option>

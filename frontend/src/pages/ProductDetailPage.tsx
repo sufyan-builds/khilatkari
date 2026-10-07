@@ -8,6 +8,7 @@ import {
   ShieldCheck,
   CheckCircle2,
   Share2,
+  Play,
 } from "lucide-react";
 import { productsService } from "../services/products";
 import type { Product } from "../types";
@@ -20,7 +21,10 @@ export default function ProductDetailPage() {
   const navigate = useNavigate();
   const [product, setProduct] = useState<Product | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
-  const [selectedImage, setSelectedImage] = useState<string>("");
+  const [selectedMedia, setSelectedMedia] = useState<{ type: "image" | "video"; url: string }>({
+    type: "image",
+    url: "",
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
@@ -38,7 +42,9 @@ export default function ProductDetailPage() {
           const item = res.data;
           setProduct(item);
           if (item.images && item.images.length > 0) {
-            setSelectedImage(item.images[0]);
+            setSelectedMedia({ type: "image", url: item.images[0] });
+          } else if (item.videos && item.videos.length > 0) {
+            setSelectedMedia({ type: "video", url: item.videos[0] });
           }
           // Fetch related in same category
           return productsService.getAll({ category: item.category, limit: 4 });
@@ -150,18 +156,20 @@ export default function ProductDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
           {/* Gallery - 7 cols */}
           <div className="lg:col-span-7 flex flex-col-reverse md:flex-row gap-4">
-            {/* Thumbnails */}
-            {product.images && product.images.length > 1 && (
-              <div className="flex md:flex-col gap-3 overflow-x-auto md:overflow-y-auto max-h-[640px]">
-                {product.images.map((img, idx) => (
+            {/* Thumbnails rail (photos + videos) */}
+            {((product.images?.length || 0) + (product.videos?.length || 0) > 1) && (
+              <div className="flex md:flex-col gap-3 overflow-x-auto md:overflow-y-auto max-h-[640px] pb-2 md:pb-0">
+                {/* Images */}
+                {product.images?.map((img, idx) => (
                   <button
-                    key={idx}
-                    onClick={() => setSelectedImage(img)}
-                    className={`relative w-20 h-28 flex-shrink-0 border-2 transition-all overflow-hidden ${
-                      selectedImage === img
+                    key={`img-${idx}`}
+                    onClick={() => setSelectedMedia({ type: "image", url: img })}
+                    className={`relative w-20 h-28 flex-shrink-0 border-2 transition-all overflow-hidden cursor-pointer ${
+                      selectedMedia.type === "image" && selectedMedia.url === img
                         ? "border-[#C9A96E] shadow-sm"
                         : "border-transparent opacity-70 hover:opacity-100"
                     }`}
+                    title={`View photo ${idx + 1}`}
                   >
                     <img
                       src={getMediaUrl(img)}
@@ -170,17 +178,61 @@ export default function ProductDetailPage() {
                     />
                   </button>
                 ))}
+
+                {/* Videos */}
+                {product.videos?.map((vid, vIdx) => (
+                  <button
+                    key={`vid-${vIdx}`}
+                    onClick={() => setSelectedMedia({ type: "video", url: vid })}
+                    className={`relative w-20 h-28 flex-shrink-0 border-2 transition-all overflow-hidden bg-black/90 cursor-pointer group/vid ${
+                      selectedMedia.type === "video" && selectedMedia.url === vid
+                        ? "border-[#C9A96E] shadow-sm"
+                        : "border-transparent opacity-75 hover:opacity-100"
+                    }`}
+                    title={`Play showcase video ${vIdx + 1}`}
+                  >
+                    <video
+                      src={getMediaUrl(vid)}
+                      muted
+                      preload="metadata"
+                      className="w-full h-full object-cover opacity-60 group-hover/vid:opacity-80 transition-opacity"
+                    />
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-1">
+                      <div className="w-7 h-7 rounded-full bg-[#C9A96E] text-white flex items-center justify-center shadow-md">
+                        <Play size={13} className="ml-0.5 fill-white" />
+                      </div>
+                      <span className="text-[0.6rem] uppercase tracking-wider text-white font-semibold bg-black/60 px-1.5 py-0.5 rounded-xs">
+                        Video
+                      </span>
+                    </div>
+                  </button>
+                ))}
               </div>
             )}
 
-            {/* Main Image */}
-            <div className="flex-1 relative aspect-[3/4] bg-[#F2EDE6] overflow-hidden border border-[#E0D8CE] shadow-sm group">
-              <img
-                src={getMediaUrl(selectedImage || product.images?.[0] || "/images/models/model-1.jpg")}
-                alt={product.name}
-                className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute top-4 right-4 flex gap-2">
+            {/* Main Media Viewport */}
+            <div className="flex-1 relative aspect-[3/4] bg-[#F2EDE6] overflow-hidden border border-[#E0D8CE] shadow-sm group flex items-center justify-center">
+              {selectedMedia.type === "video" ? (
+                <div className="w-full h-full bg-black flex items-center justify-center">
+                  <video
+                    key={selectedMedia.url}
+                    src={getMediaUrl(selectedMedia.url)}
+                    controls
+                    playsInline
+                    muted
+                    autoPlay
+                    poster={getMediaUrl(product.images?.[0] || "")}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+              ) : (
+                <img
+                  src={getMediaUrl(selectedMedia.url || product.images?.[0] || "/images/models/model-1.jpg")}
+                  alt={product.name}
+                  className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                />
+              )}
+              <div className="absolute top-4 right-4 flex gap-2 z-10">
                 <button
                   onClick={handleShare}
                   className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm text-[#1C1814] flex items-center justify-center hover:bg-white shadow transition-transform active:scale-95"
@@ -191,7 +243,7 @@ export default function ProductDetailPage() {
                 </button>
               </div>
               {copied && (
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-[#1C1814] text-[#FAF8F5] text-xs px-3 py-1.5 shadow-md">
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-[#1C1814] text-[#FAF8F5] text-xs px-3 py-1.5 shadow-md z-10">
                   Link copied to clipboard!
                 </div>
               )}

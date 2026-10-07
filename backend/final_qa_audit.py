@@ -66,7 +66,8 @@ def main():
     mongo_client = None
     db = None
     try:
-        mongo_client = MongoClient(mongo_uri, tls=True, tlsCAFile=certifi.where(), readPreference="primaryPreferred", serverSelectionTimeoutMS=10000)
+        allow_invalid = os.getenv("TLS_ALLOW_INVALID_CERTS", "false").lower() == "true"
+        mongo_client = MongoClient(mongo_uri, tls=True, tlsCAFile=certifi.where(), tlsAllowInvalidCertificates=allow_invalid, readPreference="primaryPreferred", serverSelectionTimeoutMS=10000)
         db = mongo_client[db_name]
         p_cnt = db.products.count_documents({})
         a_cnt = db.appointments.count_documents({})

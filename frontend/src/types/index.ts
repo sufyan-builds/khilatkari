@@ -28,6 +28,7 @@ export interface Product {
   occasion?: string;
   sizes: string[];
   images: string[];
+  videos?: string[];
   featured: boolean;
   available: boolean;
   availability?: ProductAvailability;
@@ -83,6 +84,29 @@ export interface AppointmentsResponse {
 export interface CollectionSummary {
   category: string;
   count: number;
+}
+
+export interface ImageFramingConfig {
+  zoom: number;
+  posX: number;
+  posY: number;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  coverImage?: string;
+  imagePosition?: ImageFramingConfig;
+  featuredOnHomepage: boolean;
+  homepageDescription?: string;
+  homepageOrder: number;
+  displayOrder: number;
+  isActive: boolean;
+  productCount?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface AdminStats {

@@ -3,7 +3,9 @@ import { useSearchParams } from "react-router-dom";
 import { Search, X, SlidersHorizontal } from "lucide-react";
 import { CATEGORIES } from "../data/constants";
 import { productsService } from "../services/products";
-import type { Product } from "../types";
+import { homepageService, type CollectionsPageConfig } from "../services/homepage";
+import { categoriesService } from "../services/categories";
+import type { Product, Category } from "../types";
 import ProductCard from "../components/product/ProductCard";
 
 export default function CollectionsPage() {
@@ -13,6 +15,29 @@ export default function CollectionsPage() {
   const [pages, setPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [cms, setCms] = useState<CollectionsPageConfig | null>(null);
+  const [dbCategories, setDbCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    homepageService
+      .getPublic()
+      .then((res) => {
+        if (res.success && res.data?.collectionsPage) {
+          setCms(res.data.collectionsPage);
+        }
+      })
+      .catch(() => {});
+
+    // Fetch active categories dynamically
+    categoriesService
+      .getAll()
+      .then((res) => {
+        if (res.success && res.data && res.data.length > 0) {
+          setDbCategories(res.data);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const category = searchParams.get("category") || "All";
   const search = searchParams.get("search") || "";
@@ -69,16 +94,16 @@ export default function CollectionsPage() {
       {/* Page header */}
       <div className="bg-[#F2EDE6] border-b border-[#E0D8CE] py-14 md:py-20">
         <div className="container-main text-center">
-          <p className="section-label mb-3">Private Lookbook</p>
+          <p className="section-label mb-3">{cms?.label || "Private Lookbook"}</p>
           <h1
             className="text-display-md text-[#1C1814]"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            The Collection
+            {cms?.heading || "The Collection"}
           </h1>
           <div className="divider-gold" />
           <p className="text-[#6B5B4E] mt-4 max-w-md mx-auto text-sm leading-relaxed">
-            Each piece is handcrafted and available for private viewing at your home. Browse, explore, then book an appointment to see them in person.
+            {cms?.description || "Each piece is handcrafted and available for private viewing at your home. Browse, explore, then book an appointment to see them in person."}
           </p>
         </div>
       </div>
@@ -119,20 +144,38 @@ export default function CollectionsPage() {
 
         {/* Category filters */}
         <div className="flex flex-wrap gap-2 mb-10">
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              id={`filter-${cat.toLowerCase().replace(/\s+/g, "-")}`}
-              onClick={() => setCategory(cat)}
-              className={`px-4 py-2 text-xs font-medium tracking-[0.08em] uppercase border transition-all duration-200 ${
-                category === cat
-                  ? "bg-[#1C1814] text-[#FAF8F5] border-[#1C1814]"
-                  : "bg-transparent text-[#6B5B4E] border-[#E0D8CE] hover:border-[#1C1814] hover:text-[#1C1814]"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
+          {(() => {
+            const filterList = [
+              "All",
+              ...(dbCategories.length > 0
+                ? dbCategories.map((c) => c.name)
+                : CATEGORIES.filter((c) => c !== "All")),
+            ];
+
+            const isSelected = (catName: string) => {
+              if (catName === "All") return category === "All" || !category;
+              if (category.toLowerCase() === catName.toLowerCase()) return true;
+              const match = dbCategories.find(
+                (c) => c.slug.toLowerCase() === category.toLowerCase()
+              );
+              return match?.name.toLowerCase() === catName.toLowerCase();
+            };
+
+            return filterList.map((cat) => (
+              <button
+                key={cat}
+                id={`filter-${cat.toLowerCase().replace(/\s+/g, "-")}`}
+                onClick={() => setCategory(cat)}
+                className={`px-4 py-2 text-xs font-medium tracking-[0.08em] uppercase border transition-all duration-200 ${
+                  isSelected(cat)
+                    ? "bg-[#1C1814] text-[#FAF8F5] border-[#1C1814]"
+                    : "bg-transparent text-[#6B5B4E] border-[#E0D8CE] hover:border-[#1C1814] hover:text-[#1C1814]"
+                }`}
+              >
+                {cat}
+              </button>
+            ));
+          })()}
         </div>
 
         {/* Error */}

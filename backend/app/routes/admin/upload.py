@@ -1,11 +1,15 @@
 import os
 import re
 import uuid
+import logging
 from pathlib import Path
-from typing import List
-from fastapi import APIRouter, Depends, File, UploadFile, HTTPException
+from typing import List, Tuple
+from fastapi import APIRouter, Depends, File, UploadFile, HTTPException, status
+from fastapi.responses import JSONResponse
 from app.routes.admin.auth import get_current_admin
 from app.utils.response import success_response, error_response
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/admin/upload", tags=["admin-upload"])
 
@@ -13,82 +17,216 @@ router = APIRouter(prefix="/api/admin/upload", tags=["admin-upload"])
 UPLOADS_DIR = Path(__file__).resolve().parent.parent.parent.parent / "uploads"
 UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
 
-ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".avif", ".gif"}
+ALLOWED_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".avif", ".gif"}
+ALLOWED_VIDEO_EXTENSIONS = {".mp4", ".webm", ".mov", ".ogg"}
+ALLOWED_EXTENSIONS = ALLOWED_IMAGE_EXTENSIONS | ALLOWED_VIDEO_EXTENSIONS
+
 ALLOWED_MIME_TYPES = {
+    # Images (SVG explicitly excluded)
     "image/jpeg",
     "image/png",
     "image/webp",
     "image/avif",
     "image/gif",
+    # Videos
+    "video/mp4",
+    "video/webm",
+    "video/quicktime",
+    "video/ogg",
 }
-MAX_FILE_SIZE = 15 * 1024 * 1024  # 15 MB per file
+
+MAX_IMAGE_SIZE = 15 * 1024 * 1024  # 15 MB per image
+MAX_VIDEO_SIZE = 50 * 1024 * 1024  # 50 MB per video
+CHUNK_SIZE = 64 * 1024             # 64 KB streaming buffer budget
 
 
-def sanitize_filename(filename: str) -> str:
-    """Generate a clean, safe filename with unique identifier."""
-    stem = Path(filename).stem
-    # Replace non-alphanumeric characters with hyphens
+def validate_file_signature(chunk: bytes, ext: str) -> bool:
+    """
+    Validate initial file signature/container header bytes against the claimed extension.
+    
+    Security & Container Validation Note:
+    - JPEG, PNG, and GIF have rigid magic byte headers.
+    - WebP uses RIFF with WEBP fourcc at offset 8.
+    - Container formats (MP4, MOV, WebM, OGG, AVIF) have standard ISO/EBML container headers.
+      Checking these headers verifies that the file is indeed a valid media container
+      and prevents disguised text/script/HTML payloads.
+    - Full bitstream codec integrity verification would require a dedicated demuxing/re-encoding
+      pipeline (e.g. ffmpeg sandbox), but container signature verification provides solid
+      defense-in-depth against malicious file uploads.
+    """
+    if len(chunk) < 4:
+        return False
+
+    if ext in {".jpg", ".jpeg"}:
+        # JPEG begins with SOI marker: 0xFF 0xD8 0xFF
+        return len(chunk) >= 3 and chunk.startswith(b"\xff\xd8\xff")
+
+    if ext == ".png":
+        # PNG 8-byte signature: \x89PNG\r\n\x1a\n
+        return len(chunk) >= 8 and chunk.startswith(b"\x89PNG\r\n\x1a\n")
+
+    if ext == ".gif":
+        # GIF header: GIF87a or GIF89a
+        return len(chunk) >= 6 and (chunk.startswith(b"GIF87a") or chunk.startswith(b"GIF89a"))
+
+    if ext == ".webp":
+        # RIFF header with WEBP fourcc at bytes 8-12
+        return len(chunk) >= 12 and chunk.startswith(b"RIFF") and chunk[8:12] == b"WEBP"
+
+    if ext == ".avif":
+        # ISO Base Media File Format with ftyp box and avif/avis/mif1 brand
+        if len(chunk) >= 12 and chunk[4:8] == b"ftyp":
+            return any(b in chunk[8:32] for b in (b"avif", b"avis", b"mif1"))
+        return False
+
+    if ext in {".mp4", ".mov"}:
+        # MP4/QuickTime ISO Base Media file: ftyp box at bytes 4-8 or standard atom box marker
+        if len(chunk) >= 8:
+            if chunk[4:8] == b"ftyp":
+                return True
+            if chunk[4:8] in {b"moov", b"mdat", b"wide", b"free", b"skip"}:
+                return True
+        return False
+
+    if ext == ".webm":
+        # EBML Header signature: 0x1A 0x45 0xDF 0xA3
+        return len(chunk) >= 4 and chunk.startswith(b"\x1a\x45\xdf\xa3")
+
+    if ext == ".ogg":
+        # Ogg container capture pattern: "OggS"
+        return len(chunk) >= 4 and chunk.startswith(b"OggS")
+
+    return False
+
+
+def sanitize_filename(filename: str, is_video: bool = False) -> str:
+    """Generate a clean, safe filename with unique identifier and no path traversal."""
+    stem = Path(filename).name  # Discard directory separators
+    stem = Path(stem).stem
     clean_stem = re.sub(r"[^\w\-]", "-", stem).strip("-").lower()
     if not clean_stem:
-        clean_stem = "photo"
-    clean_stem = clean_stem[:40]  # truncate length
+        clean_stem = "video" if is_video else "photo"
+    clean_stem = clean_stem[:40]
     ext = Path(filename).suffix.lower()
     unique_suffix = uuid.uuid4().hex[:10]
     return f"{clean_stem}-{unique_suffix}{ext}"
 
 
+async def save_upload_stream(file: UploadFile) -> Tuple[bool, str, str]:
+    """
+    Streams and validates an uploaded file chunk-by-chunk.
+    Enforces maximum size during read to avoid unbounded memory consumption.
+    Validates file extension, MIME type, container magic bytes, and directory boundary.
+    Returns (success: bool, url_or_error_message: str, error_type: str).
+    """
+    if not file.filename:
+        return False, "Filename cannot be empty.", "400"
+
+    ext = Path(file.filename).suffix.lower()
+    if ext not in ALLOWED_EXTENSIONS:
+        return False, f"File '{file.filename}' has unsupported format. Allowed formats: {', '.join(sorted(ALLOWED_EXTENSIONS))}", "400"
+
+    if file.content_type and file.content_type not in ALLOWED_MIME_TYPES:
+        return False, f"File '{file.filename}' has invalid MIME type '{file.content_type}'.", "400"
+
+    is_video = ext in ALLOWED_VIDEO_EXTENSIONS
+    max_size = MAX_VIDEO_SIZE if is_video else MAX_IMAGE_SIZE
+    max_size_label = "50MB" if is_video else "15MB"
+
+    safe_name = sanitize_filename(file.filename, is_video=is_video)
+    dest_path = UPLOADS_DIR / safe_name
+
+    # Path traversal protection: Ensure target path remains within UPLOADS_DIR
+    try:
+        if not dest_path.resolve().is_relative_to(UPLOADS_DIR.resolve()):
+            return False, "Invalid file destination.", "400"
+    except Exception:
+        return False, "Invalid file destination.", "400"
+
+    bytes_read = 0
+    first_chunk = True
+
+    try:
+        with open(dest_path, "wb") as f:
+            while True:
+                chunk = await file.read(CHUNK_SIZE)
+                if not chunk:
+                    break
+
+                bytes_read += len(chunk)
+                if bytes_read > max_size:
+                    f.close()
+                    dest_path.unlink(missing_ok=True)
+                    return False, f"File '{file.filename}' exceeds the maximum permitted size of {max_size_label}.", "400"
+
+                if first_chunk:
+                    first_chunk = False
+                    if not validate_file_signature(chunk, ext):
+                        f.close()
+                        dest_path.unlink(missing_ok=True)
+                        return False, f"File signature does not match the claimed {ext.upper()} format for '{file.filename}'.", "400"
+
+                f.write(chunk)
+
+        if bytes_read == 0:
+            dest_path.unlink(missing_ok=True)
+            return False, f"File '{file.filename}' is empty.", "400"
+
+        return True, f"/uploads/{safe_name}", ""
+
+    except Exception:
+        logger.exception("Unexpected error saving uploaded file: %s", file.filename)
+        dest_path.unlink(missing_ok=True)
+        return False, f"Failed to save '{file.filename}' due to an internal error.", "500"
+
+
 @router.post("")
-async def upload_images(
+async def upload_media(
     files: List[UploadFile] = File(...),
     _: str = Depends(get_current_admin),
 ):
-    """Upload one or more product images from local PC/device."""
+    """Upload one or more product or homepage images/videos from local PC/device."""
     if not files:
         return error_response("No files provided for upload", 400)
 
     uploaded_urls = []
 
     for file in files:
-        # Validate filename and extension
         if not file.filename:
             continue
 
-        ext = Path(file.filename).suffix.lower()
-        if ext not in ALLOWED_EXTENSIONS:
-            return error_response(
-                f"File '{file.filename}' has unsupported format. Allowed formats: {', '.join(sorted(ALLOWED_EXTENSIONS))}",
-                400,
-            )
+        success, result, err_code = await save_upload_stream(file)
+        if not success:
+            status_code = 500 if err_code == "500" else 400
+            return error_response(result, status_code)
 
-        if file.content_type and file.content_type not in ALLOWED_MIME_TYPES:
-            return error_response(
-                f"File '{file.filename}' has invalid MIME type '{file.content_type}'.",
-                400,
-            )
-
-        # Read content
-        content = await file.read()
-        if len(content) > MAX_FILE_SIZE:
-            return error_response(
-                f"File '{file.filename}' exceeds maximum allowed size of 15MB.",
-                400,
-            )
-
-        safe_name = sanitize_filename(file.filename)
-        dest_path = UPLOADS_DIR / safe_name
-
-        try:
-            with open(dest_path, "wb") as f:
-                f.write(content)
-            uploaded_urls.append(f"/uploads/{safe_name}")
-        except Exception as e:
-            return error_response(f"Failed to save '{file.filename}': {str(e)}", 500)
+        uploaded_urls.append(result)
 
     if not uploaded_urls:
         return error_response("No valid files could be processed", 400)
 
     return success_response(
         data={"urls": uploaded_urls},
-        message=f"{len(uploaded_urls)} image(s) uploaded successfully",
+        message=f"{len(uploaded_urls)} media file(s) uploaded successfully",
         status_code=201,
+    )
+
+
+@router.post("/image")
+async def upload_single_image(
+    file: UploadFile = File(...),
+    _: str = Depends(get_current_admin),
+):
+    """Upload a single image file (supports single-file upload clients and verification tests)."""
+    success, result, err_code = await save_upload_stream(file)
+    if not success:
+        status_code = 500 if err_code == "500" else 400
+        return JSONResponse(
+            status_code=status_code,
+            content={"success": False, "message": result, "data": None, "url": None},
+        )
+
+    return JSONResponse(
+        status_code=200,
+        content={"success": True, "message": "Image uploaded successfully", "url": result, "data": {"url": result}},
     )

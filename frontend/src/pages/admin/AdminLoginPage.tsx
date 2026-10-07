@@ -1,14 +1,21 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { Lock, User, ArrowRight, ShieldCheck, AlertCircle } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation, Link } from "react-router-dom";
+import { Lock, User, ArrowRight, AlertCircle } from "lucide-react";
 import { authService } from "../../services/auth";
 
 export default function AdminLoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [username, setUsername] = useState("sufian");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (authService.isAuthenticated()) {
+      navigate("/admin", { replace: true });
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,7 +30,8 @@ export default function AdminLoginPage() {
     try {
       const res = await authService.login({ username, password });
       if (res.success) {
-        navigate("/admin", { replace: true });
+        const from = (location.state as any)?.from?.pathname || "/admin";
+        navigate(from, { replace: true });
       } else {
         setError(res.message || "Invalid credentials. Please verify username and password.");
       }
@@ -43,9 +51,11 @@ export default function AdminLoginPage() {
 
         {/* Brand Header */}
         <div className="text-center mb-8">
-          <span className="w-12 h-12 rounded-full bg-[#1C1814] text-[#C9A96E] flex items-center justify-center mx-auto mb-4 border border-[#C9A96E]/30">
-            <ShieldCheck size={24} />
-          </span>
+          <img
+            src="/images/logo.jpg"
+            alt="MS Fashions Closet"
+            className="w-16 h-16 rounded-full object-contain mx-auto mb-4 border border-[#C9A96E]/50 shadow-md p-0.5 bg-white"
+          />
           <h1
             className="text-2xl font-semibold text-[#1C1814] tracking-wide"
             style={{ fontFamily: "var(--font-display)" }}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Calendar,
   Phone,
@@ -216,10 +216,9 @@ export default function AppointmentsAdminPage() {
                   const isExpanded = expandedId === apt.id;
 
                   return (
-                    <>
+                    <React.Fragment key={apt.id}>
                       {/* Main Row */}
                       <tr
-                        key={apt.id}
                         className={`hover:bg-[#FAF8F5]/80 transition-colors cursor-pointer ${isExpanded ? "bg-[#FAF8F5]" : ""}`}
                         onClick={() => setExpandedId(isExpanded ? null : apt.id)}
                       >
@@ -380,7 +379,7 @@ export default function AppointmentsAdminPage() {
                           </td>
                         </tr>
                       )}
-                    </>
+                    </React.Fragment>
                   );
                 })}
               </tbody>

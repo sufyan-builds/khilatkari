@@ -15,6 +15,8 @@ import DashboardPage from "./pages/admin/DashboardPage";
 import ProductsAdminPage from "./pages/admin/ProductsAdminPage";
 import AddEditProductPage from "./pages/admin/AddEditProductPage";
 import AppointmentsAdminPage from "./pages/admin/AppointmentsAdminPage";
+import VisualsAdminPage from "./pages/admin/VisualsAdminPage";
+import CategoriesAdminPage from "./pages/admin/CategoriesAdminPage";
 
 // Scroll to top helper on navigation
 function ScrollToTop() {
@@ -71,6 +73,8 @@ export default function App() {
         {/* Protected Admin Routes */}
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<DashboardPage />} />
+          <Route path="visuals" element={<VisualsAdminPage />} />
+          <Route path="categories" element={<CategoriesAdminPage />} />
           <Route path="products" element={<ProductsAdminPage />} />
           <Route path="products/new" element={<AddEditProductPage />} />
           <Route path="products/:id/edit" element={<AddEditProductPage />} />

@@ -1,8 +1,69 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Sparkles, HeartHandshake, ShieldCheck, Gem } from "lucide-react";
 import { BRAND, WHATSAPP_URL, CITIES } from "../data/constants";
+import { homepageService, type AboutPageConfig, type ImagePositionConfig } from "../services/homepage";
+import { getMediaUrl } from "../utils/media";
+
+// Static defaults — used when CMS field is empty
+const DEFAULT_COLLAGE: [string, string, string, string] = [
+  "/images/models/model-16.jpg",
+  "/images/models/model-4.jpg",
+  "/images/models/model-1.jpg",
+  "/images/models/model-12.jpg",
+];
+
+const DEFAULT_COLLAGE_ALTS = [
+  "MS Fashions Heritage Model",
+  "Kamdani Work Detailing",
+  "Chikankari Handcraft",
+  "Traditional Dress Ensemble",
+];
+
+function CollageImg({
+  slot,
+  defaultSrc,
+  alt,
+  className,
+}: {
+  slot?: ImagePositionConfig;
+  defaultSrc: string;
+  alt: string;
+  className: string;
+}) {
+  const src = slot?.imageUrl || defaultSrc;
+  const posX = slot?.posX ?? 50;
+  const posY = slot?.posY ?? 0; // "object-top" equivalent is posY=0
+  const zoom = slot?.zoom ?? 1.0;
+  return (
+    <img
+      src={getMediaUrl(src)}
+      alt={alt}
+      className={className}
+      style={{
+        objectFit: "cover",
+        objectPosition: `${posX}% ${posY}%`,
+        transform: zoom !== 1.0 ? `scale(${zoom})` : undefined,
+        transformOrigin: `${posX}% ${posY}%`,
+      }}
+    />
+  );
+}
 
 export default function AboutPage() {
+  const [cms, setCms] = useState<AboutPageConfig | null>(null);
+
+  useEffect(() => {
+    homepageService
+      .getPublic()
+      .then((res) => {
+        if (res.success && res.data?.aboutPage) {
+          setCms(res.data.aboutPage);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   const values = [
     {
       icon: <Gem className="w-6 h-6 text-[#C9A96E]" />,
@@ -26,6 +87,17 @@ export default function AboutPage() {
     },
   ];
 
+  // CMS values with static fallbacks
+  const heroHeadlineMain = cms?.heroHeadlineMain || "A Celebration of Authentic";
+  const heroHeadlineItalic = cms?.heroHeadlineItalic || "South Asian Heritage";
+  const heroIntroText = cms?.heroIntroText || "MS Fashions was born out of a profound admiration for the timeless artistry of subcontinental needlework, reimagined for the contemporary woman through an exclusive in-home experience.";
+  const philosophyHeadline = cms?.philosophyHeadline || "Why We Operate Exclusively by Appointment";
+  const philosophyPara1 = cms?.philosophyPara1 || "In an age of mass-produced, fast-fashion retail, true luxury has become rare. Browsing crowded store racks with hurried sales staff cannot do justice to a bridal ensemble adorned with months of delicate hand-embroidery.";
+  const philosophyPara2 = cms?.philosophyPara2 || `At MS Fashions, we replaced the conventional store with an intimate, private home viewing model. You and your family review our curated collections within the quiet comfort of your own living room across Lahore, Islamabad, Rawalpindi, and Peshawar.`;
+  const philosophyPara3 = cms?.philosophyPara3 || "You feel the weight of pure chiffon, inspect the gleam of genuine metal Kamdani threads, and drape shawls under warm home lighting before making any decision.";
+  const ctaHeadline = cms?.ctaHeadline || "Experience the Collection Firsthand";
+  const ctaBodyText = cms?.ctaBodyText || "Request your private appointment today and discover handcrafted luxury in the comfort of your own home.";
+
   return (
     <div className="min-h-screen bg-[#FAF8F5]">
       {/* Editorial Hero */}
@@ -36,12 +108,12 @@ export default function AboutPage() {
             className="text-display-lg text-[#1C1814] mb-6 leading-tight"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            A Celebration of Authentic
-            <span className="block italic font-normal text-[#9B773E]"> South Asian Heritage</span>
+            {heroHeadlineMain}
+            <span className="block italic font-normal text-[#9B773E]"> {heroHeadlineItalic}</span>
           </h1>
           <div className="divider-gold" />
           <p className="text-[#6B5B4E] max-w-2xl mx-auto mt-6 text-base md:text-lg leading-relaxed">
-            MS Fashions was born out of a profound admiration for the timeless artistry of subcontinental needlework, reimagined for the contemporary woman through an exclusive in-home experience.
+            {heroIntroText}
           </p>
         </div>
       </section>
@@ -49,30 +121,34 @@ export default function AboutPage() {
       {/* Story & Philosophy Section */}
       <section className="py-20 md:py-28 container-main">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          {/* Images Grid */}
+          {/* Images Grid — 4 independent slots */}
           <div className="lg:col-span-6 grid grid-cols-2 gap-4">
             <div className="space-y-4">
-              <img
-                src="/images/models/model-16.jpg"
-                alt="MS Fashions Heritage Model"
-                className="w-full aspect-[3/4] object-cover object-top border border-[#E0D8CE] shadow-sm"
+              <CollageImg
+                slot={cms?.collageImage1}
+                defaultSrc={DEFAULT_COLLAGE[0]}
+                alt={DEFAULT_COLLAGE_ALTS[0]}
+                className="w-full aspect-[3/4] object-cover border border-[#E0D8CE] shadow-sm"
               />
-              <img
-                src="/images/models/model-4.jpg"
-                alt="Kamdani Work Detailing"
-                className="w-full aspect-square object-cover object-top border border-[#E0D8CE] shadow-sm"
+              <CollageImg
+                slot={cms?.collageImage2}
+                defaultSrc={DEFAULT_COLLAGE[1]}
+                alt={DEFAULT_COLLAGE_ALTS[1]}
+                className="w-full aspect-square object-cover border border-[#E0D8CE] shadow-sm"
               />
             </div>
             <div className="space-y-4 pt-8">
-              <img
-                src="/images/models/model-1.jpg"
-                alt="Chikankari Handcraft"
-                className="w-full aspect-square object-cover object-top border border-[#E0D8CE] shadow-sm"
+              <CollageImg
+                slot={cms?.collageImage3}
+                defaultSrc={DEFAULT_COLLAGE[2]}
+                alt={DEFAULT_COLLAGE_ALTS[2]}
+                className="w-full aspect-square object-cover border border-[#E0D8CE] shadow-sm"
               />
-              <img
-                src="/images/models/model-12.jpg"
-                alt="Traditional Dress Ensemble"
-                className="w-full aspect-[3/4] object-cover object-top border border-[#E0D8CE] shadow-sm"
+              <CollageImg
+                slot={cms?.collageImage4}
+                defaultSrc={DEFAULT_COLLAGE[3]}
+                alt={DEFAULT_COLLAGE_ALTS[3]}
+                className="w-full aspect-[3/4] object-cover border border-[#E0D8CE] shadow-sm"
               />
             </div>
           </div>
@@ -84,16 +160,16 @@ export default function AboutPage() {
               className="text-display-md text-[#1C1814] mb-6 leading-tight"
               style={{ fontFamily: "var(--font-display)" }}
             >
-              Why We Operate Exclusively by Appointment
+              {philosophyHeadline}
             </h2>
             <p className="text-[#6B5B4E] leading-relaxed mb-6">
-              In an age of mass-produced, fast-fashion retail, true luxury has become rare. Browsing crowded store racks with hurried sales staff cannot do justice to a bridal ensemble adorned with months of delicate hand-embroidery.
+              {philosophyPara1}
             </p>
             <p className="text-[#6B5B4E] leading-relaxed mb-6">
-              At <strong>MS Fashions</strong>, we replaced the conventional store with an intimate, private home viewing model. You and your family review our curated collections within the quiet comfort of your own living room across <strong>Lahore, Islamabad, Rawalpindi, and Peshawar</strong>.
+              {philosophyPara2}
             </p>
             <p className="text-[#6B5B4E] leading-relaxed mb-8">
-              You feel the weight of pure chiffon, inspect the gleam of genuine metal Kamdani threads, and drape shawls under warm home lighting before making any decision.
+              {philosophyPara3}
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
@@ -108,11 +184,11 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* The Crafts */}
+      {/* The Crafts — hardcoded (craft terminology, unlikely to change) */}
       <section className="py-20 bg-[#F2EDE6] border-y border-[#E0D8CE]">
         <div className="container-main">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <p className="section-label mb-3">Artistry & Technique</p>
+            <p className="section-label mb-3">Artistry &amp; Technique</p>
             <h2
               className="text-display-md text-[#1C1814]"
               style={{ fontFamily: "var(--font-display)" }}
@@ -140,7 +216,7 @@ export default function AboutPage() {
                 Technique 02
               </span>
               <h3 className="text-xl font-semibold text-[#1C1814] mb-3" style={{ fontFamily: "var(--font-display)" }}>
-                Kamdani & Mukesh
+                Kamdani &amp; Mukesh
               </h3>
               <p className="text-sm text-[#6B5B4E] leading-relaxed">
                 Meticulous metal thread work where flattened gold and silver wires (badla) are pierced through delicate fabric to form glittering dots and intricate royal motifs.
@@ -162,7 +238,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Values Grid */}
+      {/* Values Grid — hardcoded (brand promise cards) */}
       <section className="py-20 md:py-28 container-main">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <p className="section-label mb-3">Our Standards</p>
@@ -210,10 +286,10 @@ export default function AboutPage() {
           className="text-display-md text-[#1C1814] mb-4"
           style={{ fontFamily: "var(--font-display)" }}
         >
-          Experience the Collection Firsthand
+          {ctaHeadline}
         </h2>
         <p className="text-[#6B5B4E] max-w-lg mx-auto mb-8 text-sm leading-relaxed">
-          Request your private appointment today and discover handcrafted luxury in the comfort of your own home.
+          {ctaBodyText}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link to="/appointments" className="btn-gold">

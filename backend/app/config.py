@@ -10,6 +10,8 @@ class Settings(BaseSettings):
     admin_username: str = "sufian"
     admin_password_hash: str = ""
     frontend_url: str = "http://localhost:5173"
+    environment: str = "development"
+    tls_allow_invalid_certs: bool = False
 
     class Config:
         env_file = ".env"

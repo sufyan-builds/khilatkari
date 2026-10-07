@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Outlet, NavLink, useNavigate, Link, useLocation } from "react-router-dom";
+import { Outlet, NavLink, useNavigate, Link, useLocation, Navigate } from "react-router-dom";
 import {
   LayoutDashboard,
   Shirt,
@@ -9,6 +9,8 @@ import {
   Menu,
   X,
   Shield,
+  Sliders,
+  Layers,
 } from "lucide-react";
 import { authService } from "../services/auth";
 
@@ -17,16 +19,17 @@ export default function AdminLayout() {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const username = authService.getUsername();
+  const isAuthenticated = authService.isAuthenticated();
 
-  useEffect(() => {
-    if (!authService.isAuthenticated()) {
-      navigate("/admin/login", { replace: true });
-    }
-  }, [navigate]);
-
+  // Must call all hooks before any early return (Rules of Hooks)
   useEffect(() => {
     setMobileOpen(false);
   }, [location]);
+
+  // Synchronous route guard to prevent unauthenticated layout/content flash
+  if (!isAuthenticated) {
+    return <Navigate to="/admin/login" replace state={{ from: location }} />;
+  }
 
   const handleLogout = () => {
     authService.logout();
@@ -35,6 +38,8 @@ export default function AdminLayout() {
 
   const navItems = [
     { to: "/admin", label: "Dashboard", icon: <LayoutDashboard size={18} />, end: true },
+    { to: "/admin/visuals", label: "Website CMS & Visuals", icon: <Sliders size={18} /> },
+    { to: "/admin/categories", label: "Categories & Collections", icon: <Layers size={18} /> },
     { to: "/admin/products", label: "Products Catalog", icon: <Shirt size={18} /> },
     { to: "/admin/appointments", label: "Appointments", icon: <CalendarDays size={18} /> },
   ];
@@ -46,16 +51,23 @@ export default function AdminLayout() {
         <div>
           {/* Brand */}
           <div className="mb-10 pb-6 border-b border-[#3A3028]">
-            <Link to="/admin" className="block">
-              <span
-                className="text-xl font-semibold tracking-wide text-white block"
-                style={{ fontFamily: "var(--font-display)" }}
-              >
-                MS Fashions
-              </span>
-              <span className="text-[0.65rem] tracking-[0.2em] uppercase text-[#C9A96E] font-medium flex items-center gap-1 mt-1">
-                <Shield size={12} /> Boutique Portal
-              </span>
+            <Link to="/admin" className="flex items-center gap-3 group">
+              <img
+                src="/images/logo.jpg"
+                alt="MS Fashions Closet"
+                className="w-10 h-10 rounded-full object-contain shrink-0 border border-[#C9A96E]/50 shadow-xs group-hover:border-[#C9A96E] transition-colors"
+              />
+              <div>
+                <span
+                  className="text-xl font-semibold tracking-wide text-white block leading-tight"
+                  style={{ fontFamily: "var(--font-display)" }}
+                >
+                  MS Fashions
+                </span>
+                <span className="text-[0.65rem] tracking-[0.2em] uppercase text-[#C9A96E] font-medium flex items-center gap-1 mt-0.5">
+                  <Shield size={11} /> Boutique Portal
+                </span>
+              </div>
             </Link>
           </div>
 
@@ -109,7 +121,14 @@ export default function AdminLayout() {
           <div className="w-64 bg-[#1C1814] text-[#FAF8F5] p-6 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-8 pb-4 border-b border-[#3A3028]">
-                <span className="font-display font-semibold text-lg text-white">MS Admin</span>
+                <div className="flex items-center gap-2.5">
+                  <img
+                    src="/images/logo.jpg"
+                    alt="MS Fashions Closet"
+                    className="w-8 h-8 rounded-full object-contain shrink-0 border border-[#C9A96E]/50 shadow-xs"
+                  />
+                  <span className="font-display font-semibold text-lg text-white">MS Admin</span>
+                </div>
                 <button onClick={() => setMobileOpen(false)} className="text-white">
                   <X size={20} />
                 </button>
@@ -156,8 +175,13 @@ export default function AdminLayout() {
           >
             <Menu size={22} />
           </button>
-          <div className="hidden lg:block text-xs uppercase tracking-widest text-[#9B8B7E] font-medium">
-            MS Fashions Boutique Administration
+          <div className="hidden lg:flex items-center gap-2.5 text-xs uppercase tracking-widest text-[#9B8B7E] font-medium">
+            <img
+              src="/images/logo.jpg"
+              alt="MS Fashions"
+              className="w-6 h-6 rounded-full object-contain border border-[#C9A96E]/30"
+            />
+            <span>MS Fashions Boutique Administration</span>
           </div>
           <div className="flex items-center gap-4">
             <span className="text-xs bg-[#FAF8F5] border border-[#E0D8CE] px-3 py-1 text-[#6B5B4E] font-medium">

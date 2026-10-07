@@ -228,6 +228,18 @@ body {
   color: var(--color-text-muted);
 }
 
+/* Suppress Chrome/Edge autofill blue-grey background override.
+   Uses inset box-shadow trick — the only browser-safe method. */
+.form-input:-webkit-autofill,
+.form-input:-webkit-autofill:hover,
+.form-input:-webkit-autofill:focus,
+.form-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px var(--color-white) inset !important;
+  box-shadow: 0 0 0 1000px var(--color-white) inset !important;
+  -webkit-text-fill-color: var(--color-text-primary) !important;
+  caret-color: var(--color-text-primary);
+}
+
 .form-label {
   display: block;
   font-size: 0.75rem;
