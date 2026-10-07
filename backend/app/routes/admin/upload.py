@@ -2,10 +2,15 @@ import os
 import re
 import uuid
 import logging
+import tempfile
+import shutil
 from pathlib import Path
 from typing import List, Tuple
 from fastapi import APIRouter, Depends, File, UploadFile, HTTPException, status
 from fastapi.responses import JSONResponse
+import cloudinary
+import cloudinary.uploader
+from app.config import settings
 from app.routes.admin.auth import get_current_admin
 from app.utils.response import success_response, error_response
 
@@ -117,6 +122,7 @@ async def save_upload_stream(file: UploadFile) -> Tuple[bool, str, str]:
     Streams and validates an uploaded file chunk-by-chunk.
     Enforces maximum size during read to avoid unbounded memory consumption.
     Validates file extension, MIME type, container magic bytes, and directory boundary.
+    Uploads directly to Cloudinary when configured (production), or saves to local disk as fallback.
     Returns (success: bool, url_or_error_message: str, error_type: str).
     """
     if not file.filename:
@@ -134,20 +140,22 @@ async def save_upload_stream(file: UploadFile) -> Tuple[bool, str, str]:
     max_size_label = "50MB" if is_video else "15MB"
 
     safe_name = sanitize_filename(file.filename, is_video=is_video)
-    dest_path = UPLOADS_DIR / safe_name
 
-    # Path traversal protection: Ensure target path remains within UPLOADS_DIR
-    try:
-        if not dest_path.resolve().is_relative_to(UPLOADS_DIR.resolve()):
-            return False, "Invalid file destination.", "400"
-    except Exception:
-        return False, "Invalid file destination.", "400"
+    use_cloudinary = bool(
+        settings.cloudinary_cloud_name
+        and settings.cloudinary_api_key
+        and settings.cloudinary_api_secret
+    )
 
     bytes_read = 0
     first_chunk = True
 
+    # Use a secure temporary file during chunked stream reading
+    with tempfile.NamedTemporaryFile(delete=False, suffix=ext) as temp_file:
+        temp_path = Path(temp_file.name)
+
     try:
-        with open(dest_path, "wb") as f:
+        with open(temp_path, "wb") as f:
             while True:
                 chunk = await file.read(CHUNK_SIZE)
                 if not chunk:
@@ -156,27 +164,66 @@ async def save_upload_stream(file: UploadFile) -> Tuple[bool, str, str]:
                 bytes_read += len(chunk)
                 if bytes_read > max_size:
                     f.close()
-                    dest_path.unlink(missing_ok=True)
+                    temp_path.unlink(missing_ok=True)
                     return False, f"File '{file.filename}' exceeds the maximum permitted size of {max_size_label}.", "400"
 
                 if first_chunk:
                     first_chunk = False
                     if not validate_file_signature(chunk, ext):
                         f.close()
-                        dest_path.unlink(missing_ok=True)
+                        temp_path.unlink(missing_ok=True)
                         return False, f"File signature does not match the claimed {ext.upper()} format for '{file.filename}'.", "400"
 
                 f.write(chunk)
 
         if bytes_read == 0:
-            dest_path.unlink(missing_ok=True)
+            temp_path.unlink(missing_ok=True)
             return False, f"File '{file.filename}' is empty.", "400"
 
+        # If Cloudinary credentials are provided, upload to Cloudinary persistent storage
+        if use_cloudinary:
+            cloudinary.config(
+                cloud_name=settings.cloudinary_cloud_name,
+                api_key=settings.cloudinary_api_key,
+                api_secret=settings.cloudinary_api_secret,
+                secure=True,
+            )
+            resource_type = "video" if is_video else "image"
+            public_id = Path(safe_name).stem
+            try:
+                res = cloudinary.uploader.upload(
+                    str(temp_path),
+                    resource_type=resource_type,
+                    folder="ms_fashions",
+                    public_id=public_id,
+                    overwrite=True,
+                )
+                secure_url = res.get("secure_url")
+                if not secure_url:
+                    raise ValueError("Cloudinary upload response did not include secure_url")
+                return True, secure_url, ""
+            except Exception:
+                logger.exception("Cloudinary upload failed for file: %s", file.filename)
+                return False, f"Failed to upload '{file.filename}' to persistent cloud storage.", "500"
+            finally:
+                temp_path.unlink(missing_ok=True)
+
+        # Fallback to local disk storage (e.g. local offline development)
+        dest_path = UPLOADS_DIR / safe_name
+        try:
+            if not dest_path.resolve().is_relative_to(UPLOADS_DIR.resolve()):
+                temp_path.unlink(missing_ok=True)
+                return False, "Invalid file destination.", "400"
+        except Exception:
+            temp_path.unlink(missing_ok=True)
+            return False, "Invalid file destination.", "400"
+
+        shutil.move(str(temp_path), str(dest_path))
         return True, f"/uploads/{safe_name}", ""
 
     except Exception:
         logger.exception("Unexpected error saving uploaded file: %s", file.filename)
-        dest_path.unlink(missing_ok=True)
+        temp_path.unlink(missing_ok=True)
         return False, f"Failed to save '{file.filename}' due to an internal error.", "500"
 
 

@@ -12,6 +12,9 @@ class Settings(BaseSettings):
     frontend_url: str = "http://localhost:5173"
     environment: str = "development"
     tls_allow_invalid_certs: bool = False
+    cloudinary_cloud_name: str = ""
+    cloudinary_api_key: str = ""
+    cloudinary_api_secret: str = ""
 
     class Config:
         env_file = ".env"
