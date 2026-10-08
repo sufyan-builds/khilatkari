@@ -68,8 +68,8 @@ export default function ProductDetailPage() {
     if (navigator.share) {
       navigator
         .share({
-          title: product?.name || "MS Fashions Piece",
-          text: `Explore ${product?.name} from MS Fashions`,
+          title: product?.name || "KhilatKari Handcrafted Piece",
+          text: `Explore ${product?.name} from KhilatKari`,
           url: window.location.href,
         })
         .catch(() => {});
@@ -123,7 +123,7 @@ export default function ProductDetailPage() {
     );
   }
 
-  const whatsappMessage = `Hello MS Fashions! I am interested in viewing "${product.name}" (Design: ${product.slug}). Could we arrange a private appointment?`;
+  const whatsappMessage = `Hello KhilatKari! I am interested in viewing "${product.name}" (Design: ${product.slug}). Could we arrange a private appointment?`;
 
   return (
     <div className="min-h-screen bg-[#FAF8F5] py-10 md:py-16">

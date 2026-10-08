@@ -54,7 +54,7 @@ export default function AdminLayout() {
             <Link to="/admin" className="flex items-center gap-3 group">
               <img
                 src="/images/logo.jpg"
-                alt="MS Fashions Closet"
+                alt="KhilatKari"
                 className="w-10 h-10 rounded-full object-contain shrink-0 border border-[#C9A96E]/50 shadow-xs group-hover:border-[#C9A96E] transition-colors"
               />
               <div>
@@ -62,10 +62,10 @@ export default function AdminLayout() {
                   className="text-xl font-semibold tracking-wide text-white block leading-tight"
                   style={{ fontFamily: "var(--font-display)" }}
                 >
-                  MS Fashions
+                  KhilatKari
                 </span>
                 <span className="text-[0.65rem] tracking-[0.2em] uppercase text-[#C9A96E] font-medium flex items-center gap-1 mt-0.5">
-                  <Shield size={11} /> Boutique Portal
+                  <Shield size={11} /> Administration Portal
                 </span>
               </div>
             </Link>
@@ -124,10 +124,10 @@ export default function AdminLayout() {
                 <div className="flex items-center gap-2.5">
                   <img
                     src="/images/logo.jpg"
-                    alt="MS Fashions Closet"
+                    alt="KhilatKari"
                     className="w-8 h-8 rounded-full object-contain shrink-0 border border-[#C9A96E]/50 shadow-xs"
                   />
-                  <span className="font-display font-semibold text-lg text-white">MS Admin</span>
+                  <span className="font-display font-semibold text-lg text-white">KhilatKari Admin</span>
                 </div>
                 <button onClick={() => setMobileOpen(false)} className="text-white">
                   <X size={20} />
@@ -178,10 +178,10 @@ export default function AdminLayout() {
           <div className="hidden lg:flex items-center gap-2.5 text-xs uppercase tracking-widest text-[#9B8B7E] font-medium">
             <img
               src="/images/logo.jpg"
-              alt="MS Fashions"
+              alt="KhilatKari"
               className="w-6 h-6 rounded-full object-contain border border-[#C9A96E]/30"
             />
-            <span>MS Fashions Boutique Administration</span>
+            <span>KhilatKari Administration</span>
           </div>
           <div className="flex items-center gap-4">
             <span className="text-xs bg-[#FAF8F5] border border-[#E0D8CE] px-3 py-1 text-[#6B5B4E] font-medium">

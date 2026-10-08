@@ -120,10 +120,10 @@ export default function DashboardPage() {
             Concierge Dashboard
           </span>
           <h1 className="text-2xl md:text-3xl font-semibold" style={{ fontFamily: "var(--font-display)" }}>
-            MS Fashions Boutique
+            KhilatKari
           </h1>
           <p className="text-xs text-[#C8BBA8] mt-1">
-            Manage your exclusive collection and coordinate private home appointments.
+            Manage your handcrafted collection and coordinate private home appointments.
           </p>
         </div>
         <div className="flex gap-3 flex-wrap">

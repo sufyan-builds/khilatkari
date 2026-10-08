@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-MS Fashions — Safe Cloudinary Migration Script
+KhilatKari — Safe Cloudinary Migration Script
 Uploads existing local media files (backend/uploads/) to Cloudinary,
 verifies that each uploaded URL is reachable, updates MongoDB Atlas
 document references, and generates a complete migration report.
@@ -67,7 +67,7 @@ def run_migration():
     )
 
     print("==================================================")
-    print("   MS FASHIONS — CLOUDINARY MEDIA MIGRATION       ")
+    print("   KHILATKARI — CLOUDINARY MEDIA MIGRATION        ")
     print("==================================================")
     print(f"Source Directory: {UPLOADS_DIR}")
     print(f"Cloudinary Cloud: {CLOUD_NAME}")

@@ -1,17 +1,17 @@
 // ============================================================
-// MS FASHIONS — Central constants file
+// KHILATKARI — Central constants file
 // Edit this file to update brand info across the entire site
 // ============================================================
 
 export const BRAND = {
-  name: "MS Fashions",
-  tagline: "Timeless Indian Elegance, Curated for You.",
+  name: "KhilatKari",
+  tagline: "The Art of Timeless Craft",
   description:
-    "A luxury appointment-based boutique specialising in Indian and Pakistani traditional wear. We bring the finest Chikankari, Kamdani, and bridal collections to you through a private, personalised shopping experience.",
+    "KhilatKari celebrates the beauty of traditional South Asian craftsmanship through carefully handcrafted clothing and textiles. Our collections feature heritage techniques including Kamdani, Mukesh, Gota, intricate hand embroidery, and bespoke bridal wear.",
   whatsapp: "923148881856", // international format for WA links
   whatsappDisplay: "0314-888-1856",
-  instagram: "https://www.instagram.com/ms.fashioncloset/",
-  instagramHandle: "@ms.fashioncloset",
+  instagram: "https://www.instagram.com/khilatkari/",
+  instagramHandle: "@khilatkari",
 };
 
 export const CITIES: string[] = ["Lahore", "Islamabad", "Rawalpindi", "Peshawar"];
@@ -38,7 +38,7 @@ export const APPOINTMENT_PROCESS = [
   {
     step: "01",
     title: "Explore the Collection",
-    description: "Browse our curated collections of luxury Indian and traditional wear at your leisure.",
+    description: "Browse our curated collections of handcrafted South Asian heritage wear at your leisure.",
   },
   {
     step: "02",

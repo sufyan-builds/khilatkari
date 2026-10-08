@@ -27,7 +27,7 @@ def record(category, test_name, passed, notes=""):
 
 def main():
     print("==================================================")
-    print("   MS FASHIONS — COMPREHENSIVE FINAL QA AUDIT     ")
+    print("   KHILATKARI — COMPREHENSIVE FINAL QA AUDIT      ")
     print("==================================================")
 
     # ----------------------------------------------------
@@ -43,7 +43,7 @@ def main():
 
     try:
         fe_res = requests.get(FRONTEND_URL, timeout=5)
-        passed = fe_res.status_code == 200 and "MS Fashions" in fe_res.text
+        passed = fe_res.status_code == 200 and ("KhilatKari" in fe_res.text or "KHILATKARI" in fe_res.text)
         record("Environment", "Frontend Server Running", passed, f"Status {fe_res.status_code}")
     except Exception as e:
         record("Environment", "Frontend Server Running", False, str(e))
@@ -81,7 +81,7 @@ def main():
     # ----------------------------------------------------
     print("\n--- Category 3: Customer Website — Home Page ---")
     fe_home = requests.get(FRONTEND_URL, timeout=5)
-    has_brand = "MS Fashions" in fe_home.text or "ms.fashioncloset" in fe_home.text
+    has_brand = "KhilatKari" in fe_home.text or "KHILATKARI" in fe_home.text or "khilatkari" in fe_home.text.lower()
     has_cta = "Book" in fe_home.text or "Appointment" in fe_home.text
     record("Customer Website", "Home Page Luxury Branding & CTAs", fe_home.status_code == 200 and has_brand, "Luxury brand identity confirmed")
 

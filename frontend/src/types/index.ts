@@ -1,5 +1,5 @@
 // ============================================================
-// MS FASHIONS — TypeScript type definitions
+// KHILATKARI — TypeScript type definitions
 // ============================================================
 
 export type PriceDisplayMode = "fixed_price" | "price_on_request";

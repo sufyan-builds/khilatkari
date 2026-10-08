@@ -14,7 +14,7 @@ const DEFAULT_COLLAGE: [string, string, string, string] = [
 ];
 
 const DEFAULT_COLLAGE_ALTS = [
-  "MS Fashions Heritage Model",
+  "KhilatKari Heritage Model",
   "Kamdani Work Detailing",
   "Chikankari Handcraft",
   "Traditional Dress Ensemble",
@@ -78,7 +78,7 @@ export default function AboutPage() {
     {
       icon: <HeartHandshake className="w-6 h-6 text-[#C9A96E]" />,
       title: "Family Heritage",
-      desc: "Founded as a passion project for exquisite South Asian traditional textiles, MS Fashions serves discerning families with warmth and integrity.",
+      desc: "Founded on a reverence for exquisite South Asian traditional textiles, KhilatKari serves discerning families with dedication, warmth, and integrity.",
     },
     {
       icon: <Sparkles className="w-6 h-6 text-[#C9A96E]" />,
@@ -90,10 +90,10 @@ export default function AboutPage() {
   // CMS values with static fallbacks
   const heroHeadlineMain = cms?.heroHeadlineMain || "A Celebration of Authentic";
   const heroHeadlineItalic = cms?.heroHeadlineItalic || "South Asian Heritage";
-  const heroIntroText = cms?.heroIntroText || "MS Fashions was born out of a profound admiration for the timeless artistry of subcontinental needlework, reimagined for the contemporary woman through an exclusive in-home experience.";
+  const heroIntroText = cms?.heroIntroText || "KhilatKari was born out of a profound admiration for the timeless artistry of South Asian handcrafts, reimagined for the contemporary woman through an exclusive in-home experience.";
   const philosophyHeadline = cms?.philosophyHeadline || "Why We Operate Exclusively by Appointment";
   const philosophyPara1 = cms?.philosophyPara1 || "In an age of mass-produced, fast-fashion retail, true luxury has become rare. Browsing crowded store racks with hurried sales staff cannot do justice to a bridal ensemble adorned with months of delicate hand-embroidery.";
-  const philosophyPara2 = cms?.philosophyPara2 || `At MS Fashions, we replaced the conventional store with an intimate, private home viewing model. You and your family review our curated collections within the quiet comfort of your own living room across Lahore, Islamabad, Rawalpindi, and Peshawar.`;
+  const philosophyPara2 = cms?.philosophyPara2 || `At KhilatKari, we replaced the conventional store with an intimate, private home viewing model. You and your family review our curated collections within the quiet comfort of your own living room across Lahore, Islamabad, Rawalpindi, and Peshawar.`;
   const philosophyPara3 = cms?.philosophyPara3 || "You feel the weight of pure chiffon, inspect the gleam of genuine metal Kamdani threads, and drape shawls under warm home lighting before making any decision.";
   const ctaHeadline = cms?.ctaHeadline || "Experience the Collection Firsthand";
   const ctaBodyText = cms?.ctaBodyText || "Request your private appointment today and discover handcrafted luxury in the comfort of your own home.";
@@ -103,7 +103,7 @@ export default function AboutPage() {
       {/* Editorial Hero */}
       <section className="relative py-20 md:py-28 bg-[#F2EDE6] border-b border-[#E0D8CE]">
         <div className="container-main max-w-4xl text-center">
-          <p className="section-label mb-3">The MS Fashions Story</p>
+          <p className="section-label mb-3">The KhilatKari Story</p>
           <h1
             className="text-display-lg text-[#1C1814] mb-6 leading-tight"
             style={{ fontFamily: "var(--font-display)" }}
@@ -246,7 +246,7 @@ export default function AboutPage() {
             className="text-display-md text-[#1C1814]"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            The MS Fashions Promise
+            The KhilatKari Promise
           </h2>
           <div className="divider-gold" />
         </div>
@@ -296,7 +296,7 @@ export default function AboutPage() {
             Book an Appointment
           </Link>
           <a
-            href={WHATSAPP_URL("Hello MS Fashions! I'd like to learn more about your private viewing services.")}
+            href={WHATSAPP_URL("Hello KhilatKari! I'd like to learn more about your private viewing services.")}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-outline"

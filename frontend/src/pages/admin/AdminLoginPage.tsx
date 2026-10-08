@@ -94,14 +94,14 @@ export default function AdminLoginPage() {
         <div className="text-center mb-8">
           <img
             src="/images/logo.jpg"
-            alt="MS Fashions Closet"
+            alt="KhilatKari"
             className="w-16 h-16 rounded-full object-contain mx-auto mb-4 border border-[#C9A96E]/50 shadow-md p-0.5 bg-white"
           />
           <h1
             className="text-2xl font-semibold text-[#1C1814] tracking-wide"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            MS Fashions
+            KhilatKari
           </h1>
           <p className="text-[0.65rem] tracking-[0.25em] uppercase text-[#9B8B7E] mt-1 font-medium">
             Management Portal
@@ -197,7 +197,7 @@ export default function AdminLoginPage() {
             to="/"
             className="text-xs text-[#9B8B7E] hover:text-[#1C1814] transition-colors tracking-wide"
           >
-            ← Return to MS Fashions Boutique
+            ← Return to KhilatKari Storefront
           </Link>
         </div>
       </div>

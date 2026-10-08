@@ -51,10 +51,10 @@ DEFAULT_HOMEPAGE_CONTENT: Dict[str, Any] = {
     "aboutPage": {
         "heroHeadlineMain": "A Celebration of Authentic",
         "heroHeadlineItalic": "South Asian Heritage",
-        "heroIntroText": "MS Fashions was born out of a profound admiration for the timeless artistry of subcontinental needlework, reimagined for the contemporary woman through an exclusive in-home experience.",
+        "heroIntroText": "KhilatKari was born out of a profound admiration for the timeless artistry of subcontinental needlework, reimagined for the contemporary woman through an exclusive in-home experience.",
         "philosophyHeadline": "Why We Operate Exclusively by Appointment",
         "philosophyPara1": "In an age of mass-produced, fast-fashion retail, true luxury has become rare. Browsing crowded store racks with hurried sales staff cannot do justice to a bridal ensemble adorned with months of delicate hand-embroidery.",
-        "philosophyPara2": "At MS Fashions, we replaced the conventional store with an intimate, private home viewing model. You and your family review our curated collections within the quiet comfort of your own living room across Lahore, Islamabad, Rawalpindi, and Peshawar.",
+        "philosophyPara2": "At KhilatKari, we replaced the conventional store with an intimate, private home viewing model. You and your family review our curated collections within the quiet comfort of your own living room across Lahore, Islamabad, Rawalpindi, and Peshawar.",
         "philosophyPara3": "You feel the weight of pure chiffon, inspect the gleam of genuine metal Kamdani threads, and drape shawls under warm home lighting before making any decision.",
         "ctaHeadline": "Experience the Collection Firsthand",
         "ctaBodyText": "Request your private appointment today and discover handcrafted luxury in the comfort of your own home.",

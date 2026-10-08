@@ -1,8 +1,8 @@
-# MS FASHIONS — Luxury Traditional Wear Boutique
+# KHILATKARI — The Art of Timeless Craft
 
-A full-stack, appointment-based luxury fashion web application built for **MS Fashions** (`@ms.fashioncloset`).
+A full-stack, appointment-based luxury fashion web application built for **KhilatKari**.
 
-MS Fashions operates as an exclusive, private in-home appointment boutique for handcrafted South Asian traditional wear (Chikankari, Kamdani, Gota & Mukesh, Kashmiri Shawls, and Bridal Wear) across **Lahore, Islamabad, Rawalpindi, and Peshawar**.
+KhilatKari operates as an exclusive, private in-home appointment label for handcrafted South Asian traditional wear (Kamdani, Mukesh, Gota, hand embroidery, Kashmiri Shawls, and Bridal Wear) across **Lahore, Islamabad, Rawalpindi, and Peshawar**.
 
 ---
 

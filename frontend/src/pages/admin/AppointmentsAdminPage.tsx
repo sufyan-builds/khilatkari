@@ -97,7 +97,7 @@ export default function AppointmentsAdminPage() {
   const buildWhatsAppUrl = (apt: Appointment) => {
     const phone = apt.phone.replace(/[^0-9]/g, "");
     const pieceText = apt.interestedPiece ? ` regarding the piece "${apt.interestedPiece}"` : "";
-    const msg = `Hello ${apt.customerName}! This is MS Fashions${pieceText}. We are reaching out about your private appointment request for ${apt.preferredDate} in ${apt.city}. Please let us know your availability to confirm the appointment.`;
+    const msg = `Hello ${apt.customerName}! This is KhilatKari${pieceText}. We are reaching out about your private appointment request for ${apt.preferredDate} in ${apt.city}. Please let us know your availability to confirm the appointment.`;
     return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
   };
 

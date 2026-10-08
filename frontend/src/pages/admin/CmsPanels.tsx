@@ -413,7 +413,7 @@ export function AboutPagePanel({ content, setContent, uploading, setUploading, s
             <CmsTextField
               label="Intro Paragraph"
               value={about.heroIntroText || ""}
-              placeholder="MS Fashions was born out of a profound admiration…"
+              placeholder="KhilatKari was born out of a profound admiration…"
               multiline
               rows={3}
               onChange={(v) => update({ heroIntroText: v })}
@@ -443,7 +443,7 @@ export function AboutPagePanel({ content, setContent, uploading, setUploading, s
           <CmsTextField
             label="Philosophy Paragraph 2"
             value={about.philosophyPara2 || ""}
-            placeholder="At MS Fashions, we replaced the conventional store…"
+            placeholder="At KhilatKari, we replaced the conventional store…"
             multiline
             rows={3}
             onChange={(v) => update({ philosophyPara2: v })}

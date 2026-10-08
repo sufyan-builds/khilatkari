@@ -47,8 +47,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="MS Fashions API",
-    description="Backend API for MS Fashions luxury fashion boutique",
+    title="KhilatKari API",
+    description="Backend API for KhilatKari handcrafted luxury fashion",
     version="1.0.0",
     lifespan=lifespan,
 )
@@ -191,4 +191,4 @@ app.include_router(admin_homepage.router)
 
 @app.get("/api/health")
 async def health():
-    return {"success": True, "message": "MS Fashions API is running"}
+    return {"success": True, "message": "KhilatKari API is running"}

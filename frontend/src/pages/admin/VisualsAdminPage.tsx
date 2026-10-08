@@ -616,13 +616,13 @@ export default function VisualsAdminPage() {
               {activeTab === "hero" && (
                 <div className="absolute inset-0 bg-gradient-to-r from-[#1C1814]/80 via-[#1C1814]/40 to-transparent pointer-events-none flex flex-col justify-end p-6">
                   <span className="text-[0.65rem] tracking-widest uppercase text-[#C9A96E] font-medium">
-                    MS Fashions Luxury
+                    KhilatKari
                   </span>
                   <h3
                     className="text-white text-lg md:text-xl font-medium mt-0.5 line-clamp-1"
                     style={{ fontFamily: "var(--font-display)" }}
                   >
-                    {currentItem.title || "Private Luxury Traditional Wear"}
+                    {currentItem.title || "The Art of Timeless Craft"}
                   </h3>
                   <p className="text-[#D4C8BC] text-xs line-clamp-1 mt-0.5">
                     {currentItem.subtitle || "Handcrafted pieces presented through private appointments."}

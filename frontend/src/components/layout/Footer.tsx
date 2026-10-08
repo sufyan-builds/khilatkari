@@ -15,17 +15,17 @@ export default function Footer() {
               className="text-2xl font-semibold tracking-wide text-white mb-3"
               style={{ fontFamily: "var(--font-display)" }}
             >
-              MS Fashions
+              KhilatKari
             </h2>
             <p className="text-[0.65rem] tracking-[0.2em] uppercase text-[#C9A96E] mb-4">
-              Luxury Traditional Wear
+              The Art of Timeless Craft
             </p>
             <p className="text-sm text-[#9B8B7E] leading-relaxed max-w-xs">
               {BRAND.description}
             </p>
             <div className="flex gap-4 mt-6">
               <a
-                href={WHATSAPP_URL("Hello! I'd like to enquire about MS Fashions.")}
+                href={WHATSAPP_URL("Hello! I'd like to enquire about KhilatKari.")}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-sm text-[#C9A96E] hover:text-white transition-colors"
@@ -92,10 +92,10 @@ export default function Footer() {
       <div className="border-t border-[#3A3028]">
         <div className="container-main py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-[#6B5B4E]">
-            © {new Date().getFullYear()} MS Fashions. All rights reserved.
+            © {new Date().getFullYear()} KhilatKari. All rights reserved.
           </p>
           <p className="text-xs text-[#6B5B4E]">
-            Luxury Traditional Wear · Appointment-Based Shopping
+            The Art of Timeless Craft · Exclusive Private Appointments
           </p>
         </div>
       </div>

@@ -97,7 +97,7 @@ export default function AppointmentPage() {
     }
   };
 
-  const whatsappConfirmMessage = `Hello MS Fashions! I just submitted a private appointment request for ${formData.customerName} in ${formData.city} for ${formData.preferredDate} (${formData.preferredTime}). Collection: ${formData.collection}.${formData.interestedPiece ? ` Interested Piece: ${formData.interestedPiece}.` : ""}`;
+  const whatsappConfirmMessage = `Hello KhilatKari! I just submitted a private appointment request for ${formData.customerName} in ${formData.city} for ${formData.preferredDate} (${formData.preferredTime}). Collection: ${formData.collection}.${formData.interestedPiece ? ` Interested Piece: ${formData.interestedPiece}.` : ""}`;
 
   return (
     <div className="min-h-screen bg-[#FAF8F5] py-12 md:py-20">
@@ -422,7 +422,7 @@ export default function AppointmentPage() {
                   Skip the form and message our style director directly on WhatsApp for immediate date coordination.
                 </p>
                 <a
-                  href={WHATSAPP_URL("Hello MS Fashions! I'd like to book an exclusive home appointment.")}
+                  href={WHATSAPP_URL("Hello KhilatKari! I'd like to book an exclusive home appointment.")}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn-gold w-full text-center flex items-center justify-center gap-2 py-3"

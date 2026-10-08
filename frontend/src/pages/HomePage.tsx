@@ -117,16 +117,16 @@ export default function HomePage() {
               <div className="absolute inset-0 bg-gradient-to-b from-[#1C1814] via-[#2A231C]/60 to-[#1C1814]" />
               <div className="relative z-10 container-main flex flex-col justify-center">
                 <div className="max-w-2xl">
-                  <p className="section-label text-[#C9A96E] mb-4">MS Fashions</p>
+                  <p className="section-label text-[#C9A96E] mb-4 tracking-[0.25em]">KHILATKARI</p>
                   <h1
                     className="text-display-xl text-white mb-4 leading-tight"
                     style={{ fontFamily: "var(--font-display)" }}
                   >
-                    Private Luxury
-                    <span className="block italic font-normal text-[#E8D5A8]"> Traditional Wear.</span>
+                    The Art of
+                    <span className="block italic font-normal text-[#E8D5A8]"> Timeless Craft.</span>
                   </h1>
                   <p className="text-[#D4C8BC] text-base md:text-lg leading-relaxed mb-6 max-w-lg">
-                    Handcrafted South Asian traditional wear presented through an exclusive private appointment experience in Lahore, Islamabad, Rawalpindi, and Peshawar.
+                    KhilatKari celebrates the beauty of traditional South Asian craftsmanship through carefully handcrafted clothing and textiles — Kamdani, Mukesh, Gota, and bridal wear — experienced through private in-home appointments.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4">
                     <Link to="/appointments" className="btn-gold">
@@ -149,16 +149,16 @@ export default function HomePage() {
               <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#C9A96E_1px,transparent_1px)] [background-size:24px_24px]" />
               <div className="relative z-10 container-main flex flex-col justify-center">
                 <div className="max-w-2xl">
-                  <p className="section-label text-[#C9A96E] mb-4">MS Fashions</p>
+                  <p className="section-label text-[#C9A96E] mb-4 tracking-[0.25em]">KHILATKARI</p>
                   <h1
                     className="text-display-xl text-white mb-4 leading-tight"
                     style={{ fontFamily: "var(--font-display)" }}
                   >
-                    Private Luxury
-                    <span className="block italic font-normal text-[#E8D5A8]"> Traditional Wear.</span>
+                    The Art of
+                    <span className="block italic font-normal text-[#E8D5A8]"> Timeless Craft.</span>
                   </h1>
                   <p className="text-[#D4C8BC] text-base md:text-lg leading-relaxed mb-10 max-w-lg">
-                    Handcrafted South Asian traditional wear — Chikankari, Kamdani, Bridal &amp; more — presented through an exclusive private appointment experience in Lahore, Islamabad, Rawalpindi, and Peshawar.
+                    KhilatKari celebrates the beauty of traditional South Asian craftsmanship through carefully handcrafted clothing and textiles — Kamdani, Mukesh, Gota, and bridal wear — experienced through private in-home appointments.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4">
                     <Link to="/appointments" className="btn-gold">
@@ -205,7 +205,7 @@ export default function HomePage() {
                 ) : (
                   <img
                     src={getMediaUrl(slide.imageUrl)}
-                    alt={slide.title || "MS Fashions luxury collection"}
+                    alt={slide.title || "KhilatKari luxury handcrafted collection"}
                     style={{
                       objectFit: "cover",
                       objectPosition: `${slide.posX ?? 50}% ${slide.posY ?? 15}%`,
@@ -224,7 +224,7 @@ export default function HomePage() {
             {/* Content */}
             <div className="relative z-10 h-full container-main flex flex-col justify-center">
               <div className="max-w-2xl">
-                <p className="section-label text-[#C9A96E] mb-4">MS Fashions</p>
+                <p className="section-label text-[#C9A96E] mb-4 tracking-[0.25em]">KHILATKARI</p>
                 <h1
                   className="text-display-xl text-white mb-4 leading-tight"
                   style={{ fontFamily: "var(--font-display)" }}
@@ -233,8 +233,8 @@ export default function HomePage() {
                     activeSlide.title
                   ) : (
                     <>
-                      Private Luxury
-                      <span className="block italic font-normal text-[#E8D5A8]"> Traditional Wear.</span>
+                      The Art of
+                      <span className="block italic font-normal text-[#E8D5A8]"> Timeless Craft.</span>
                     </>
                   )}
                 </h1>
@@ -345,8 +345,8 @@ export default function HomePage() {
                         />
                       ) : (
                         <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#2D2319] to-[#1C1814] p-4 text-center">
-                          <div className="w-10 h-10 rounded-full border border-[#C9A96E]/40 flex items-center justify-center text-[#C9A96E] mb-2 font-serif text-xs">
-                            MS
+                          <div className="w-10 h-10 rounded-full border border-[#C9A96E]/40 flex items-center justify-center text-[#C9A96E] mb-2 font-serif text-xs font-semibold">
+                            KK
                           </div>
                           <span className="text-[#C9A96E] text-xs uppercase tracking-widest font-medium">
                             {col.name}
@@ -487,8 +487,8 @@ export default function HomePage() {
               // Placeholder / Empty state when no visual configured
               return (
                 <div className="relative overflow-hidden aspect-[4/5] bg-[#F2EDE6] border border-[#E0D8CE] flex flex-col items-center justify-center p-8 text-center">
-                  <div className="w-16 h-16 rounded-full border border-[#C9A96E]/50 flex items-center justify-center text-[#C9A96E] mb-4 font-serif text-lg">
-                    MS
+                  <div className="w-16 h-16 rounded-full border border-[#C9A96E]/50 flex items-center justify-center text-[#C9A96E] mb-4 font-serif text-lg font-semibold">
+                    KK
                   </div>
                   <h3 className="font-serif text-lg text-[#1C1814] mb-2">{exp?.title || "The Private Viewing Experience"}</h3>
                   <p className="text-xs text-[#6B5B4E] max-w-xs leading-relaxed">
@@ -579,7 +579,7 @@ export default function HomePage() {
                 <div key={item.id || i} className="flex-1 overflow-hidden relative group">
                   <img
                     src={getMediaUrl(item.imageUrl)}
-                    alt={item.title || "MS Fashions collection"}
+                    alt={item.title || "KhilatKari handcrafted collection"}
                     style={{
                       objectFit: "cover",
                       objectPosition: `${item.posX ?? 50}% ${item.posY ?? 15}%`,
@@ -608,7 +608,7 @@ export default function HomePage() {
           </h2>
           <div className="divider-gold" />
           <p className="text-[#6B5B4E] leading-relaxed mt-6 mb-6 text-base md:text-lg">
-            {homepageContent?.aboutPage?.heroIntroText || "MS Fashions is a family boutique dedicated to the art of Indian and Pakistani traditional wear. Every piece in our collection is selected for its exceptional craftsmanship — from the delicate threadwork of Chikankari to the rich embellishments of bridal wear."}
+            {homepageContent?.aboutPage?.heroIntroText || "KhilatKari celebrates the beauty of traditional South Asian craftsmanship through carefully handcrafted clothing and textiles. Every piece in our collection is created with timeless artistry — from delicate Kamdani and Mukesh work to intricate Gota embellishments and bridal craftsmanship."}
           </p>
           <p className="text-[#6B5B4E] leading-relaxed mb-10">
             We bring a curated selection of the finest traditional wear to your doorstep through our exclusive private appointment service, available across Lahore, Islamabad, Rawalpindi, and Peshawar.
@@ -669,7 +669,7 @@ export default function HomePage() {
         const btn1Text = stmt?.button1Text || "Book a Private Appointment";
         const btn1Link = stmt?.button1Link || "/appointments";
         const btn2Text = stmt?.button2Text || "Chat on WhatsApp";
-        const btn2Link = stmt?.button2Link || WHATSAPP_URL("Hello! I'd like to enquire about booking an appointment with MS Fashions.");
+        const btn2Link = stmt?.button2Link || WHATSAPP_URL("Hello! I'd like to enquire about booking an appointment with KhilatKari.");
 
         const bgStyle = hasBg
           ? {

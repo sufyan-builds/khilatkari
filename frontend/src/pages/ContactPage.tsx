@@ -25,14 +25,14 @@ export default function ContactPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Pre-fill WhatsApp message and redirect
-    const msg = `Hello MS Fashions! Name: ${form.name}, City: ${form.city}, Subject: ${form.subject}. Message: ${form.message}`;
+    const msg = `Hello KhilatKari! Name: ${form.name}, City: ${form.city}, Subject: ${form.subject}. Message: ${form.message}`;
     window.open(WHATSAPP_URL(msg), "_blank");
     setSent(true);
   };
 
   const faqs = [
     {
-      q: "Why does MS Fashions operate by appointment only?",
+      q: "Why does KhilatKari operate by appointment only?",
       a: "Our pieces are bespoke, high-value luxury traditional and bridal garments. We believe private in-home viewings allow clients and their families to experience fabrics, hand-embroidery, and fittings peacefully without the distraction of crowded shopping malls.",
     },
     {
@@ -63,7 +63,7 @@ export default function ContactPage() {
             className="text-display-lg text-[#1C1814] mb-4"
             style={{ fontFamily: "var(--font-display)" }}
           >
-            Connect with MS Fashions
+            Connect with KhilatKari
           </h1>
           <div className="divider-gold" />
           <p className="text-[#6B5B4E] mt-4 text-sm md:text-base leading-relaxed">
@@ -109,7 +109,7 @@ export default function ContactPage() {
             <p className="text-xs text-[#9B8B7E] mb-4">Fastest response for appointments & inquiries</p>
             <p className="text-sm font-semibold text-[#1C1814] mb-4">{BRAND.whatsappDisplay}</p>
             <a
-              href={WHATSAPP_URL("Hello MS Fashions! I'd like to get in touch with you.")}
+              href={WHATSAPP_URL("Hello KhilatKari! I'd like to get in touch with you.")}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-outline btn-sm w-full block"
@@ -134,7 +134,7 @@ export default function ContactPage() {
               rel="noopener noreferrer"
               className="btn-outline btn-sm w-full block"
             >
-              Follow @ms.fashioncloset
+              Follow @khilatkari
             </a>
           </div>
 

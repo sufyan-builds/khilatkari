@@ -1,5 +1,5 @@
 """
-In-Memory Sliding-Window Rate Limiter for MS Fashions API.
+In-Memory Sliding-Window Rate Limiter for KhilatKari API.
 
 Architecture Note & Deployment Characteristics:
 ----------------------------------------------

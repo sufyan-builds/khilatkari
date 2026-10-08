@@ -6,7 +6,7 @@ interface WhatsAppButtonProps {
 }
 
 export default function WhatsAppButton({ message }: WhatsAppButtonProps) {
-  const url = message ? WHATSAPP_URL(message) : WHATSAPP_URL("Hello! I'd like to book an appointment with MS Fashions.");
+  const url = message ? WHATSAPP_URL(message) : WHATSAPP_URL("Hello! I'd like to book an appointment with KhilatKari.");
 
   return (
     <aside aria-label="WhatsApp Consultation" className="fixed bottom-6 right-6 z-40 flex items-center group">
@@ -17,7 +17,7 @@ export default function WhatsAppButton({ message }: WhatsAppButtonProps) {
         href={url}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label={`Chat with MS Fashions on WhatsApp (${BRAND.whatsappDisplay})`}
+        aria-label={`Chat with KhilatKari on WhatsApp (${BRAND.whatsappDisplay})`}
         className="w-14 h-14 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-full flex items-center justify-center shadow-xl hover:scale-105 active:scale-95 transition-all duration-300"
       >
         <MessageCircle size={28} className="fill-white/20" />
