@@ -30,8 +30,19 @@ export function getMediaUrl(src?: string): string {
   }
 
   if (trimmed.startsWith("/uploads/")) {
-    const rawApiUrl = import.meta.env.VITE_API_URL || "";
-    return rawApiUrl ? `${rawApiUrl.replace(/\/+$/, "")}${trimmed}` : trimmed;
+    const rawApiUrl = (import.meta.env.VITE_API_URL || "").trim().replace(/\/+$/, "");
+    if (rawApiUrl) {
+      return `${rawApiUrl}${trimmed}`;
+    }
+    if (
+      import.meta.env.PROD ||
+      (typeof window !== "undefined" &&
+        window.location.hostname !== "localhost" &&
+        window.location.hostname !== "127.0.0.1")
+    ) {
+      return `https://ms-fashion-closet.onrender.com${trimmed}`;
+    }
+    return trimmed;
   }
 
   // Relative internal path (e.g. /images/models/...)

@@ -9,7 +9,7 @@ KhilatKari operates as an exclusive, private in-home appointment label for handc
 ## 🏛️ Project Architecture
 
 ```
-ms-fashions/
+khilatkari/
 ├── frontend/                     # React 19 + TypeScript + Vite + Tailwind CSS v4
 │   ├── src/
 │   │   ├── components/           # Reusable UI & Layout components

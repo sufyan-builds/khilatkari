@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { Lock, User, ArrowRight, AlertCircle, WifiOff, ShieldX, ServerCrash } from "lucide-react";
 import { authService } from "../../services/auth";
+import api from "../../services/api";
 import axios from "axios";
 
 export default function AdminLoginPage() {
@@ -10,13 +11,17 @@ export default function AdminLoginPage() {
   const [username, setUsername] = useState("sufian");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [warmingUp, setWarmingUp] = useState(false);
   const [error, setError] = useState("");
   const [errorType, setErrorType] = useState<"connection" | "auth" | "server" | "unknown" | "">("");
 
   useEffect(() => {
     if (authService.isAuthenticated()) {
       navigate("/admin", { replace: true });
+      return;
     }
+    // Proactively ping health endpoint to wake Render if idle
+    api.get("/health").catch(() => {});
   }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -31,6 +36,10 @@ export default function AdminLoginPage() {
     }
 
     setLoading(true);
+    const warmupTimer = setTimeout(() => {
+      setWarmingUp(true);
+    }, 2500);
+
     try {
       const res = await authService.login({ username, password });
       if (res.success) {
@@ -47,10 +56,10 @@ export default function AdminLoginPage() {
         const serverMsg = err.response?.data?.message;
 
         if (!err.response) {
-          // Network failure — backend unreachable
+          // Network failure — backend unreachable or cold start timeout
           setErrorType("connection");
           setError(
-            "Cannot reach the backend server. Please make sure the API is running on the expected address."
+            "Cannot reach the backend server. Render may be waking up from sleep (~30s). Please wait a moment and try again."
           );
         } else if (status === 401 || status === 403) {
           // Authentication / authorization failure
@@ -79,6 +88,8 @@ export default function AdminLoginPage() {
         setError("An unexpected network error occurred. Please check your connection.");
       }
     } finally {
+      clearTimeout(warmupTimer);
+      setWarmingUp(false);
       setLoading(false);
     }
   };
@@ -186,7 +197,7 @@ export default function AdminLoginPage() {
             className="btn-primary w-full py-3.5 text-center flex items-center justify-center gap-2 mt-6 cursor-pointer"
           >
             {loading ? (
-              <span>Authenticating...</span>
+              <span>{warmingUp ? "Waking up server (Render)..." : "Authenticating..."}</span>
             ) : (
               <>
                 <span>Sign In to Dashboard</span>
