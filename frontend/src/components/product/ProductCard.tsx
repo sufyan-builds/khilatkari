@@ -21,9 +21,9 @@ export default function ProductCard({ product }: ProductCardProps) {
     : null;
 
   return (
-    <article className="product-card group">
-      <Link to={`/products/${product.slug}`} className="block">
-        {/* Image */}
+    <article className="product-card group active:scale-[0.99] transition-transform">
+      <Link to={`/products/${product.slug}`} className="block h-full flex flex-col justify-between">
+        {/* Image Container */}
         <div className="relative overflow-hidden bg-[#F2EDE6]">
           <img
             src={mainImage}
@@ -32,39 +32,45 @@ export default function ProductCard({ product }: ProductCardProps) {
             loading="lazy"
           />
 
-          {/* Availability badge (only if not "Available") */}
-          {availabilityLabel && (
-            <div className="absolute top-3 left-3">
-              <span className={`badge text-[0.65rem] border ${AVAILABILITY_STYLES[availabilityLabel] ?? "bg-gray-100 text-gray-600 border-gray-200"}`}>
-                {availabilityLabel}
-              </span>
+          {/* Badges container — neatly spaced to never collide */}
+          {(availabilityLabel || product.featured) && (
+            <div className="absolute top-2.5 left-2.5 right-2.5 flex items-start justify-between gap-1 pointer-events-none z-10">
+              {availabilityLabel ? (
+                <span className={`badge text-[0.6rem] sm:text-[0.65rem] border ${AVAILABILITY_STYLES[availabilityLabel] ?? "bg-gray-100 text-gray-600 border-gray-200"}`}>
+                  {availabilityLabel}
+                </span>
+              ) : (
+                <span />
+              )}
+
+              {product.featured && (
+                <span className="badge badge-gold text-[0.6rem] sm:text-[0.65rem]">
+                  Featured
+                </span>
+              )}
             </div>
           )}
 
-          {product.featured && (
-            <div className="absolute top-3 right-3">
-              <span className="badge badge-gold text-[0.65rem]">Featured</span>
-            </div>
-          )}
-
-          {/* Hover overlay CTA */}
-          <div className="absolute inset-0 bg-[#1C1814]/0 group-hover:bg-[#1C1814]/35 transition-all duration-300 flex items-end justify-center pb-6 opacity-0 group-hover:opacity-100">
+          {/* Hover overlay CTA (desktop only) */}
+          <div className="hidden md:flex absolute inset-0 bg-[#1C1814]/0 group-hover:bg-[#1C1814]/35 transition-all duration-300 items-end justify-center pb-6 opacity-0 group-hover:opacity-100">
             <span className="btn-primary btn-sm">Inquire About This Piece</span>
           </div>
         </div>
 
         {/* Info */}
-        <div className="p-4">
-          <p className="text-[0.65rem] tracking-[0.12em] uppercase text-[#C9A96E] mb-1">
-            {product.category}
-          </p>
-          <h3
-            className="text-[1rem] font-medium text-[#1C1814] mb-2 leading-snug"
-            style={{ fontFamily: "var(--font-display)" }}
-          >
-            {product.name}
-          </h3>
-          <p className="text-sm font-medium text-[#6B5B4E]">
+        <div className="p-3 sm:p-4 flex flex-col justify-between flex-grow">
+          <div>
+            <p className="text-[0.6rem] sm:text-[0.65rem] tracking-[0.12em] uppercase text-[#C9A96E] mb-1 font-medium">
+              {product.category}
+            </p>
+            <h3
+              className="text-sm sm:text-base font-medium text-[#1C1814] mb-1.5 leading-snug line-clamp-2"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
+              {product.name}
+            </h3>
+          </div>
+          <p className="text-xs sm:text-sm font-medium text-[#6B5B4E] mt-1">
             {formatPrice(product)}
           </p>
         </div>

@@ -108,25 +108,28 @@ export default function CollectionsPage() {
         </div>
       </div>
 
-      <div className="container-main py-10">
+      <div className="container-main py-8 md:py-12">
         {/* Search + Filter bar */}
-        <div className="flex flex-col md:flex-row gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6 sm:mb-8">
           {/* Search */}
-          <form onSubmit={handleSearch} className="relative flex-1">
-            <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9B8B7E]" />
+          <form onSubmit={handleSearch} className="form-group flex-1">
+            <span className="form-input-icon">
+              <Search size={18} className="text-[#9B8B7E]" />
+            </span>
             <input
               type="text"
               id="collection-search"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               placeholder="Search by name, colour, fabric…"
-              className="form-input pl-10 pr-10"
+              className="form-input form-input-search"
             />
             {searchInput && (
               <button
                 type="button"
                 onClick={clearSearch}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#9B8B7E] hover:text-[#1C1814]"
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-[#9B8B7E] hover:text-[#1C1814] cursor-pointer"
+                aria-label="Clear search"
               >
                 <X size={16} />
               </button>
@@ -135,15 +138,15 @@ export default function CollectionsPage() {
 
           {/* Result count */}
           {!loading && (
-            <div className="flex items-center text-sm text-[#6B5B4E] whitespace-nowrap">
+            <div className="flex items-center text-xs sm:text-sm text-[#6B5B4E] whitespace-nowrap px-1">
               <SlidersHorizontal size={15} className="mr-2 text-[#C9A96E]" />
               {total} {total === 1 ? "piece" : "pieces"} found
             </div>
           )}
         </div>
 
-        {/* Category filters */}
-        <div className="flex flex-wrap gap-2 mb-10">
+        {/* Category filters — horizontally swipeable on mobile, wrapping on tablet/desktop */}
+        <div className="flex gap-2 overflow-x-auto pb-3 mb-8 sm:mb-10 -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap scrollbar-none">
           {(() => {
             const filterList = [
               "All",
@@ -166,10 +169,10 @@ export default function CollectionsPage() {
                 key={cat}
                 id={`filter-${cat.toLowerCase().replace(/\s+/g, "-")}`}
                 onClick={() => setCategory(cat)}
-                className={`px-4 py-2 text-xs font-medium tracking-[0.08em] uppercase border transition-all duration-200 ${
+                className={`px-3.5 py-2 text-xs font-medium tracking-[0.08em] uppercase border transition-all duration-200 whitespace-nowrap flex-shrink-0 cursor-pointer ${
                   isSelected(cat)
                     ? "bg-[#1C1814] text-[#FAF8F5] border-[#1C1814]"
-                    : "bg-transparent text-[#6B5B4E] border-[#E0D8CE] hover:border-[#1C1814] hover:text-[#1C1814]"
+                    : "bg-white text-[#6B5B4E] border-[#E0D8CE] hover:border-[#1C1814] hover:text-[#1C1814]"
                 }`}
               >
                 {cat}
@@ -187,11 +190,11 @@ export default function CollectionsPage() {
 
         {/* Loading skeletons */}
         {loading && (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
             {[...Array(8)].map((_, i) => (
               <div key={i} className="product-card">
                 <div className="skeleton aspect-[3/4] w-full" />
-                <div className="p-4 space-y-2">
+                <div className="p-3 sm:p-4 space-y-2">
                   <div className="skeleton h-3 w-1/3" />
                   <div className="skeleton h-4 w-2/3" />
                   <div className="skeleton h-3 w-1/4" />
@@ -203,15 +206,15 @@ export default function CollectionsPage() {
 
         {/* Empty state */}
         {!loading && !error && products.length === 0 && (
-          <div className="text-center py-24">
+          <div className="text-center py-20 px-4">
             <p
-              className="text-display-sm text-[#9B8B7E] mb-4"
+              className="text-display-sm text-[#9B8B7E] mb-3"
               style={{ fontFamily: "var(--font-display)" }}
             >
               No pieces found
             </p>
-            <p className="text-sm text-[#9B8B7E] mb-6">
-              Try a different category or clear your search.
+            <p className="text-sm text-[#9B8B7E] mb-6 max-w-sm mx-auto">
+              Try a different category or clear your search to explore other handcrafted garments.
             </p>
             <button onClick={() => { clearSearch(); setCategory("All"); }} className="btn-outline btn-sm">
               Clear Filters
@@ -221,14 +224,14 @@ export default function CollectionsPage() {
 
         {/* Appointment CTA Banner */}
         {!loading && !error && products.length > 0 && (
-          <div className="mb-10 flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#1C1814] text-[#FAF8F5] px-6 py-4">
-            <div>
+          <div className="mb-8 sm:mb-10 flex flex-col sm:flex-row items-center justify-between gap-4 bg-[#1C1814] text-[#FAF8F5] p-5 sm:p-6">
+            <div className="text-center sm:text-left">
               <p className="text-xs uppercase tracking-[0.15em] text-[#C9A96E] font-semibold mb-1">Private Viewing Available</p>
-              <p className="text-sm text-[#D4C8BC]">Interested in a piece? We bring it to your home.</p>
+              <p className="text-xs sm:text-sm text-[#D4C8BC]">Interested in a piece? We bring it to your home.</p>
             </div>
             <a
               href="/appointments"
-              className="btn-gold btn-sm whitespace-nowrap flex-shrink-0"
+              className="btn-gold btn-sm whitespace-nowrap flex-shrink-0 w-full sm:w-auto text-center"
             >
               Book a Private Appointment
             </a>
@@ -238,7 +241,7 @@ export default function CollectionsPage() {
         {/* Products grid */}
         {!loading && !error && products.length > 0 && (
           <>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
               {products.map((p) => (
                 <ProductCard key={p.id} product={p} />
               ))}

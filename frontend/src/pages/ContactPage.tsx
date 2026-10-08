@@ -184,7 +184,7 @@ export default function ContactPage() {
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label htmlFor="name" className="block text-xs font-semibold uppercase tracking-wider text-[#6B5B4E] mb-1.5">
+                  <label htmlFor="name" className="form-label">
                     Your Name *
                   </label>
                   <input
@@ -199,7 +199,7 @@ export default function ContactPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="phone" className="block text-xs font-semibold uppercase tracking-wider text-[#6B5B4E] mb-1.5">
+                  <label htmlFor="phone" className="form-label">
                     Phone / WhatsApp *
                   </label>
                   <input
@@ -213,16 +213,16 @@ export default function ContactPage() {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="city" className="block text-xs font-semibold uppercase tracking-wider text-[#6B5B4E] mb-1.5">
+                    <label htmlFor="city" className="form-label">
                       Your City
                     </label>
                     <select
                       id="city"
                       value={form.city}
                       onChange={(e) => setForm({ ...form, city: e.target.value })}
-                      className="form-input"
+                      className="form-input form-select"
                     >
                       {CITIES.map((c) => (
                         <option key={c} value={c}>
@@ -232,14 +232,14 @@ export default function ContactPage() {
                     </select>
                   </div>
                   <div>
-                    <label htmlFor="subject" className="block text-xs font-semibold uppercase tracking-wider text-[#6B5B4E] mb-1.5">
+                    <label htmlFor="subject" className="form-label">
                       Subject
                     </label>
                     <select
                       id="subject"
                       value={form.subject}
                       onChange={(e) => setForm({ ...form, subject: e.target.value })}
-                      className="form-input"
+                      className="form-input form-select"
                     >
                       <option value="General Inquiry">General Inquiry</option>
                       <option value="Bridal Consultation">Bridal Consultation</option>
@@ -250,7 +250,7 @@ export default function ContactPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="message" className="block text-xs font-semibold uppercase tracking-wider text-[#6B5B4E] mb-1.5">
+                  <label htmlFor="message" className="form-label">
                     Your Message *
                   </label>
                   <textarea
@@ -266,7 +266,7 @@ export default function ContactPage() {
 
                 <button
                   type="submit"
-                  className="btn-gold w-full flex items-center justify-center gap-2 py-3.5"
+                  className="btn-gold w-full flex items-center justify-center gap-2 py-3.5 cursor-pointer"
                 >
                   <Send size={16} /> Send via WhatsApp Concierge
                 </button>

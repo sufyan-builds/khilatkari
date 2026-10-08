@@ -158,13 +158,13 @@ export default function ProductDetailPage() {
           <div className="lg:col-span-7 flex flex-col-reverse md:flex-row gap-4">
             {/* Thumbnails rail (photos + videos) */}
             {((product.images?.length || 0) + (product.videos?.length || 0) > 1) && (
-              <div className="flex md:flex-col gap-3 overflow-x-auto md:overflow-y-auto max-h-[640px] pb-2 md:pb-0">
+              <div className="flex md:flex-col gap-2.5 sm:gap-3 overflow-x-auto md:overflow-y-auto max-h-[640px] pb-2 md:pb-0 scrollbar-none -mx-1 px-1">
                 {/* Images */}
                 {product.images?.map((img, idx) => (
                   <button
                     key={`img-${idx}`}
                     onClick={() => setSelectedMedia({ type: "image", url: img })}
-                    className={`relative w-20 h-28 flex-shrink-0 border-2 transition-all overflow-hidden cursor-pointer ${
+                    className={`relative w-16 h-22 sm:w-20 sm:h-28 flex-shrink-0 border-2 transition-all overflow-hidden cursor-pointer ${
                       selectedMedia.type === "image" && selectedMedia.url === img
                         ? "border-[#C9A96E] shadow-sm"
                         : "border-transparent opacity-70 hover:opacity-100"
@@ -387,7 +387,7 @@ export default function ProductDetailPage() {
                 More from {product.category}
               </h2>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
               {relatedProducts.map((rel) => (
                 <ProductCard key={rel.id} product={rel} />
               ))}

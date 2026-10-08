@@ -137,12 +137,14 @@ export default function AdminLoginPage() {
           <div>
             <label
               htmlFor="admin-username"
-              className="block text-xs font-semibold uppercase tracking-wider text-[#6B5B4E] mb-2"
+              className="form-label"
             >
               Username
             </label>
-            <div className="relative">
-              <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9B8B7E]" />
+            <div className="form-group">
+              <span className="form-input-icon">
+                <User size={18} />
+              </span>
               <input
                 id="admin-username"
                 type="text"
@@ -150,7 +152,7 @@ export default function AdminLoginPage() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Enter username"
-                className="form-input pl-10"
+                className="form-input form-input-with-icon"
               />
             </div>
           </div>
@@ -158,12 +160,14 @@ export default function AdminLoginPage() {
           <div>
             <label
               htmlFor="admin-password"
-              className="block text-xs font-semibold uppercase tracking-wider text-[#6B5B4E] mb-2"
+              className="form-label"
             >
               Password
             </label>
-            <div className="relative">
-              <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9B8B7E]" />
+            <div className="form-group">
+              <span className="form-input-icon">
+                <Lock size={18} />
+              </span>
               <input
                 id="admin-password"
                 type="password"
@@ -171,7 +175,7 @@ export default function AdminLoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="form-input pl-10"
+                className="form-input form-input-with-icon"
               />
             </div>
           </div>

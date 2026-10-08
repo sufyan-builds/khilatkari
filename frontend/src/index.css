@@ -41,6 +41,9 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
 }
 
 body {
@@ -49,6 +52,9 @@ body {
   color: var(--color-text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
 }
 
 /* ============================================================
@@ -61,31 +67,31 @@ body {
 
 .text-display-xl {
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 6vw, 5rem);
-  line-height: 1.1;
+  font-size: clamp(2.15rem, 5.5vw, 4.5rem);
+  line-height: 1.15;
   font-weight: 500;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 
 .text-display-lg {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 4vw, 3.5rem);
-  line-height: 1.15;
+  font-size: clamp(1.75rem, 4vw, 3.25rem);
+  line-height: 1.2;
   font-weight: 500;
   letter-spacing: -0.01em;
 }
 
 .text-display-md {
   font-family: var(--font-display);
-  font-size: clamp(1.5rem, 3vw, 2.5rem);
-  line-height: 1.2;
+  font-size: clamp(1.35rem, 3.2vw, 2.25rem);
+  line-height: 1.25;
   font-weight: 500;
 }
 
 .text-display-sm {
   font-family: var(--font-display);
-  font-size: clamp(1.2rem, 2vw, 1.75rem);
-  line-height: 1.3;
+  font-size: clamp(1.1rem, 2.2vw, 1.65rem);
+  line-height: 1.35;
   font-weight: 400;
 }
 
@@ -100,17 +106,27 @@ body {
   gap: 0.5rem;
   background-color: var(--color-text-primary);
   color: var(--color-ivory);
-  padding: 0.875rem 2rem;
+  min-height: 2.875rem;
+  padding: 0.8125rem 1.375rem;
   font-family: var(--font-body);
   font-size: 0.8125rem;
   font-weight: 500;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   border: 1px solid var(--color-text-primary);
   cursor: pointer;
   transition: all 0.25s ease;
   text-decoration: none;
-  white-space: nowrap;
+  text-align: center;
+  line-height: 1.25;
+}
+
+@media (min-width: 640px) {
+  .btn-primary {
+    padding: 0.875rem 2rem;
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+  }
 }
 
 .btn-primary:hover {
@@ -125,17 +141,27 @@ body {
   gap: 0.5rem;
   background-color: transparent;
   color: var(--color-text-primary);
-  padding: 0.875rem 2rem;
+  min-height: 2.875rem;
+  padding: 0.8125rem 1.375rem;
   font-family: var(--font-body);
   font-size: 0.8125rem;
   font-weight: 500;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   border: 1px solid var(--color-text-primary);
   cursor: pointer;
   transition: all 0.25s ease;
   text-decoration: none;
-  white-space: nowrap;
+  text-align: center;
+  line-height: 1.25;
+}
+
+@media (min-width: 640px) {
+  .btn-outline {
+    padding: 0.875rem 2rem;
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+  }
 }
 
 .btn-outline:hover {
@@ -150,17 +176,27 @@ body {
   gap: 0.5rem;
   background-color: var(--color-gold);
   color: var(--color-white);
-  padding: 0.875rem 2rem;
+  min-height: 2.875rem;
+  padding: 0.8125rem 1.375rem;
   font-family: var(--font-body);
   font-size: 0.8125rem;
   font-weight: 500;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   border: 1px solid var(--color-gold);
   cursor: pointer;
   transition: all 0.25s ease;
   text-decoration: none;
-  white-space: nowrap;
+  text-align: center;
+  line-height: 1.25;
+}
+
+@media (min-width: 640px) {
+  .btn-gold {
+    padding: 0.875rem 2rem;
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+  }
 }
 
 .btn-gold:hover {
@@ -169,8 +205,16 @@ body {
 }
 
 .btn-sm {
-  padding: 0.6rem 1.25rem;
+  min-height: 2.375rem;
+  padding: 0.55rem 1.125rem;
   font-size: 0.75rem;
+  letter-spacing: 0.08em;
+}
+
+@media (min-width: 640px) {
+  .btn-sm {
+    padding: 0.6rem 1.25rem;
+  }
 }
 
 /* ============================================================
@@ -182,6 +226,9 @@ body {
   border: 1px solid var(--color-border);
   transition: all 0.3s ease;
   overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .product-card:hover {
@@ -194,6 +241,7 @@ body {
   aspect-ratio: 3/4;
   width: 100%;
   object-fit: cover;
+  object-position: top center;
   transition: transform 0.5s ease;
 }
 
@@ -202,30 +250,94 @@ body {
 }
 
 /* ============================================================
-   Forms
+   Forms & Inputs System
    ============================================================ */
+
+.form-group {
+  position: relative;
+  width: 100%;
+}
 
 .form-input {
   width: 100%;
+  min-height: 3rem;
   background: var(--color-white);
   border: 1px solid var(--color-border);
   color: var(--color-text-primary);
-  padding: 0.875rem 1rem;
+  padding: 0.75rem 1.125rem;
   font-family: var(--font-body);
-  font-size: 0.9rem;
-  transition: border-color 0.2s ease;
+  /* 16px base font on mobile prevents iOS Safari viewport auto-zooming */
+  font-size: 1rem;
+  line-height: 1.5;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   outline: none;
   border-radius: 0;
   appearance: none;
+  -webkit-appearance: none;
+}
+
+@media (min-width: 768px) {
+  .form-input {
+    font-size: 0.9375rem;
+    padding: 0.8125rem 1.125rem;
+  }
 }
 
 .form-input:focus {
   border-color: var(--color-gold);
-  box-shadow: 0 0 0 2px rgba(201, 169, 110, 0.15);
+  box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.18);
 }
 
 .form-input::placeholder {
   color: var(--color-text-muted);
+  opacity: 0.85;
+}
+
+/* Form input leading icon padding */
+.form-input-with-icon {
+  padding-left: 3.125rem !important; /* 50px */
+}
+
+/* Form input trailing icon padding */
+.form-input-with-icon-right {
+  padding-right: 3rem !important;
+}
+
+/* Form search input */
+.form-input-search {
+  padding-left: 3.125rem !important;
+  padding-right: 3rem !important;
+}
+
+/* Form input icon container */
+.form-input-icon {
+  position: absolute;
+  left: 1.125rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+/* Form select with custom gold chevron dropdown indicator */
+.form-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23C9A96E' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E") !important;
+  background-position: right 1rem center !important;
+  background-repeat: no-repeat !important;
+  background-size: 1.125rem !important;
+  padding-right: 2.75rem !important;
+  cursor: pointer;
+}
+
+/* Form textarea */
+textarea.form-input {
+  min-height: 6.5rem;
+  resize: vertical;
+  padding: 0.875rem 1.125rem;
 }
 
 /* Suppress Chrome/Edge autofill blue-grey background override.
@@ -243,7 +355,7 @@ body {
 .form-label {
   display: block;
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--color-text-secondary);
@@ -263,11 +375,12 @@ body {
 .badge {
   display: inline-flex;
   align-items: center;
-  padding: 0.25rem 0.75rem;
-  font-size: 0.7rem;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.65rem;
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  line-height: 1;
 }
 
 .badge-gold {
@@ -304,7 +417,13 @@ body {
 .container-main {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .container-main {
+    padding: 0 1.5rem;
+  }
 }
 
 @media (min-width: 768px) {
@@ -358,6 +477,7 @@ body {
 
 ::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: var(--color-cream);

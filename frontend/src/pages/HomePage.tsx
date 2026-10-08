@@ -270,11 +270,11 @@ export default function HomePage() {
       })()}
 
       {/* ── APPOINTMENT NOTE BANNER ────────────────── */}
-      <section className="bg-[#1C1814] py-4" id="appointment-banner">
+      <section className="bg-[#1C1814] py-3.5 sm:py-4" id="appointment-banner">
         <div className="container-main">
-          <p className="text-center text-xs tracking-[0.15em] uppercase text-[#C9A96E]">
-            By Private Appointment Only — Not a Walk-In Store
-            <span className="mx-4 text-[#3A3028]">|</span>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-4 text-center text-[0.68rem] sm:text-xs tracking-[0.14em] uppercase text-[#C9A96E]">
+            <span>By Private Appointment Only — Not a Walk-In Store</span>
+            <span className="hidden sm:inline text-[#4A3D33]">&bull;</span>
             <a
               href={WHATSAPP_URL("Hello! I'd like to book an appointment.")}
               target="_blank"
@@ -283,15 +283,15 @@ export default function HomePage() {
             >
               WhatsApp: {BRAND.whatsappDisplay}
             </a>
-          </p>
+          </div>
         </div>
       </section>
 
       {/* ── FEATURED COLLECTIONS ──────────────────── */}
-      <section className="py-20 md:py-28 bg-[#FAF8F5]" id="collections">
+      <section className="py-16 md:py-24 bg-[#FAF8F5]" id="collections">
         <div className="container-main">
-          <div className="text-center mb-14">
-            <p className="section-label mb-3">Our Specialities</p>
+          <div className="text-center mb-10 sm:mb-14">
+            <p className="section-label mb-2 sm:mb-3">Our Specialities</p>
             <h2 className="text-display-md text-[#1C1814]" style={{ fontFamily: "var(--font-display)" }}>
               Explore the Collection
             </h2>
@@ -299,7 +299,7 @@ export default function HomePage() {
           </div>
 
           {loadingCategories ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6">
               {[...Array(5)].map((_, i) => (
                 <div key={i} className="aspect-[3/4] bg-[#E8E0D5] animate-pulse rounded-xs" />
               ))}
@@ -319,7 +319,7 @@ export default function HomePage() {
               </Link>
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-6">
               {homepageCategories.map((col) => {
                 const targetQuery = col.slug || col.name;
                 const framing = col.imagePosition;
@@ -393,11 +393,11 @@ export default function HomePage() {
           </div>
 
           {loadingProducts ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
               {[...Array(6)].map((_, i) => (
                 <div key={i} className="product-card">
                   <div className="skeleton aspect-[3/4] w-full" />
-                  <div className="p-4 space-y-2">
+                  <div className="p-3 sm:p-4 space-y-2">
                     <div className="skeleton h-3 w-1/3" />
                     <div className="skeleton h-4 w-2/3" />
                     <div className="skeleton h-3 w-1/4" />
@@ -410,7 +410,7 @@ export default function HomePage() {
               <p className="text-[#9B8B7E]">No featured products yet. Add products from the admin panel.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
               {featuredProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
@@ -574,9 +574,12 @@ export default function HomePage() {
 
         return (
           <section className="bg-[#1C1814] overflow-hidden" id="gallery-strip">
-            <div className="flex h-64 md:h-80">
+            <div className="flex h-56 sm:h-64 md:h-80 overflow-x-auto scrollbar-none snap-x snap-mandatory">
               {validStrip.map((item, i) => (
-                <div key={item.id || i} className="flex-1 overflow-hidden relative group">
+                <div
+                  key={item.id || i}
+                  className="w-56 sm:w-64 md:w-auto md:flex-1 flex-shrink-0 snap-center overflow-hidden relative group"
+                >
                   <img
                     src={getMediaUrl(item.imageUrl)}
                     alt={item.title || "KhilatKari handcrafted collection"}
@@ -597,20 +600,20 @@ export default function HomePage() {
       })()}
 
       {/* ── ABOUT SNIPPET ─────────────────────────── */}
-      <section className="py-20 md:py-28 bg-[#F2EDE6]" id="about-snippet">
+      <section className="py-16 md:py-24 bg-[#F2EDE6]" id="about-snippet">
         <div className="container-main max-w-3xl text-center">
-          <p className="section-label mb-3">Our Story</p>
+          <p className="section-label mb-2 sm:mb-3">Our Story</p>
           <h2
-            className="text-display-md text-[#1C1814] mb-6"
+            className="text-display-md text-[#1C1814] mb-4 sm:mb-6"
             style={{ fontFamily: "var(--font-display)" }}
           >
             Craftsmanship That Speaks
           </h2>
           <div className="divider-gold" />
-          <p className="text-[#6B5B4E] leading-relaxed mt-6 mb-6 text-base md:text-lg">
+          <p className="text-[#6B5B4E] leading-relaxed mt-4 sm:mt-6 mb-4 sm:mb-6 text-sm sm:text-base md:text-lg">
             {homepageContent?.aboutPage?.heroIntroText || "KhilatKari celebrates the beauty of traditional South Asian craftsmanship through carefully handcrafted clothing and textiles. Every piece in our collection is created with timeless artistry — from delicate Kamdani and Mukesh work to intricate Gota embellishments and bridal craftsmanship."}
           </p>
-          <p className="text-[#6B5B4E] leading-relaxed mb-10">
+          <p className="text-[#6B5B4E] leading-relaxed mb-8 sm:mb-10 text-xs sm:text-sm md:text-base">
             We bring a curated selection of the finest traditional wear to your doorstep through our exclusive private appointment service, available across Lahore, Islamabad, Rawalpindi, and Peshawar.
           </p>
           <Link to="/about" className="btn-outline">
@@ -620,20 +623,20 @@ export default function HomePage() {
       </section>
 
       {/* ── SERVICE CITIES ────────────────────────── */}
-      <section className="py-16 bg-[#FAF8F5] border-y border-[#E0D8CE]" id="cities">
+      <section className="py-12 md:py-16 bg-[#FAF8F5] border-y border-[#E0D8CE]" id="cities">
         <div className="container-main">
-          <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-12">
-            <p className="text-xs tracking-[0.15em] uppercase text-[#9B8B7E] md:mr-4">
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 md:gap-10">
+            <p className="text-[0.65rem] sm:text-xs tracking-[0.18em] uppercase text-[#9B8B7E] font-medium mr-2">
               Available In
             </p>
             {CITIES.map((city, i) => (
-              <div key={city} className="flex items-center gap-3 md:gap-6">
-                <div className="flex items-center gap-2 text-[#1C1814]">
-                  <MapPin size={14} className="text-[#C9A96E]" />
-                  <span className="text-sm font-medium">{city}</span>
+              <div key={city} className="flex items-center gap-2 sm:gap-4">
+                <div className="flex items-center gap-1.5 sm:gap-2 text-[#1C1814]">
+                  <MapPin size={14} className="text-[#C9A96E] flex-shrink-0" />
+                  <span className="text-xs sm:text-sm font-medium">{city}</span>
                 </div>
                 {i < CITIES.length - 1 && (
-                  <span className="hidden md:block text-[#E0D8CE]">·</span>
+                  <span className="text-[#E0D8CE] font-serif text-sm">·</span>
                 )}
               </div>
             ))}

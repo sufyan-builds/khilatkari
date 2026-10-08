@@ -122,57 +122,57 @@ export default function AboutPage() {
       <section className="py-20 md:py-28 container-main">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           {/* Images Grid — 4 independent slots */}
-          <div className="lg:col-span-6 grid grid-cols-2 gap-4">
-            <div className="space-y-4">
+          <div className="lg:col-span-6 grid grid-cols-2 gap-3 sm:gap-4">
+            <div className="space-y-3 sm:space-y-4">
               <CollageImg
                 slot={cms?.collageImage1}
                 defaultSrc={DEFAULT_COLLAGE[0]}
                 alt={DEFAULT_COLLAGE_ALTS[0]}
-                className="w-full aspect-[3/4] object-cover border border-[#E0D8CE] shadow-sm"
+                className="w-full aspect-[3/4] object-cover border border-[#E0D8CE] shadow-xs"
               />
               <CollageImg
                 slot={cms?.collageImage2}
                 defaultSrc={DEFAULT_COLLAGE[1]}
                 alt={DEFAULT_COLLAGE_ALTS[1]}
-                className="w-full aspect-square object-cover border border-[#E0D8CE] shadow-sm"
+                className="w-full aspect-square object-cover border border-[#E0D8CE] shadow-xs"
               />
             </div>
-            <div className="space-y-4 pt-8">
+            <div className="space-y-3 sm:space-y-4 pt-4 sm:pt-8">
               <CollageImg
                 slot={cms?.collageImage3}
                 defaultSrc={DEFAULT_COLLAGE[2]}
                 alt={DEFAULT_COLLAGE_ALTS[2]}
-                className="w-full aspect-square object-cover border border-[#E0D8CE] shadow-sm"
+                className="w-full aspect-square object-cover border border-[#E0D8CE] shadow-xs"
               />
               <CollageImg
                 slot={cms?.collageImage4}
                 defaultSrc={DEFAULT_COLLAGE[3]}
                 alt={DEFAULT_COLLAGE_ALTS[3]}
-                className="w-full aspect-[3/4] object-cover border border-[#E0D8CE] shadow-sm"
+                className="w-full aspect-[3/4] object-cover border border-[#E0D8CE] shadow-xs"
               />
             </div>
           </div>
 
           {/* Text Content */}
           <div className="lg:col-span-6">
-            <p className="section-label mb-3">Our Philosophy</p>
+            <p className="section-label mb-2 sm:mb-3">Our Philosophy</p>
             <h2
-              className="text-display-md text-[#1C1814] mb-6 leading-tight"
+              className="text-display-md text-[#1C1814] mb-4 sm:mb-6 leading-tight"
               style={{ fontFamily: "var(--font-display)" }}
             >
               {philosophyHeadline}
             </h2>
-            <p className="text-[#6B5B4E] leading-relaxed mb-6">
+            <p className="text-[#6B5B4E] leading-relaxed mb-4 sm:mb-6 text-sm sm:text-base">
               {philosophyPara1}
             </p>
-            <p className="text-[#6B5B4E] leading-relaxed mb-6">
+            <p className="text-[#6B5B4E] leading-relaxed mb-4 sm:mb-6 text-sm sm:text-base">
               {philosophyPara2}
             </p>
-            <p className="text-[#6B5B4E] leading-relaxed mb-8">
+            <p className="text-[#6B5B4E] leading-relaxed mb-6 sm:mb-8 text-sm sm:text-base">
               {philosophyPara3}
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <Link to="/appointments" className="btn-gold">
                 Schedule a Consultation <ArrowRight size={16} />
               </Link>

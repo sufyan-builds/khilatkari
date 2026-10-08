@@ -190,14 +190,16 @@ export default function AppointmentPage() {
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
                 {/* Full Name */}
                 <div>
-                  <label htmlFor="customerName" className="block text-xs font-semibold uppercase tracking-wider text-[#6B5B4E] mb-2">
+                  <label htmlFor="customerName" className="form-label">
                     Full Name *
                   </label>
-                  <div className="relative">
-                    <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9B8B7E]" />
+                  <div className="form-group">
+                    <span className="form-input-icon">
+                      <User size={18} />
+                    </span>
                     <input
                       id="customerName"
                       type="text"
@@ -205,18 +207,20 @@ export default function AppointmentPage() {
                       placeholder="e.g. Fatima Khan"
                       value={formData.customerName}
                       onChange={(e) => setFormData({ ...formData, customerName: e.target.value })}
-                      className="form-input pl-10"
+                      className="form-input form-input-with-icon"
                     />
                   </div>
                 </div>
 
                 {/* Phone / WhatsApp */}
                 <div>
-                  <label htmlFor="phone" className="block text-xs font-semibold uppercase tracking-wider text-[#6B5B4E] mb-2">
+                  <label htmlFor="phone" className="form-label">
                     WhatsApp / Phone Number *
                   </label>
-                  <div className="relative">
-                    <Phone size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9B8B7E]" />
+                  <div className="form-group">
+                    <span className="form-input-icon">
+                      <Phone size={18} />
+                    </span>
                     <input
                       id="phone"
                       type="tel"
@@ -224,44 +228,48 @@ export default function AppointmentPage() {
                       placeholder="e.g. 0300-1234567"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      className="form-input pl-10"
+                      className="form-input form-input-with-icon"
                     />
                   </div>
-                  <p className="text-[0.7rem] text-[#9B8B7E] mt-1">We will message you on WhatsApp to confirm your booking.</p>
+                  <p className="text-[0.7rem] text-[#9B8B7E] mt-1.5">We will message you on WhatsApp to confirm your booking date &amp; slot.</p>
                 </div>
 
                 {/* Email (optional) */}
                 <div>
-                  <label htmlFor="email" className="block text-xs font-semibold uppercase tracking-wider text-[#6B5B4E] mb-2">
+                  <label htmlFor="email" className="form-label">
                     Email Address (Optional)
                   </label>
-                  <div className="relative">
-                    <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9B8B7E]" />
+                  <div className="form-group">
+                    <span className="form-input-icon">
+                      <Mail size={18} />
+                    </span>
                     <input
                       id="email"
                       type="email"
                       placeholder="e.g. fatima@example.com"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="form-input pl-10"
+                      className="form-input form-input-with-icon"
                     />
                   </div>
                 </div>
 
                 {/* City & Collection row */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   {/* City */}
                   <div>
-                    <label htmlFor="city" className="block text-xs font-semibold uppercase tracking-wider text-[#6B5B4E] mb-2">
+                    <label htmlFor="city" className="form-label">
                       City *
                     </label>
-                    <div className="relative">
-                      <MapPin size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9B8B7E]" />
+                    <div className="form-group">
+                      <span className="form-input-icon">
+                        <MapPin size={18} />
+                      </span>
                       <select
                         id="city"
                         value={formData.city}
                         onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                        className="form-input pl-10 cursor-pointer"
+                        className="form-input form-input-with-icon form-select"
                       >
                         {CITIES.map((c) => (
                           <option key={c} value={c}>{c}</option>
@@ -272,16 +280,18 @@ export default function AppointmentPage() {
 
                   {/* What are you looking for */}
                   <div>
-                    <label htmlFor="collection" className="block text-xs font-semibold uppercase tracking-wider text-[#6B5B4E] mb-2">
+                    <label htmlFor="collection" className="form-label">
                       What Are You Looking For? *
                     </label>
-                    <div className="relative">
-                      <Sparkles size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9B8B7E]" />
+                    <div className="form-group">
+                      <span className="form-input-icon">
+                        <Sparkles size={18} />
+                      </span>
                       <select
                         id="collection"
                         value={formData.collection}
                         onChange={(e) => setFormData({ ...formData, collection: e.target.value })}
-                        className="form-input pl-10 cursor-pointer"
+                        className="form-input form-input-with-icon form-select"
                       >
                         {categoryOptions.map((c) => (
                           <option key={c} value={c}>{c}</option>
@@ -293,14 +303,16 @@ export default function AppointmentPage() {
                 </div>
 
                 {/* Date & Time Slot row */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   {/* Preferred Date */}
                   <div>
-                    <label htmlFor="preferredDate" className="block text-xs font-semibold uppercase tracking-wider text-[#6B5B4E] mb-2">
+                    <label htmlFor="preferredDate" className="form-label">
                       Preferred Date *
                     </label>
-                    <div className="relative">
-                      <Calendar size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9B8B7E]" />
+                    <div className="form-group">
+                      <span className="form-input-icon">
+                        <Calendar size={18} />
+                      </span>
                       <input
                         id="preferredDate"
                         type="date"
@@ -308,23 +320,25 @@ export default function AppointmentPage() {
                         min={minDate}
                         value={formData.preferredDate}
                         onChange={(e) => setFormData({ ...formData, preferredDate: e.target.value })}
-                        className="form-input pl-10 cursor-pointer"
+                        className="form-input form-input-with-icon cursor-pointer"
                       />
                     </div>
                   </div>
 
                   {/* Time Slot */}
                   <div>
-                    <label htmlFor="preferredTime" className="block text-xs font-semibold uppercase tracking-wider text-[#6B5B4E] mb-2">
+                    <label htmlFor="preferredTime" className="form-label">
                       Preferred Time Slot *
                     </label>
-                    <div className="relative">
-                      <Clock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9B8B7E]" />
+                    <div className="form-group">
+                      <span className="form-input-icon">
+                        <Clock size={18} />
+                      </span>
                       <select
                         id="preferredTime"
                         value={formData.preferredTime}
                         onChange={(e) => setFormData({ ...formData, preferredTime: e.target.value })}
-                        className="form-input pl-10 cursor-pointer"
+                        className="form-input form-input-with-icon form-select"
                       >
                         <option value="Morning (11:00 AM - 2:00 PM)">Morning (11:00 AM – 2:00 PM)</option>
                         <option value="Afternoon (2:00 PM - 5:00 PM)">Afternoon (2:00 PM – 5:00 PM)</option>
@@ -337,20 +351,20 @@ export default function AppointmentPage() {
                 {/* Interested Piece — pre-filled from product page */}
                 {formData.interestedPiece && (
                   <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#6B5B4E] mb-2">
+                    <label className="form-label">
                       Interested Piece
                     </label>
                     <div className="flex items-center gap-3 px-4 py-3 bg-[#F2EDE6] border border-[#C9A96E]/40">
-                      <Tag size={14} className="text-[#C9A96E] flex-shrink-0" />
-                      <span className="text-sm font-medium text-[#1C1814]">{formData.interestedPiece}</span>
-                      <span className="text-xs text-[#9B8B7E] ml-auto">Pre-filled from collection</span>
+                      <Tag size={15} className="text-[#C9A96E] flex-shrink-0" />
+                      <span className="text-sm font-medium text-[#1C1814] truncate">{formData.interestedPiece}</span>
+                      <span className="text-[0.7rem] text-[#9B8B7E] ml-auto flex-shrink-0">Pre-filled</span>
                     </div>
                   </div>
                 )}
 
                 {/* Additional Request */}
                 <div>
-                  <label htmlFor="message" className="block text-xs font-semibold uppercase tracking-wider text-[#6B5B4E] mb-2">
+                  <label htmlFor="message" className="form-label">
                     Additional Notes for Our Concierge
                   </label>
                   <textarea
@@ -368,7 +382,7 @@ export default function AppointmentPage() {
                   type="submit"
                   disabled={loading}
                   id="submit-appointment"
-                  className="btn-gold w-full py-4 text-center justify-center flex items-center gap-2"
+                  className="btn-gold w-full py-4 text-center justify-center flex items-center gap-2 cursor-pointer"
                 >
                   {loading ? (
                     <span>Submitting Request...</span>
