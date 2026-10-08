@@ -120,11 +120,18 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
     )
 
 
+DEFAULT_PRODUCTION_ORIGINS = [
+    "https://ms-fashion-closet.vercel.app",
+]
+
+# Regex matching any Vercel domain (*.vercel.app) for preview and production deployments
+VERCEL_ORIGIN_REGEX = r"^https://([a-zA-Z0-9-]+\.)*vercel\.app$"
+
+
 def get_allowed_cors_origins(environment: str = "development", frontend_url: str = "") -> list[str]:
     """
     Build allowed CORS origins.
-    In production: strictly permits the exact configured frontend origins.
-    In development: permits localhost and 127.0.0.1 dev server ports.
+    Permits configured frontend URLs, production defaults, and development localhost ports.
     """
     origins = set()
     if frontend_url:
@@ -133,9 +140,18 @@ def get_allowed_cors_origins(environment: str = "development", frontend_url: str
             if cleaned:
                 origins.add(cleaned)
 
-    # Localhost and 127.0.0.1 origins are strictly development-only
+    # Always ensure known production frontend origins are included
+    origins.update(DEFAULT_PRODUCTION_ORIGINS)
+
+    # Localhost and 127.0.0.1 origins are permitted in non-production environments
     if str(environment).strip().lower() != "production":
-        origins.update(["http://localhost:5173", "http://localhost:4173", "http://127.0.0.1:5173"])
+        origins.update([
+            "http://localhost:5173",
+            "http://localhost:4173",
+            "http://localhost:3000",
+            "http://127.0.0.1:5173",
+            "http://127.0.0.1:4173",
+        ])
 
     return sorted(list(origins))
 
@@ -148,6 +164,7 @@ allowed_origins = get_allowed_cors_origins(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
+    allow_origin_regex=VERCEL_ORIGIN_REGEX,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: ms-fashions-api
+    name: ms-fashion-closet
     runtime: python
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
@@ -22,7 +22,7 @@ services:
       - key: ADMIN_PASSWORD_HASH
         sync: false
       - key: FRONTEND_URL
-        sync: false
+        value: https://ms-fashion-closet.vercel.app
       - key: ENVIRONMENT
         value: production
       - key: TLS_ALLOW_INVALID_CERTS

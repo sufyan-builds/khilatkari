@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
-import { Lock, User, ArrowRight, AlertCircle } from "lucide-react";
+import { Lock, User, ArrowRight, AlertCircle, WifiOff, ShieldX, ServerCrash } from "lucide-react";
 import { authService } from "../../services/auth";
+import axios from "axios";
 
 export default function AdminLoginPage() {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ export default function AdminLoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [errorType, setErrorType] = useState<"connection" | "auth" | "server" | "unknown" | "">("");
 
   useEffect(() => {
     if (authService.isAuthenticated()) {
@@ -20,9 +22,11 @@ export default function AdminLoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setErrorType("");
 
     if (!username.trim() || !password.trim()) {
       setError("Please enter both username and password.");
+      setErrorType("unknown");
       return;
     }
 
@@ -33,10 +37,47 @@ export default function AdminLoginPage() {
         const from = (location.state as any)?.from?.pathname || "/admin";
         navigate(from, { replace: true });
       } else {
+        // Non-2xx but Axios didn't throw (shouldn't normally happen, but guard anyway)
+        setErrorType("auth");
         setError(res.message || "Invalid credentials. Please verify username and password.");
       }
-    } catch {
-      setError("Connection to backend server failed. Please ensure the API is running.");
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        const status = err.response?.status;
+        const serverMsg = err.response?.data?.message;
+
+        if (!err.response) {
+          // Network failure — backend unreachable
+          setErrorType("connection");
+          setError(
+            "Cannot reach the backend server. Please make sure the API is running on the expected address."
+          );
+        } else if (status === 401 || status === 403) {
+          // Authentication / authorization failure
+          setErrorType("auth");
+          setError(serverMsg || "Invalid username or password. Please check your credentials.");
+        } else if (status === 404) {
+          // Wrong endpoint — misconfiguration
+          setErrorType("server");
+          setError("Login endpoint not found (404). This may be a configuration issue.");
+        } else if (status === 429) {
+          // Rate limited
+          setErrorType("unknown");
+          setError("Too many login attempts. Please wait a moment and try again.");
+        } else if (status && status >= 500) {
+          // Backend server error
+          setErrorType("server");
+          setError(
+            serverMsg || "A server error occurred. Please try again later or contact support."
+          );
+        } else {
+          setErrorType("unknown");
+          setError(serverMsg || "An unexpected error occurred. Please try again.");
+        }
+      } else {
+        setErrorType("connection");
+        setError("An unexpected network error occurred. Please check your connection.");
+      }
     } finally {
       setLoading(false);
     }
@@ -69,8 +110,24 @@ export default function AdminLoginPage() {
 
         {/* Error Alert */}
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border-l-2 border-red-500 text-red-700 text-xs flex items-start gap-2">
-            <AlertCircle size={16} className="flex-shrink-0 mt-0.5" />
+          <div
+            className={`mb-6 p-4 text-xs flex items-start gap-2 border-l-2 ${
+              errorType === "connection"
+                ? "bg-orange-50 border-orange-500 text-orange-700"
+                : errorType === "server"
+                ? "bg-purple-50 border-purple-500 text-purple-700"
+                : "bg-red-50 border-red-500 text-red-700"
+            }`}
+          >
+            {errorType === "connection" ? (
+              <WifiOff size={16} className="flex-shrink-0 mt-0.5" />
+            ) : errorType === "server" ? (
+              <ServerCrash size={16} className="flex-shrink-0 mt-0.5" />
+            ) : errorType === "auth" ? (
+              <ShieldX size={16} className="flex-shrink-0 mt-0.5" />
+            ) : (
+              <AlertCircle size={16} className="flex-shrink-0 mt-0.5" />
+            )}
             <span>{error}</span>
           </div>
         )}
