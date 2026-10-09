@@ -12,14 +12,18 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="lg:col-span-5 space-y-4">
             <div className="flex items-center gap-3">
-              <picture className="shrink-0">
-                <source srcSet="/images/logo-emblem.webp" type="image/webp" />
-                <img
-                  src="/images/logo.jpg"
-                  alt="KhilatKari"
-                  className="w-11 h-11 rounded-full object-contain border border-[#C9A96E]/50 shadow-xs bg-[#FAF8F5]/90"
-                />
-              </picture>
+              <div className="w-11 h-11 shrink-0 flex items-center justify-center">
+                <picture className="w-full h-full flex items-center justify-center">
+                  <source srcSet="/images/logo.webp" type="image/webp" />
+                  <img
+                    src="/images/logo.jpg"
+                    alt="KhilatKari"
+                    className="w-full h-full object-contain object-center"
+                    width="1024"
+                    height="1024"
+                  />
+                </picture>
+              </div>
               <div className="flex flex-col">
                 <div className="flex items-baseline gap-2">
                   <span

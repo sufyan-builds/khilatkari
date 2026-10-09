@@ -52,14 +52,18 @@ export default function AdminLayout() {
           {/* Brand */}
           <div className="mb-10 pb-6 border-b border-[#3A3028]">
             <Link to="/admin" className="flex items-center gap-3 group">
-              <picture className="shrink-0">
-                <source srcSet="/images/logo-emblem.webp" type="image/webp" />
-                <img
-                  src="/images/logo.jpg"
-                  alt="KhilatKari"
-                  className="w-10 h-10 rounded-full object-contain shrink-0 border border-[#C9A96E]/50 shadow-xs group-hover:border-[#C9A96E] transition-colors bg-[#FAF8F5]"
-                />
-              </picture>
+              <div className="w-10 h-10 shrink-0 flex items-center justify-center">
+                <picture className="w-full h-full flex items-center justify-center">
+                  <source srcSet="/images/logo.webp" type="image/webp" />
+                  <img
+                    src="/images/logo.jpg"
+                    alt="KhilatKari"
+                    className="w-full h-full object-contain object-center"
+                    width="1024"
+                    height="1024"
+                  />
+                </picture>
+              </div>
               <div>
                 <span
                   className="text-xl font-semibold tracking-wide text-white block leading-tight"
@@ -125,11 +129,15 @@ export default function AdminLayout() {
             <div>
               <div className="flex items-center justify-between mb-8 pb-4 border-b border-[#3A3028]">
                 <div className="flex items-center gap-2.5">
-                  <img
-                    src="/images/logo.jpg"
-                    alt="KhilatKari"
-                    className="w-8 h-8 rounded-full object-contain shrink-0 border border-[#C9A96E]/50 shadow-xs"
-                  />
+                  <div className="w-8 h-8 shrink-0 flex items-center justify-center">
+                    <img
+                      src="/images/logo.jpg"
+                      alt="KhilatKari"
+                      className="w-full h-full object-contain object-center"
+                      width="1024"
+                      height="1024"
+                    />
+                  </div>
                   <span className="font-display font-semibold text-lg text-white">KhilatKari Admin</span>
                 </div>
                 <button onClick={() => setMobileOpen(false)} className="text-white">
@@ -179,11 +187,15 @@ export default function AdminLayout() {
             <Menu size={22} />
           </button>
           <div className="hidden lg:flex items-center gap-2.5 text-xs uppercase tracking-widest text-[#9B8B7E] font-medium">
-            <img
-              src="/images/logo.jpg"
-              alt="KhilatKari"
-              className="w-6 h-6 rounded-full object-contain border border-[#C9A96E]/30"
-            />
+            <div className="w-6 h-6 shrink-0 flex items-center justify-center">
+              <img
+                src="/images/logo.jpg"
+                alt="KhilatKari"
+                className="w-full h-full object-contain object-center"
+                width="1024"
+                height="1024"
+              />
+            </div>
             <span>KhilatKari Administration</span>
           </div>
           <div className="flex items-center gap-4">

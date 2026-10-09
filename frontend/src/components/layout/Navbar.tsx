@@ -43,14 +43,18 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-16 md:h-20 gap-2">
             {/* Logo & Brand */}
             <Link to="/" className="flex items-center gap-2 sm:gap-3 group shrink min-w-0">
-              <picture className="shrink-0">
-                <source srcSet="/images/logo-emblem.webp" type="image/webp" />
-                <img
-                  src="/images/logo.jpg"
-                  alt="KhilatKari"
-                  className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full object-contain shrink-0 shadow-xs border border-[#C9A96E]/40 group-hover:border-[#C9A96E] transition-colors bg-[#FDFBF7]"
-                />
-              </picture>
+              <div className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 shrink-0 flex items-center justify-center">
+                <picture className="w-full h-full flex items-center justify-center">
+                  <source srcSet="/images/logo.webp" type="image/webp" />
+                  <img
+                    src="/images/logo.jpg"
+                    alt="KhilatKari"
+                    className="w-full h-full object-contain object-center transition-transform duration-300 group-hover:scale-105"
+                    width="1024"
+                    height="1024"
+                  />
+                </picture>
+              </div>
               <div className="flex flex-col items-start min-w-0">
                 <div className="flex items-baseline gap-1.5 min-w-0">
                   <span
@@ -104,26 +108,17 @@ export default function Navbar() {
                 <InstagramIcon size={18} />
               </a>
 
-              {/* Mobile compact appointment button */}
+              {/* Single Appointment CTA (Responsive for Mobile & Desktop) */}
               <Link
                 to="/appointments"
-                className="md:hidden inline-flex items-center justify-center h-8 px-2.5 sm:px-3 text-[0.68rem] tracking-[0.08em] uppercase font-medium bg-[#1C1814] text-[#FAF8F5] border border-[#1C1814] hover:bg-[#C9A96E] hover:border-[#C9A96E] transition-all rounded-xs shrink-0 whitespace-nowrap shadow-xs"
+                className="inline-flex items-center justify-center h-8 md:h-9 px-2.5 sm:px-3.5 md:px-5 text-[0.68rem] md:text-xs tracking-[0.08em] md:tracking-[0.1em] font-medium uppercase bg-[#1C1814] text-[#FAF8F5] border border-[#1C1814] hover:bg-[#C9A96E] hover:border-[#C9A96E] transition-all rounded-xs shrink-0 whitespace-nowrap shadow-xs"
                 aria-label="Book Appointment"
               >
-                <span className="hidden min-[360px]:inline">Book Appointment</span>
-                <span className="inline min-[360px]:hidden">Book</span>
+                <span className="hidden sm:inline">Book Appointment</span>
+                <span className="inline sm:hidden">Book</span>
               </Link>
 
-              {/* Desktop full appointment button */}
-              <Link
-                to="/appointments"
-                className="hidden md:flex btn-primary btn-sm"
-                aria-label="Book Appointment"
-              >
-                Book Appointment
-              </Link>
-
-              {/* Quick WhatsApp icon for mobile */}
+              {/* Quick WhatsApp icon for concierge */}
               <a
                 href={WHATSAPP_URL("Hello! I'd like to enquire about KhilatKari.")}
                 target="_blank"
