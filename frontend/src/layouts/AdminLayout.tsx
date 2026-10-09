@@ -52,11 +52,14 @@ export default function AdminLayout() {
           {/* Brand */}
           <div className="mb-10 pb-6 border-b border-[#3A3028]">
             <Link to="/admin" className="flex items-center gap-3 group">
-              <img
-                src="/images/logo.jpg"
-                alt="KhilatKari"
-                className="w-10 h-10 rounded-full object-contain shrink-0 border border-[#C9A96E]/50 shadow-xs group-hover:border-[#C9A96E] transition-colors"
-              />
+              <picture className="shrink-0">
+                <source srcSet="/images/logo-emblem.webp" type="image/webp" />
+                <img
+                  src="/images/logo.jpg"
+                  alt="KhilatKari"
+                  className="w-10 h-10 rounded-full object-contain shrink-0 border border-[#C9A96E]/50 shadow-xs group-hover:border-[#C9A96E] transition-colors bg-[#FAF8F5]"
+                />
+              </picture>
               <div>
                 <span
                   className="text-xl font-semibold tracking-wide text-white block leading-tight"

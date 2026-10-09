@@ -1,61 +1,82 @@
 import { Link } from "react-router-dom";
-import { MessageCircle, MapPin } from "lucide-react";
+import { MessageCircle, MapPin, Calendar } from "lucide-react";
 import InstagramIcon from "../ui/InstagramIcon";
 import { BRAND, CITIES, NAV_LINKS, WHATSAPP_URL } from "../../data/constants";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#1C1814] text-[#F2EDE6] border-t border-[#3A3028]">
-      {/* Main footer */}
-      <div className="container-main py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-          {/* Brand column */}
-          <div className="lg:col-span-2">
-            <h2
-              className="text-2xl font-semibold tracking-wide text-white mb-3"
-              style={{ fontFamily: "var(--font-display)" }}
-            >
-              KhilatKari
-            </h2>
-            <p className="text-[0.65rem] tracking-[0.2em] uppercase text-[#C9A96E] mb-4">
-              The Art of Timeless Craft
-            </p>
-            <p className="text-sm text-[#9B8B7E] leading-relaxed max-w-xs">
+    <footer className="bg-[#1C1814] text-[#F2EDE6] border-t border-[#2E2721]">
+      {/* Main footer content */}
+      <div className="container-main py-10 md:py-14">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10">
+          {/* Brand Column */}
+          <div className="lg:col-span-5 space-y-4">
+            <div className="flex items-center gap-3">
+              <picture className="shrink-0">
+                <source srcSet="/images/logo-emblem.webp" type="image/webp" />
+                <img
+                  src="/images/logo.jpg"
+                  alt="KhilatKari"
+                  className="w-11 h-11 rounded-full object-contain border border-[#C9A96E]/50 shadow-xs bg-[#FAF8F5]/90"
+                />
+              </picture>
+              <div className="flex flex-col">
+                <div className="flex items-baseline gap-2">
+                  <span
+                    className="text-xl sm:text-2xl font-semibold tracking-wide text-white"
+                    style={{ fontFamily: "var(--font-display)" }}
+                  >
+                    KhilatKari
+                  </span>
+                  <span className="font-urdu text-sm text-[#C9A96E]" title="خلعت کاری">
+                    خلعت کاری
+                  </span>
+                </div>
+                <span className="text-[0.62rem] tracking-[0.2em] uppercase text-[#C9A96E] font-medium">
+                  Heritage in Every Stitch
+                </span>
+              </div>
+            </div>
+
+            <p className="text-xs sm:text-sm text-[#9B8B7E] leading-relaxed max-w-sm">
               {BRAND.description}
             </p>
-            <div className="flex gap-4 mt-6">
+
+            {/* Direct Concierge Contact Links */}
+            <div className="pt-2 flex flex-wrap gap-x-6 gap-y-2 text-xs">
               <a
                 href={WHATSAPP_URL("Hello! I'd like to enquire about KhilatKari.")}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-sm text-[#C9A96E] hover:text-white transition-colors"
+                className="inline-flex items-center gap-1.5 text-[#C9A96E] hover:text-white transition-colors"
               >
-                <MessageCircle size={16} />
-                {BRAND.whatsappDisplay}
+                <MessageCircle size={15} className="text-[#25D366]" />
+                <span>WhatsApp: {BRAND.whatsappDisplay}</span>
+              </a>
+
+              <a
+                href={BRAND.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-[#C9A96E] hover:text-white transition-colors"
+              >
+                <InstagramIcon size={14} />
+                <span>{BRAND.instagramHandle}</span>
               </a>
             </div>
-            <a
-              href={BRAND.instagram}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 mt-3 text-sm text-[#C9A96E] hover:text-white transition-colors"
-            >
-              <InstagramIcon size={16} />
-              {BRAND.instagramHandle}
-            </a>
           </div>
 
-          {/* Navigation */}
-          <div>
-            <h3 className="text-xs font-medium tracking-[0.15em] uppercase text-[#9B8B7E] mb-5">
-              Navigate
+          {/* Navigation Column */}
+          <div className="lg:col-span-3">
+            <h3 className="text-xs font-semibold tracking-[0.16em] uppercase text-[#C9A96E] mb-3 md:mb-4">
+              Explore Lookbook
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-2.5 text-xs sm:text-sm">
               {NAV_LINKS.map((link) => (
                 <li key={link.href}>
                   <Link
                     to={link.href}
-                    className="text-sm text-[#C8BBA8] hover:text-white transition-colors"
+                    className="text-[#C8BBA8] hover:text-[#C9A96E] transition-colors inline-block py-0.5"
                   >
                     {link.label}
                   </Link>
@@ -64,39 +85,50 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Cities */}
-          <div>
-            <h3 className="text-xs font-medium tracking-[0.15em] uppercase text-[#9B8B7E] mb-5">
-              We Serve
-            </h3>
-            <ul className="space-y-3">
-              {CITIES.map((city) => (
-                <li key={city} className="flex items-center gap-2 text-sm text-[#C8BBA8]">
-                  <MapPin size={13} className="text-[#C9A96E]" />
-                  {city}
-                </li>
-              ))}
-            </ul>
+          {/* Consultations & Cities Column */}
+          <div className="lg:col-span-4 space-y-4">
+            <div>
+              <h3 className="text-xs font-semibold tracking-[0.16em] uppercase text-[#C9A96E] mb-3 md:mb-4">
+                Private In-Home Viewings
+              </h3>
+              <ul className="grid grid-cols-2 gap-2 text-xs sm:text-sm text-[#C8BBA8]">
+                {CITIES.map((city) => (
+                  <li key={city} className="flex items-center gap-1.5">
+                    <MapPin size={13} className="text-[#C9A96E] shrink-0" />
+                    <span>{city}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-            <div className="mt-8 p-4 border border-[#3A3028] bg-[#251F1A]">
+            <div className="p-3.5 bg-[#251F1A] border border-[#3A3028] rounded-xs space-y-2">
               <p className="text-xs text-[#9B8B7E] leading-relaxed">
-                <span className="text-[#C9A96E] font-medium">By appointment only.</span>
-                {" "}We operate exclusively through private appointments — not a walk-in store.
+                <strong className="text-[#C9A96E] font-medium">Exclusively by Appointment.</strong>{" "}
+                We bring our collection to your residence for private family viewings.
               </p>
+              <Link
+                to="/appointments"
+                className="inline-flex items-center gap-1.5 text-xs text-[#E8D5A8] hover:text-white transition-colors font-medium"
+              >
+                <Calendar size={13} />
+                <span>Schedule a Private Viewing →</span>
+              </Link>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Bottom bar */}
-      <div className="border-t border-[#3A3028]">
-        <div className="container-main py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-[#6B5B4E]">
+      {/* Bottom bar with distinct separator */}
+      <div className="border-t border-[#2E2721] bg-[#161310]">
+        <div className="container-main py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
+          <p className="text-[0.7rem] text-[#7A6B5E]">
             © {new Date().getFullYear()} KhilatKari. All rights reserved.
           </p>
-          <p className="text-xs text-[#6B5B4E]">
-            The Art of Timeless Craft · Exclusive Private Appointments
-          </p>
+          <div className="flex items-center gap-2 text-[0.7rem] text-[#7A6B5E]">
+            <span>Heritage in Every Stitch</span>
+            <span>&bull;</span>
+            <span className="font-urdu text-[0.75rem] text-[#C9A96E]">خلعت کاری</span>
+          </div>
         </div>
       </div>
     </footer>

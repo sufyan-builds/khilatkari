@@ -1,9 +1,24 @@
+export function optimizeCloudinaryUrl(url: string, maxWidth: number = 1200): string {
+  if (!url.includes("res.cloudinary.com") || !url.includes("/image/upload/")) {
+    return url;
+  }
+  // Avoid duplicating existing transformation parameters
+  if (
+    url.includes("/image/upload/f_") ||
+    url.includes("/image/upload/q_") ||
+    url.includes("/image/upload/w_")
+  ) {
+    return url;
+  }
+  return url.replace("/image/upload/", `/image/upload/f_auto,q_auto,w_${maxWidth}/`);
+}
+
 /**
  * Resolves static and uploaded media URLs properly across both
  * local development and production deployments.
  * Blocks dangerous schemes (javascript:, vbscript:, arbitrary data:).
  */
-export function getMediaUrl(src?: string): string {
+export function getMediaUrl(src?: string, maxWidth: number = 1200): string {
   if (!src) return "/images/placeholder.jpg";
   const trimmed = src.trim();
   const lower = trimmed.toLowerCase();
@@ -26,6 +41,9 @@ export function getMediaUrl(src?: string): string {
   }
 
   if (lower.startsWith("https://") || lower.startsWith("http://")) {
+    if (lower.includes("res.cloudinary.com") && lower.includes("/image/upload/")) {
+      return optimizeCloudinaryUrl(trimmed, maxWidth);
+    }
     return trimmed;
   }
 

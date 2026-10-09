@@ -24,6 +24,7 @@
   /* Fonts */
   --font-display: "Playfair Display", Georgia, serif;
   --font-body: "Inter", system-ui, sans-serif;
+  --font-urdu: "Noto Nastaliq Urdu", "Scheherazade New", "Traditional Arabic", serif;
 
   /* Spacing scale additions */
   --spacing-18: 4.5rem;
@@ -63,6 +64,12 @@ body {
 
 .font-display {
   font-family: var(--font-display);
+}
+
+.font-urdu {
+  font-family: var(--font-urdu);
+  direction: rtl;
+  unicode-bidi: embed;
 }
 
 .text-display-xl {

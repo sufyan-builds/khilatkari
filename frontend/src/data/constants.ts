@@ -5,7 +5,8 @@
 
 export const BRAND = {
   name: "KhilatKari",
-  tagline: "The Art of Timeless Craft",
+  urduName: "خلعت کاری",
+  tagline: "Heritage in Every Stitch",
   description:
     "KhilatKari celebrates the beauty of traditional South Asian craftsmanship through carefully handcrafted clothing and textiles. Our collections feature heritage techniques including Kamdani, Mukesh, Gota, intricate hand embroidery, and bespoke bridal wear.",
   whatsapp: "923148881856", // international format for WA links

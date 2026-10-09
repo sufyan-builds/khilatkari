@@ -1,4 +1,4 @@
-# KHILATKARI — The Art of Timeless Craft
+# KHILATKARI — Heritage in Every Stitch
 
 A full-stack, appointment-based luxury fashion web application built for **KhilatKari**.
 

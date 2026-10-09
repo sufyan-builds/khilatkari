@@ -622,7 +622,7 @@ export default function VisualsAdminPage() {
                     className="text-white text-lg md:text-xl font-medium mt-0.5 line-clamp-1"
                     style={{ fontFamily: "var(--font-display)" }}
                   >
-                    {currentItem.title || "The Art of Timeless Craft"}
+                    {currentItem.title || "Heritage in Every Stitch"}
                   </h3>
                   <p className="text-[#D4C8BC] text-xs line-clamp-1 mt-0.5">
                     {currentItem.subtitle || "Handcrafted pieces presented through private appointments."}

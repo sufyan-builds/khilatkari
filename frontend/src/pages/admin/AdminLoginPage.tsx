@@ -103,18 +103,29 @@ export default function AdminLoginPage() {
 
         {/* Brand Header */}
         <div className="text-center mb-8">
-          <img
-            src="/images/logo.jpg"
-            alt="KhilatKari"
-            className="w-16 h-16 rounded-full object-contain mx-auto mb-4 border border-[#C9A96E]/50 shadow-md p-0.5 bg-white"
-          />
-          <h1
-            className="text-2xl font-semibold text-[#1C1814] tracking-wide"
-            style={{ fontFamily: "var(--font-display)" }}
-          >
-            KhilatKari
-          </h1>
-          <p className="text-[0.65rem] tracking-[0.25em] uppercase text-[#9B8B7E] mt-1 font-medium">
+          <picture className="mx-auto mb-4 block">
+            <source srcSet="/images/logo-emblem.webp" type="image/webp" />
+            <img
+              src="/images/logo.jpg"
+              alt="KhilatKari"
+              className="w-16 h-16 rounded-full object-contain mx-auto border border-[#C9A96E]/50 shadow-md p-0.5 bg-[#FAF8F5]"
+            />
+          </picture>
+          <div className="flex items-center justify-center gap-2">
+            <h1
+              className="text-2xl font-semibold text-[#1C1814] tracking-wide"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
+              KhilatKari
+            </h1>
+            <span className="font-urdu text-base text-[#C9A96E]" title="خلعت کاری">
+              خلعت کاری
+            </span>
+          </div>
+          <p className="text-[0.62rem] tracking-[0.2em] uppercase text-[#C9A96E] mt-1 font-medium">
+            Heritage in Every Stitch
+          </p>
+          <p className="text-[0.6rem] tracking-[0.2em] uppercase text-[#9B8B7E] mt-0.5 font-medium">
             Management Portal
           </p>
         </div>

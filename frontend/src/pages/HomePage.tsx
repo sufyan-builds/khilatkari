@@ -9,34 +9,92 @@ import { getMediaUrl, sanitizeLinkUrl } from "../utils/media";
 import type { Product, Category } from "../types";
 import ProductCard from "../components/product/ProductCard";
 
+const INITIAL_HOMEPAGE_CONTENT: HomepageContentConfig = {
+  heroSlides: [
+    {
+      id: "hero-init-1",
+      mediaType: "image",
+      imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/f_auto,q_auto,w_1400/v1791391518/ms_fashions/screenshot_20251105_170619_instagram-cf5020c01f.jpg",
+      zoom: 1.0,
+      posX: 51.0,
+      posY: 32.0,
+      title: "Handcrafted Luxury",
+      subtitle: "Bespoke traditional wear tailored for private viewings.",
+    },
+    {
+      id: "hero-init-2",
+      mediaType: "image",
+      imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/f_auto,q_auto,w_1400/v1791391824/ms_fashions/whatsapp-image-2026-09-15-at-4-36-30-pm-0ef4664601.jpg",
+      zoom: 1.0,
+      posX: 49.0,
+      posY: 26.0,
+      title: "Heritage in Every Stitch",
+      subtitle: "Bespoke traditional wear tailored for private viewings.",
+    },
+    {
+      id: "hero-init-3",
+      mediaType: "image",
+      imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/f_auto,q_auto,w_1400/v1791391875/ms_fashions/whatsapp-image-2026-09-16-at-10-21-11-pm-166e1d17c7.jpg",
+      zoom: 1.0,
+      posX: 13.0,
+      posY: 8.0,
+      title: "Timeless Artistry",
+      subtitle: "Bespoke traditional wear tailored for private viewings.",
+    },
+  ],
+  experienceImage: {
+    id: "exp-init",
+    mediaType: "image",
+    imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/f_auto,q_auto,w_1000/v1791391829/ms_fashions/whatsapp-image-2026-09-15-at-4-36-31-pm--322253409e.jpg",
+    zoom: 1.0,
+    posX: 50.0,
+    posY: 33.0,
+    title: "The Private Viewing Experience",
+  },
+  galleryStrip: [
+    { id: "gal-1", imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/f_auto,q_auto,w_600/v1791391579/ms_fashions/screenshot_20260719_141645_instagram-f7a18b75f2.jpg", zoom: 1.0, posX: 53.0, posY: 42.0 },
+    { id: "gal-2", imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/f_auto,q_auto,w_600/v1791391554/ms_fashions/screenshot_20251105_171122_instagram-f828f56279.jpg", zoom: 1.0, posX: 50.0, posY: 20.0 },
+    { id: "gal-3", imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/f_auto,q_auto,w_600/v1791391879/ms_fashions/whatsapp-image-2026-09-16-at-10-21-12-pm-21017d0257.jpg", zoom: 1.0, posX: 49.0, posY: 40.0 },
+    { id: "gal-4", imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/f_auto,q_auto,w_600/v1791391548/ms_fashions/screenshot_20251105_170746_instagram-e0b502e398.jpg", zoom: 1.0, posX: 50.0, posY: 20.0 },
+    { id: "gal-5", imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/f_auto,q_auto,w_600/v1791391877/ms_fashions/whatsapp-image-2026-09-16-at-10-21-11-pm-f93ff7366b.jpg", zoom: 1.0, posX: 50.0, posY: 20.0 },
+  ],
+};
+
+const INITIAL_CATEGORIES: Category[] = [
+  { id: "cat-1", name: "Chikankari", slug: "chikankari", coverImage: "/images/models/model-1.jpg", homepageDescription: "Pure hand-shadow and Murri work on delicate chiffon", featuredOnHomepage: true, homepageOrder: 1, displayOrder: 1, isActive: true },
+  { id: "cat-2", name: "Kamdani & Mukesh", slug: "kamdani", coverImage: "/images/models/model-2.jpg", homepageDescription: "Pure silver and gold wire hand-embedded into heritage fabrics", featuredOnHomepage: true, homepageOrder: 2, displayOrder: 2, isActive: true },
+  { id: "cat-3", name: "Bridal Wear", slug: "bridal-wear", coverImage: "/images/models/model-3.jpg", homepageDescription: "Bespoke bridal heirlooms created for private viewings", featuredOnHomepage: true, homepageOrder: 3, displayOrder: 3, isActive: true },
+  { id: "cat-4", name: "Kashmiri Shawls", slug: "kashmiri-shawls", coverImage: "/images/models/model-4.jpg", homepageDescription: "Exquisite fine wool and Sozni hand embroidery", featuredOnHomepage: true, homepageOrder: 4, displayOrder: 4, isActive: true },
+  { id: "cat-5", name: "Gota Craft", slug: "traditional-wear", coverImage: "/images/models/model-5.jpg", homepageDescription: "Traditional ribbon and floral embellishment", featuredOnHomepage: true, homepageOrder: 5, displayOrder: 5, isActive: true },
+];
+
 export default function HomePage() {
   const [heroIdx, setHeroIdx] = useState(0);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
 
-  // Homepage CMS Content state
-  const [homepageContent, setHomepageContent] = useState<HomepageContentConfig | null>(null);
-  const [loadingContent, setLoadingContent] = useState(true);
-  const [contentError, setContentError] = useState(false);
+  // Homepage CMS Content state — starts with instant pre-rendered data for immediate FCP
+  const [homepageContent, setHomepageContent] = useState<HomepageContentConfig | null>(INITIAL_HOMEPAGE_CONTENT);
+  const [loadingContent, setLoadingContent] = useState(false);
 
-  // Homepage Featured Categories state
-  const [homepageCategories, setHomepageCategories] = useState<Category[]>([]);
-  const [loadingCategories, setLoadingCategories] = useState(true);
+  // Homepage Featured Categories state — initialized with defaults for instant display
+  const [homepageCategories, setHomepageCategories] = useState<Category[]>(INITIAL_CATEGORIES);
+  const [loadingCategories, setLoadingCategories] = useState(false);
   const [categoriesError, setCategoriesError] = useState(false);
 
-  // Fetch dynamic visual positioning settings from backend
+  // Fetch dynamic visual positioning settings from backend in background
   useEffect(() => {
     homepageService
       .getPublic()
       .then((res) => {
         if (res.success && res.data) {
           setHomepageContent(res.data);
-        } else {
-          setContentError(true);
         }
       })
       .catch(() => {
-        setContentError(true);
+        // Keeps graceful fallback without breaking layout
       })
       .finally(() => {
         setLoadingContent(false);
@@ -46,21 +104,19 @@ export default function HomePage() {
     categoriesService
       .getHomepage()
       .then((res) => {
-        if (res.success && res.data) {
+        if (res.success && res.data && res.data.length > 0) {
           setHomepageCategories(res.data);
-        } else {
-          setCategoriesError(true);
         }
       })
       .catch(() => {
-        setCategoriesError(true);
+        setCategoriesError(false);
       })
       .finally(() => {
         setLoadingCategories(false);
       });
   }, []);
 
-  // Filter hero slides to only those with configured visual media (no obsolete model defaults)
+  // Filter hero slides to only those with configured visual media
   const rawHeroSlides = homepageContent?.heroSlides || [];
   const validHeroSlides = rawHeroSlides.filter(
     (slide) => Boolean(slide.imageUrl?.trim() || slide.videoUrl?.trim())
@@ -71,11 +127,31 @@ export default function HomePage() {
     if (validHeroSlides.length <= 1) return;
     const timer = setInterval(() => {
       setHeroIdx((i) => (i + 1) % validHeroSlides.length);
-    }, 5500);
+    }, 6000);
     return () => clearInterval(timer);
   }, [validHeroSlides.length]);
 
   const safeHeroIdx = validHeroSlides.length > 0 ? heroIdx % validHeroSlides.length : 0;
+
+  // Touch swipe gesture handlers for mobile
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    if (distance > 45 && validHeroSlides.length > 1) {
+      // Swiped left -> next slide
+      setHeroIdx((i) => (i + 1) % validHeroSlides.length);
+    } else if (distance < -45 && validHeroSlides.length > 1) {
+      // Swiped right -> prev slide
+      setHeroIdx((i) => (i - 1 + validHeroSlides.length) % validHeroSlides.length);
+    }
+  };
 
   // Fetch featured products
   useEffect(() => {
@@ -92,120 +168,50 @@ export default function HomePage() {
     <div>
       {/* ── HERO ─────────────────────────────────── */}
       {(() => {
-        // 1. Loading / Skeleton state
-        if (loadingContent) {
-          return (
-            <section className="relative h-[90vh] min-h-[600px] overflow-hidden bg-[#1C1814] flex items-center" id="hero">
-              <div className="container-main max-w-2xl animate-pulse space-y-6">
-                <div className="h-4 w-28 bg-[#C9A96E]/30 rounded-xs" />
-                <div className="h-12 w-3/4 bg-white/10 rounded-xs" />
-                <div className="h-12 w-1/2 bg-white/10 rounded-xs" />
-                <div className="h-4 w-full max-w-lg bg-white/5 rounded-xs" />
-                <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                  <div className="h-12 w-48 bg-[#C9A96E]/20 rounded-xs" />
-                  <div className="h-12 w-44 bg-white/10 rounded-xs" />
-                </div>
-              </div>
-            </section>
-          );
-        }
-
-        // 2. Error Fallback state (Never promotional model images)
-        if (contentError) {
-          return (
-            <section className="relative h-[90vh] min-h-[600px] overflow-hidden bg-[#1C1814] flex items-center" id="hero">
-              <div className="absolute inset-0 bg-gradient-to-b from-[#1C1814] via-[#2A231C]/60 to-[#1C1814]" />
-              <div className="relative z-10 container-main flex flex-col justify-center">
-                <div className="max-w-2xl">
-                  <p className="section-label text-[#C9A96E] mb-4 tracking-[0.25em]">KHILATKARI</p>
-                  <h1
-                    className="text-display-xl text-white mb-4 leading-tight"
-                    style={{ fontFamily: "var(--font-display)" }}
-                  >
-                    The Art of
-                    <span className="block italic font-normal text-[#E8D5A8]"> Timeless Craft.</span>
-                  </h1>
-                  <p className="text-[#D4C8BC] text-base md:text-lg leading-relaxed mb-6 max-w-lg">
-                    KhilatKari celebrates the beauty of traditional South Asian craftsmanship through carefully handcrafted clothing and textiles — Kamdani, Mukesh, Gota, and bridal wear — experienced through private in-home appointments.
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <Link to="/appointments" className="btn-gold">
-                      Book a Private Appointment <ArrowRight size={16} />
-                    </Link>
-                    <Link to="/collections" className="btn-outline border-white text-white hover:bg-white hover:text-[#1C1814]">
-                      Explore the Collection
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </section>
-          );
-        }
-
-        // 3. Empty / Placeholder state (No visual configured by Admin)
-        if (validHeroSlides.length === 0) {
-          return (
-            <section className="relative h-[90vh] min-h-[600px] overflow-hidden bg-gradient-to-b from-[#1C1814] via-[#251E18] to-[#1C1814] flex items-center" id="hero">
-              <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#C9A96E_1px,transparent_1px)] [background-size:24px_24px]" />
-              <div className="relative z-10 container-main flex flex-col justify-center">
-                <div className="max-w-2xl">
-                  <p className="section-label text-[#C9A96E] mb-4 tracking-[0.25em]">KHILATKARI</p>
-                  <h1
-                    className="text-display-xl text-white mb-4 leading-tight"
-                    style={{ fontFamily: "var(--font-display)" }}
-                  >
-                    The Art of
-                    <span className="block italic font-normal text-[#E8D5A8]"> Timeless Craft.</span>
-                  </h1>
-                  <p className="text-[#D4C8BC] text-base md:text-lg leading-relaxed mb-10 max-w-lg">
-                    KhilatKari celebrates the beauty of traditional South Asian craftsmanship through carefully handcrafted clothing and textiles — Kamdani, Mukesh, Gota, and bridal wear — experienced through private in-home appointments.
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <Link to="/appointments" className="btn-gold">
-                      Book a Private Appointment <ArrowRight size={16} />
-                    </Link>
-                    <Link to="/collections" className="btn-outline border-white text-white hover:bg-white hover:text-[#1C1814]">
-                      Explore the Collection
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </section>
-          );
-        }
-
-        // 4. Configured Admin Visuals
         const activeSlide = validHeroSlides[safeHeroIdx] || validHeroSlides[0];
 
         return (
-          <section className="relative h-[90vh] min-h-[600px] overflow-hidden" id="hero">
+          <section
+            className="relative h-[68vh] sm:h-[75vh] md:h-[82vh] min-h-[460px] sm:min-h-[500px] md:min-h-[560px] max-h-[740px] overflow-hidden"
+            id="hero"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
             {/* Background images or videos */}
             {validHeroSlides.map((slide, i) => (
               <div
                 key={slide.id || slide.imageUrl || i}
-                className={`absolute inset-0 transition-opacity duration-1000 ${i === safeHeroIdx ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+                className={`absolute inset-0 transition-opacity duration-1000 ${
+                  i === safeHeroIdx ? "opacity-100" : "opacity-0 pointer-events-none"
+                }`}
               >
                 {slide.mediaType === "video" && slide.videoUrl ? (
-                  <video
-                    src={getMediaUrl(slide.videoUrl)}
-                    poster={slide.posterUrl ? getMediaUrl(slide.posterUrl) : undefined}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    preload="metadata"
-                    style={{
-                      objectFit: "cover",
-                      objectPosition: `${slide.posX ?? 50}% ${slide.posY ?? 15}%`,
-                      transform: `scale(${slide.zoom ?? 1.0})`,
-                      transformOrigin: `${slide.posX ?? 50}% ${slide.posY ?? 15}%`,
-                    }}
-                    className="w-full h-full"
-                  />
+                  i === safeHeroIdx ? (
+                    <video
+                      src={getMediaUrl(slide.videoUrl)}
+                      poster={slide.posterUrl ? getMediaUrl(slide.posterUrl) : undefined}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                      style={{
+                        objectFit: "cover",
+                        objectPosition: `${slide.posX ?? 50}% ${slide.posY ?? 15}%`,
+                        transform: `scale(${slide.zoom ?? 1.0})`,
+                        transformOrigin: `${slide.posX ?? 50}% ${slide.posY ?? 15}%`,
+                      }}
+                      className="w-full h-full"
+                    />
+                  ) : null
                 ) : (
                   <img
-                    src={getMediaUrl(slide.imageUrl)}
+                    src={getMediaUrl(slide.imageUrl, 1400)}
                     alt={slide.title || "KhilatKari luxury handcrafted collection"}
+                    loading={i === 0 ? "eager" : "lazy"}
+                    fetchPriority={i === 0 ? "high" : "auto"}
+                    decoding="async"
                     style={{
                       objectFit: "cover",
                       objectPosition: `${slide.posX ?? 50}% ${slide.posY ?? 15}%`,
@@ -219,33 +225,54 @@ export default function HomePage() {
             ))}
 
             {/* Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#1C1814]/80 via-[#1C1814]/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#1C1814]/85 via-[#1C1814]/45 to-transparent" />
 
             {/* Content */}
-            <div className="relative z-10 h-full container-main flex flex-col justify-center">
+            <div className="relative z-10 h-full container-main flex flex-col justify-center pt-6 pb-12 sm:py-0">
               <div className="max-w-2xl">
-                <p className="section-label text-[#C9A96E] mb-4 tracking-[0.25em]">KHILATKARI</p>
+                <div className="flex items-center gap-2 mb-2 sm:mb-3">
+                  <p className="section-label text-[#C9A96E] tracking-[0.25em] text-[0.68rem] sm:text-xs">
+                    KHILATKARI
+                  </p>
+                  <span className="text-[#C9A96E]/50 text-xs">&bull;</span>
+                  <span
+                    className="font-urdu text-sm sm:text-base text-[#E8D5A8] tracking-normal select-none"
+                    title="خلعت کاری"
+                  >
+                    خلعت کاری
+                  </span>
+                </div>
+
                 <h1
-                  className="text-display-xl text-white mb-4 leading-tight"
+                  className="text-display-lg sm:text-display-xl text-white mb-2.5 sm:mb-4 leading-tight"
                   style={{ fontFamily: "var(--font-display)" }}
                 >
                   {activeSlide?.title ? (
                     activeSlide.title
                   ) : (
                     <>
-                      The Art of
-                      <span className="block italic font-normal text-[#E8D5A8]"> Timeless Craft.</span>
+                      Heritage in
+                      <span className="block italic font-normal text-[#E8D5A8]"> Every Stitch.</span>
                     </>
                   )}
                 </h1>
-                <p className="text-[#D4C8BC] text-base md:text-lg leading-relaxed mb-10 max-w-lg">
-                  {activeSlide?.subtitle || "Handcrafted South Asian traditional wear — Chikankari, Kamdani, Bridal & more — presented through an exclusive private appointment experience in Lahore, Islamabad, Rawalpindi, and Peshawar."}
+
+                <p className="text-[#D4C8BC] text-xs sm:text-base md:text-lg leading-relaxed mb-6 sm:mb-8 max-w-lg line-clamp-3 sm:line-clamp-none">
+                  {activeSlide?.subtitle ||
+                    "Handcrafted South Asian traditional wear — Chikankari, Kamdani, Bridal & more — presented through an exclusive private appointment experience in Lahore, Islamabad, Rawalpindi, and Peshawar."}
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Link to="/appointments" className="btn-gold">
-                    Book a Private Appointment <ArrowRight size={16} />
+
+                <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-4">
+                  <Link
+                    to="/appointments"
+                    className="btn-gold py-2.5 sm:py-3.5 px-5 sm:px-6 text-xs sm:text-sm"
+                  >
+                    Book a Private Appointment <ArrowRight size={15} />
                   </Link>
-                  <Link to="/collections" className="btn-outline border-white text-white hover:bg-white hover:text-[#1C1814]">
+                  <Link
+                    to="/collections"
+                    className="btn-outline border-white text-white hover:bg-white hover:text-[#1C1814] py-2.5 sm:py-3.5 px-5 sm:px-6 text-xs sm:text-sm"
+                  >
                     Explore the Collection
                   </Link>
                 </div>
@@ -254,12 +281,14 @@ export default function HomePage() {
 
             {/* Slide indicators */}
             {validHeroSlides.length > 1 && (
-              <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+              <div className="absolute bottom-5 sm:bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-10">
                 {validHeroSlides.map((_, i) => (
                   <button
                     key={i}
                     onClick={() => setHeroIdx(i)}
-                    className={`h-0.5 transition-all duration-300 ${i === safeHeroIdx ? "w-8 bg-[#C9A96E]" : "w-4 bg-white/40"}`}
+                    className={`h-1 sm:h-0.5 transition-all duration-300 rounded-full ${
+                      i === safeHeroIdx ? "w-7 sm:w-8 bg-[#C9A96E]" : "w-3 sm:w-4 bg-white/40"
+                    }`}
                     aria-label={`Slide ${i + 1}`}
                   />
                 ))}

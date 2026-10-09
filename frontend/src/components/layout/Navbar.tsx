@@ -40,29 +40,40 @@ export default function Navbar() {
         }`}
       >
         <div className="container-main">
-          <div className="flex items-center justify-between h-16 md:h-20">
-            {/* Logo */}
-            <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group">
-              <img
-                src="/images/logo.jpg"
-                alt="KhilatKari"
-                className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full object-contain shrink-0 shadow-xs border border-[#C9A96E]/40 group-hover:border-[#C9A96E] transition-colors"
-              />
-              <div className="flex flex-col items-start">
-                <span
-                  className="font-display text-lg sm:text-xl md:text-2xl font-semibold tracking-wide text-[#1C1814] leading-tight"
-                  style={{ fontFamily: "var(--font-display)" }}
-                >
-                  KhilatKari
-                </span>
-                <span className="text-[0.55rem] sm:text-[0.6rem] tracking-[0.2em] uppercase text-[#C9A96E] hidden sm:block font-medium">
-                  The Art of Timeless Craft
+          <div className="flex items-center justify-between h-16 md:h-20 gap-2">
+            {/* Logo & Brand */}
+            <Link to="/" className="flex items-center gap-2 sm:gap-3 group shrink min-w-0">
+              <picture className="shrink-0">
+                <source srcSet="/images/logo-emblem.webp" type="image/webp" />
+                <img
+                  src="/images/logo.jpg"
+                  alt="KhilatKari"
+                  className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full object-contain shrink-0 shadow-xs border border-[#C9A96E]/40 group-hover:border-[#C9A96E] transition-colors bg-[#FDFBF7]"
+                />
+              </picture>
+              <div className="flex flex-col items-start min-w-0">
+                <div className="flex items-baseline gap-1.5 min-w-0">
+                  <span
+                    className="font-display text-base sm:text-xl md:text-2xl font-semibold tracking-wide text-[#1C1814] leading-tight truncate"
+                    style={{ fontFamily: "var(--font-display)" }}
+                  >
+                    KhilatKari
+                  </span>
+                  <span
+                    className="font-urdu text-[0.7rem] sm:text-xs text-[#C9A96E] leading-none select-none hidden min-[400px]:inline"
+                    title="خلعت کاری"
+                  >
+                    خلعت کاری
+                  </span>
+                </div>
+                <span className="text-[0.52rem] sm:text-[0.58rem] tracking-[0.18em] uppercase text-[#C9A96E] hidden sm:block font-medium truncate">
+                  Heritage in Every Stitch
                 </span>
               </div>
             </Link>
 
             {/* Desktop Nav */}
-            <nav className="hidden lg:flex items-center gap-8">
+            <nav className="hidden lg:flex items-center gap-8 shrink-0">
               {NAV_LINKS.map((link) => (
                 <NavLink
                   key={link.href}
@@ -81,7 +92,8 @@ export default function Navbar() {
             </nav>
 
             {/* Right actions */}
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-1.5 sm:gap-2.5 md:gap-3 shrink-0">
+              {/* Instagram on Desktop */}
               <a
                 href={BRAND.instagram}
                 target="_blank"
@@ -91,33 +103,45 @@ export default function Navbar() {
               >
                 <InstagramIcon size={18} />
               </a>
-              <a
-                href={WHATSAPP_URL("Hello! I'd like to enquire about KhilatKari.")}
-                target="_blank"
-                rel="noopener noreferrer"
+
+              {/* Mobile compact appointment button */}
+              <Link
+                to="/appointments"
+                className="md:hidden inline-flex items-center justify-center h-8 px-2.5 sm:px-3 text-[0.68rem] tracking-[0.08em] uppercase font-medium bg-[#1C1814] text-[#FAF8F5] border border-[#1C1814] hover:bg-[#C9A96E] hover:border-[#C9A96E] transition-all rounded-xs shrink-0 whitespace-nowrap shadow-xs"
+                aria-label="Book Appointment"
+              >
+                <span className="hidden min-[360px]:inline">Book Appointment</span>
+                <span className="inline min-[360px]:hidden">Book</span>
+              </Link>
+
+              {/* Desktop full appointment button */}
+              <Link
+                to="/appointments"
                 className="hidden md:flex btn-primary btn-sm"
-                aria-label="WhatsApp"
+                aria-label="Book Appointment"
               >
                 Book Appointment
-              </a>
+              </Link>
+
               {/* Quick WhatsApp icon for mobile */}
               <a
                 href={WHATSAPP_URL("Hello! I'd like to enquire about KhilatKari.")}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="md:hidden flex items-center justify-center w-9 h-9 text-[#25D366] hover:text-[#1C1814] transition-colors"
+                className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 text-[#25D366] hover:text-[#1C1814] transition-colors shrink-0"
                 aria-label="WhatsApp Concierge"
               >
-                <MessageCircle size={20} />
+                <MessageCircle size={19} />
               </a>
+
               {/* Mobile menu toggle */}
               <button
                 id="mobile-menu-toggle"
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="lg:hidden p-2 text-[#1C1814] min-w-[40px] min-h-[40px] flex items-center justify-center cursor-pointer"
+                className="lg:hidden w-8 h-8 sm:w-9 sm:h-9 text-[#1C1814] flex items-center justify-center cursor-pointer shrink-0"
                 aria-label="Toggle menu"
               >
-                {menuOpen ? <X size={24} /> : <Menu size={24} />}
+                {menuOpen ? <X size={22} /> : <Menu size={22} />}
               </button>
             </div>
           </div>
@@ -181,11 +205,17 @@ export default function Navbar() {
             </div>
           </div>
 
-          <div className="pt-6 border-t border-[#E0D8CE] text-center">
-            <p className="text-[0.65rem] tracking-[0.2em] uppercase text-[#C9A96E] font-medium mb-1">
-              KhilatKari
+          <div className="pt-6 border-t border-[#E0D8CE] text-center space-y-1">
+            <div className="flex items-center justify-center gap-2">
+              <span className="text-[0.7rem] tracking-[0.2em] uppercase text-[#C9A96E] font-medium">
+                KhilatKari
+              </span>
+              <span className="font-urdu text-xs text-[#C9A96E]">خلعت کاری</span>
+            </div>
+            <p className="text-[0.65rem] tracking-[0.15em] uppercase text-[#9B8B7E]">
+              Heritage in Every Stitch
             </p>
-            <p className="text-xs text-[#9B8B7E]">
+            <p className="text-[0.72rem] text-[#9B8B7E]">
               Private Consultations across Lahore, Islamabad, Rawalpindi &amp; Peshawar
             </p>
           </div>
