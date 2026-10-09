@@ -108,14 +108,13 @@ export default function Navbar() {
                 <InstagramIcon size={18} />
               </a>
 
-              {/* Single Appointment CTA (Responsive for Mobile & Desktop) */}
+              {/* Desktop Appointment CTA (Hidden on mobile devices, visible on laptop/desktop) */}
               <Link
                 to="/appointments"
-                className="inline-flex items-center justify-center h-8 md:h-9 px-2.5 sm:px-3.5 md:px-5 text-[0.68rem] md:text-xs tracking-[0.08em] md:tracking-[0.1em] font-medium uppercase bg-[#1C1814] text-[#FAF8F5] border border-[#1C1814] hover:bg-[#C9A96E] hover:border-[#C9A96E] transition-all rounded-xs shrink-0 whitespace-nowrap shadow-xs"
+                className="hidden lg:inline-flex items-center justify-center h-9 px-5 text-xs tracking-[0.1em] font-medium uppercase bg-[#1C1814] text-[#FAF8F5] border border-[#1C1814] hover:bg-[#C9A96E] hover:border-[#C9A96E] transition-all rounded-xs shrink-0 whitespace-nowrap shadow-xs"
                 aria-label="Book Appointment"
               >
-                <span className="hidden sm:inline">Book Appointment</span>
-                <span className="inline sm:hidden">Book</span>
+                Book Appointment
               </Link>
 
               {/* Quick WhatsApp icon for concierge */}
