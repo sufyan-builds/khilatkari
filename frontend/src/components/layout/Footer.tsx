@@ -12,13 +12,13 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="lg:col-span-5 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 shrink-0 flex items-center justify-center">
+              <div className="w-12 h-12 shrink-0 rounded-full overflow-hidden border border-[#C9A96E]/50 shadow-xs flex items-center justify-center bg-[#FAF8F5]">
                 <picture className="w-full h-full flex items-center justify-center">
-                  <source srcSet="/images/logo.webp" type="image/webp" />
+                  <source srcSet="/images/logo-circle.webp" type="image/webp" />
                   <img
-                    src="/images/logo.jpg"
+                    src="/images/logo-circle.png"
                     alt="KhilatKari"
-                    className="w-full h-full object-contain object-center"
+                    className="w-full h-full object-cover object-center"
                     width="1024"
                     height="1024"
                   />

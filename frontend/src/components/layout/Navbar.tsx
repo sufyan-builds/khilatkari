@@ -43,13 +43,13 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-16 md:h-20 gap-2">
             {/* Logo & Brand */}
             <Link to="/" className="flex items-center gap-2 sm:gap-3 group shrink min-w-0">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 shrink-0 flex items-center justify-center">
+              <div className="w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 shrink-0 rounded-full overflow-hidden border border-[#C9A96E]/50 shadow-xs flex items-center justify-center bg-[#FAF8F5]">
                 <picture className="w-full h-full flex items-center justify-center">
-                  <source srcSet="/images/logo.webp" type="image/webp" />
+                  <source srcSet="/images/logo-circle.webp" type="image/webp" />
                   <img
-                    src="/images/logo.jpg"
+                    src="/images/logo-circle.png"
                     alt="KhilatKari"
-                    className="w-full h-full object-contain object-center transition-transform duration-300 group-hover:scale-105"
+                    className="w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
                     width="1024"
                     height="1024"
                   />

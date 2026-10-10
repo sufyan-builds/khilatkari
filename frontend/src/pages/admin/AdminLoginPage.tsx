@@ -103,13 +103,13 @@ export default function AdminLoginPage() {
 
         {/* Brand Header */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full overflow-hidden border border-[#C9A96E]/50 shadow-md flex items-center justify-center bg-[#FAF8F5]">
             <picture className="w-full h-full flex items-center justify-center">
-              <source srcSet="/images/logo.webp" type="image/webp" />
+              <source srcSet="/images/logo-circle.webp" type="image/webp" />
               <img
-                src="/images/logo.jpg"
+                src="/images/logo-circle.png"
                 alt="KhilatKari"
-                className="w-full h-full object-contain object-center"
+                className="w-full h-full object-cover object-center"
                 width="1024"
                 height="1024"
               />

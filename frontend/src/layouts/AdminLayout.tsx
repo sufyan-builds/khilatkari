@@ -52,13 +52,13 @@ export default function AdminLayout() {
           {/* Brand */}
           <div className="mb-10 pb-6 border-b border-[#3A3028]">
             <Link to="/admin" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 shrink-0 flex items-center justify-center">
+              <div className="w-10 h-10 shrink-0 rounded-full overflow-hidden border border-[#C9A96E]/50 shadow-xs flex items-center justify-center bg-[#FAF8F5]">
                 <picture className="w-full h-full flex items-center justify-center">
-                  <source srcSet="/images/logo.webp" type="image/webp" />
+                  <source srcSet="/images/logo-circle.webp" type="image/webp" />
                   <img
-                    src="/images/logo.jpg"
+                    src="/images/logo-circle.png"
                     alt="KhilatKari"
-                    className="w-full h-full object-contain object-center"
+                    className="w-full h-full object-cover object-center"
                     width="1024"
                     height="1024"
                   />
@@ -129,11 +129,11 @@ export default function AdminLayout() {
             <div>
               <div className="flex items-center justify-between mb-8 pb-4 border-b border-[#3A3028]">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 shrink-0 flex items-center justify-center">
+                  <div className="w-8 h-8 shrink-0 rounded-full overflow-hidden border border-[#C9A96E]/50 shadow-xs flex items-center justify-center bg-[#FAF8F5]">
                     <img
-                      src="/images/logo.jpg"
+                      src="/images/logo-circle.png"
                       alt="KhilatKari"
-                      className="w-full h-full object-contain object-center"
+                      className="w-full h-full object-cover object-center"
                       width="1024"
                       height="1024"
                     />
@@ -187,11 +187,11 @@ export default function AdminLayout() {
             <Menu size={22} />
           </button>
           <div className="hidden lg:flex items-center gap-2.5 text-xs uppercase tracking-widest text-[#9B8B7E] font-medium">
-            <div className="w-6 h-6 shrink-0 flex items-center justify-center">
+            <div className="w-6 h-6 shrink-0 rounded-full overflow-hidden border border-[#C9A96E]/40 flex items-center justify-center bg-[#FAF8F5]">
               <img
-                src="/images/logo.jpg"
+                src="/images/logo-circle.png"
                 alt="KhilatKari"
-                className="w-full h-full object-contain object-center"
+                className="w-full h-full object-cover object-center"
                 width="1024"
                 height="1024"
               />
