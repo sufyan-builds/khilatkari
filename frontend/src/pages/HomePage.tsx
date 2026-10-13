@@ -12,9 +12,9 @@ import ProductCard from "../components/product/ProductCard";
 const INITIAL_HOMEPAGE_CONTENT: HomepageContentConfig = {
   heroSlides: [
     {
-      id: "hero-init-1",
+      id: "hero-1789649398460",
       mediaType: "image",
-      imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/f_auto,q_auto,w_1400/v1791391518/ms_fashions/screenshot_20251105_170619_instagram-cf5020c01f.jpg",
+      imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/v1791391518/ms_fashions/screenshot_20251105_170619_instagram-cf5020c01f.jpg",
       zoom: 1.0,
       posX: 51.0,
       posY: 32.0,
@@ -22,65 +22,237 @@ const INITIAL_HOMEPAGE_CONTENT: HomepageContentConfig = {
       subtitle: "Bespoke traditional wear tailored for private viewings.",
     },
     {
-      id: "hero-init-2",
+      id: "hero-1789712848753",
       mediaType: "image",
-      imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/f_auto,q_auto,w_1400/v1791391824/ms_fashions/whatsapp-image-2026-09-15-at-4-36-30-pm-0ef4664601.jpg",
+      imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/v1791391824/ms_fashions/whatsapp-image-2026-09-15-at-4-36-30-pm-0ef4664601.jpg",
       zoom: 1.0,
       posX: 49.0,
       posY: 26.0,
-      title: "Heritage in Every Stitch",
+      title: "Handcrafted Luxury",
       subtitle: "Bespoke traditional wear tailored for private viewings.",
     },
     {
-      id: "hero-init-3",
+      id: "hero-1789712878469",
       mediaType: "image",
-      imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/f_auto,q_auto,w_1400/v1791391875/ms_fashions/whatsapp-image-2026-09-16-at-10-21-11-pm-166e1d17c7.jpg",
+      imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/v1791391875/ms_fashions/whatsapp-image-2026-09-16-at-10-21-11-pm-166e1d17c7.jpg",
       zoom: 1.0,
       posX: 13.0,
       posY: 8.0,
-      title: "Timeless Artistry",
+      title: "Handcrafted Luxury",
+      subtitle: "Bespoke traditional wear tailored for private viewings.",
+    },
+    {
+      id: "hero-1789712921393",
+      mediaType: "image",
+      imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/v1791391506/ms_fashions/img-20251116-wa0018-7b960ab263.jpg",
+      zoom: 1.0,
+      posX: 50.0,
+      posY: 41.0,
+      title: "Handcrafted Luxury",
+      subtitle: "Bespoke traditional wear tailored for private viewings.",
+    },
+    {
+      id: "hero-1789712934249",
+      mediaType: "image",
+      imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/v1791391598/ms_fashions/screenshot_20260719_141656_instagram-94ed529f31.jpg",
+      zoom: 1.0,
+      posX: 46.0,
+      posY: 33.0,
+      title: "Handcrafted Luxury",
+      subtitle: "Bespoke traditional wear tailored for private viewings.",
+    },
+    {
+      id: "hero-1789712953593",
+      mediaType: "video",
+      imageUrl: "",
+      videoUrl: "https://res.cloudinary.com/iv29blwq/video/upload/v1791391696/ms_fashions/ssstik-io_1785751034820--1-fac8907bf7.mp4",
+      zoom: 1.0,
+      posX: 25.0,
+      posY: 21.0,
+      title: "Handcrafted Luxury",
       subtitle: "Bespoke traditional wear tailored for private viewings.",
     },
   ],
   experienceImage: {
-    id: "exp-init",
+    id: "exp-1",
     mediaType: "image",
-    imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/f_auto,q_auto,w_1000/v1791391829/ms_fashions/whatsapp-image-2026-09-15-at-4-36-31-pm--322253409e.jpg",
+    imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/v1791391829/ms_fashions/whatsapp-image-2026-09-15-at-4-36-31-pm--322253409e.jpg",
     zoom: 1.0,
     posX: 50.0,
     posY: 33.0,
     title: "The Private Viewing Experience",
   },
   galleryStrip: [
-    { id: "gal-1", imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/f_auto,q_auto,w_600/v1791391579/ms_fashions/screenshot_20260719_141645_instagram-f7a18b75f2.jpg", zoom: 1.0, posX: 53.0, posY: 42.0 },
-    { id: "gal-2", imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/f_auto,q_auto,w_600/v1791391554/ms_fashions/screenshot_20251105_171122_instagram-f828f56279.jpg", zoom: 1.0, posX: 50.0, posY: 20.0 },
-    { id: "gal-3", imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/f_auto,q_auto,w_600/v1791391879/ms_fashions/whatsapp-image-2026-09-16-at-10-21-12-pm-21017d0257.jpg", zoom: 1.0, posX: 49.0, posY: 40.0 },
-    { id: "gal-4", imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/f_auto,q_auto,w_600/v1791391548/ms_fashions/screenshot_20251105_170746_instagram-e0b502e398.jpg", zoom: 1.0, posX: 50.0, posY: 20.0 },
-    { id: "gal-5", imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/f_auto,q_auto,w_600/v1791391877/ms_fashions/whatsapp-image-2026-09-16-at-10-21-11-pm-f93ff7366b.jpg", zoom: 1.0, posX: 50.0, posY: 20.0 },
+    {
+      id: "gallery-1789732793005",
+      imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/v1791391579/ms_fashions/screenshot_20260719_141645_instagram-f7a18b75f2.jpg",
+      zoom: 1.0,
+      posX: 53.0,
+      posY: 42.0,
+    },
+    {
+      id: "gallery-1789732826548",
+      imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/v1791391554/ms_fashions/screenshot_20251105_171122_instagram-f828f56279.jpg",
+      zoom: 1.0,
+      posX: 50.0,
+      posY: 20.0,
+    },
+    {
+      id: "gallery-1789732846203",
+      imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/v1791391879/ms_fashions/whatsapp-image-2026-09-16-at-10-21-12-pm-21017d0257.jpg",
+      zoom: 1.0,
+      posX: 49.0,
+      posY: 40.0,
+    },
+    {
+      id: "gallery-1789732946421",
+      imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/v1791391548/ms_fashions/screenshot_20251105_170746_instagram-e0b502e398.jpg",
+      zoom: 1.0,
+      posX: 50.0,
+      posY: 20.0,
+    },
+    {
+      id: "gallery-1789732984183",
+      imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/v1791391877/ms_fashions/whatsapp-image-2026-09-16-at-10-21-11-pm-f93ff7366b.jpg",
+      zoom: 1.0,
+      posX: 50.0,
+      posY: 20.0,
+    },
   ],
+  statementSection: {
+    backgroundImage: {
+      id: "stmt-bg",
+      mediaType: "image",
+      imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/v1791391888/ms_fashions/whatsapp-image-2026-09-16-at-10-21-12-pm-76fdca365d.jpg",
+      zoom: 1.0,
+      posX: 50.0,
+      posY: 9.0,
+    },
+    headlineMain: "Discover Your Next",
+    headlineItalic: "Statement Piece.",
+    bodyText: "Request a private appointment to experience our hand-crafted bridal, Chikankari, and luxury formal collections in the comfort of your own home.",
+    button1Text: "Book a Private Appointment",
+    button1Link: "/appointments",
+    button2Text: "Chat on WhatsApp",
+    button2Link: "",
+  },
+  aboutPage: {
+    heroHeadlineMain: "A Celebration of Authentic",
+    heroHeadlineItalic: "South Asian Heritage",
+    heroIntroText: "KhilatKari was born out of a profound admiration for the timeless artistry of South Asian handcrafts, reimagined for the contemporary woman through an exclusive in-home experience.",
+  },
 };
 
 const INITIAL_CATEGORIES: Category[] = [
-  { id: "cat-1", name: "Chikankari", slug: "chikankari", coverImage: "/images/models/model-1.jpg", homepageDescription: "Pure hand-shadow and Murri work on delicate chiffon", featuredOnHomepage: true, homepageOrder: 1, displayOrder: 1, isActive: true },
-  { id: "cat-2", name: "Kamdani & Mukesh", slug: "kamdani", coverImage: "/images/models/model-2.jpg", homepageDescription: "Pure silver and gold wire hand-embedded into heritage fabrics", featuredOnHomepage: true, homepageOrder: 2, displayOrder: 2, isActive: true },
-  { id: "cat-3", name: "Bridal Wear", slug: "bridal-wear", coverImage: "/images/models/model-3.jpg", homepageDescription: "Bespoke bridal heirlooms created for private viewings", featuredOnHomepage: true, homepageOrder: 3, displayOrder: 3, isActive: true },
-  { id: "cat-4", name: "Kashmiri Shawls", slug: "kashmiri-shawls", coverImage: "/images/models/model-4.jpg", homepageDescription: "Exquisite fine wool and Sozni hand embroidery", featuredOnHomepage: true, homepageOrder: 4, displayOrder: 4, isActive: true },
-  { id: "cat-5", name: "Gota Craft", slug: "traditional-wear", coverImage: "/images/models/model-5.jpg", homepageDescription: "Traditional ribbon and floral embellishment", featuredOnHomepage: true, homepageOrder: 5, displayOrder: 5, isActive: true },
+  {
+    id: "cat-kamdani",
+    name: "Kamdani",
+    slug: "kamdani",
+    coverImage: "/images/models/model-4.jpg",
+    description: "Shimmering metal thread work",
+    homepageDescription: "Shimmering metal thread work",
+    imagePosition: { zoom: 1.0, posX: 50.0, posY: 25.0 },
+    featuredOnHomepage: true,
+    homepageOrder: 2,
+    displayOrder: 2,
+    isActive: true,
+  },
+  {
+    id: "cat-gota-mukesh",
+    name: "Gota & Mukesh",
+    slug: "gota-mukesh",
+    coverImage: "/images/models/model-6.jpg",
+    description: "Ornate gold ribbon embellishment",
+    homepageDescription: "Ornate gold ribbon embellishment",
+    imagePosition: { zoom: 1.0, posX: 50.0, posY: 0.0 },
+    featuredOnHomepage: true,
+    homepageOrder: 3,
+    displayOrder: 3,
+    isActive: true,
+  },
+  {
+    id: "cat-bridal-wear",
+    name: "Bridal Wear",
+    slug: "bridal-wear",
+    coverImage: "/images/models/model-9.jpg",
+    description: "Bespoke bridal ensembles",
+    homepageDescription: "Bespoke bridal ensembles",
+    imagePosition: { zoom: 1.0, posX: 50.0, posY: 0.0 },
+    featuredOnHomepage: true,
+    homepageOrder: 5,
+    displayOrder: 5,
+    isActive: true,
+  },
 ];
+
+const STORAGE_KEY_CONTENT = "khilatkari_cached_homepage_content";
+const STORAGE_KEY_CATEGORIES = "khilatkari_cached_homepage_categories";
+const STORAGE_KEY_PRODUCTS = "khilatkari_cached_featured_products";
+
+function getCachedInitialContent(): HomepageContentConfig {
+  if (typeof window !== "undefined") {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY_CONTENT);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed && Array.isArray(parsed.heroSlides) && parsed.heroSlides.length > 0) {
+          return parsed;
+        }
+      }
+    } catch {
+      // Ignore storage read errors
+    }
+  }
+  return INITIAL_HOMEPAGE_CONTENT;
+}
+
+function getCachedInitialCategories(): Category[] {
+  if (typeof window !== "undefined") {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY_CATEGORIES);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch {
+      // Ignore storage read errors
+    }
+  }
+  return INITIAL_CATEGORIES;
+}
+
+function getCachedInitialProducts(): Product[] {
+  if (typeof window !== "undefined") {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY_PRODUCTS);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch {
+      // Ignore storage read errors
+    }
+  }
+  return [];
+}
 
 export default function HomePage() {
   const [heroIdx, setHeroIdx] = useState(0);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
-  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
-  const [loadingProducts, setLoadingProducts] = useState(true);
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>(getCachedInitialProducts);
+  const [loadingProducts, setLoadingProducts] = useState(() => getCachedInitialProducts().length === 0);
 
-  // Homepage CMS Content state — starts with instant pre-rendered data for immediate FCP
-  const [homepageContent, setHomepageContent] = useState<HomepageContentConfig | null>(INITIAL_HOMEPAGE_CONTENT);
+  // Homepage CMS Content state — starts with synchronized production data & cache for zero layout shift
+  const [homepageContent, setHomepageContent] = useState<HomepageContentConfig | null>(getCachedInitialContent);
   const [loadingContent, setLoadingContent] = useState(false);
 
-  // Homepage Featured Categories state — initialized with defaults for instant display
-  const [homepageCategories, setHomepageCategories] = useState<Category[]>(INITIAL_CATEGORIES);
+  // Homepage Featured Categories state — initialized with active categories for consistent display
+  const [homepageCategories, setHomepageCategories] = useState<Category[]>(getCachedInitialCategories);
   const [loadingCategories, setLoadingCategories] = useState(false);
   const [categoriesError, setCategoriesError] = useState(false);
 
@@ -89,8 +261,15 @@ export default function HomePage() {
     homepageService
       .getPublic()
       .then((res) => {
-        if (res.success && res.data) {
-          setHomepageContent(res.data);
+        const newData = res.data;
+        if (res.success && newData) {
+          setHomepageContent((prev) => {
+            if (JSON.stringify(prev) === JSON.stringify(newData)) return prev;
+            try {
+              localStorage.setItem(STORAGE_KEY_CONTENT, JSON.stringify(newData));
+            } catch {}
+            return newData;
+          });
         }
       })
       .catch(() => {
@@ -104,8 +283,15 @@ export default function HomePage() {
     categoriesService
       .getHomepage()
       .then((res) => {
-        if (res.success && res.data && res.data.length > 0) {
-          setHomepageCategories(res.data);
+        const newCats = res.data;
+        if (res.success && newCats && newCats.length > 0) {
+          setHomepageCategories((prev) => {
+            if (JSON.stringify(prev) === JSON.stringify(newCats)) return prev;
+            try {
+              localStorage.setItem(STORAGE_KEY_CATEGORIES, JSON.stringify(newCats));
+            } catch {}
+            return newCats;
+          });
         }
       })
       .catch(() => {
@@ -158,7 +344,16 @@ export default function HomePage() {
     productsService
       .getAll({ featured: true, limit: 6 })
       .then((res) => {
-        if (res.success && res.data) setFeaturedProducts(res.data.products);
+        const newProducts = res.data?.products;
+        if (res.success && newProducts) {
+          setFeaturedProducts((prev) => {
+            if (JSON.stringify(prev) === JSON.stringify(newProducts)) return prev;
+            try {
+              localStorage.setItem(STORAGE_KEY_PRODUCTS, JSON.stringify(newProducts));
+            } catch {}
+            return newProducts;
+          });
+        }
       })
       .catch(() => {})
       .finally(() => setLoadingProducts(false));

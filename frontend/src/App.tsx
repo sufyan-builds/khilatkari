@@ -1,22 +1,25 @@
 import { useEffect } from "react";
 import { BrowserRouter, Routes, Route, useLocation, Link } from "react-router-dom";
 import PublicLayout from "./layouts/PublicLayout";
+import { lazy, Suspense } from "react";
 import HomePage from "./pages/HomePage";
-import CollectionsPage from "./pages/CollectionsPage";
-import ProductDetailPage from "./pages/ProductDetailPage";
-import AppointmentPage from "./pages/AppointmentPage";
-import AboutPage from "./pages/AboutPage";
-import ContactPage from "./pages/ContactPage";
 
-// Admin imports
-import AdminLayout from "./layouts/AdminLayout";
-import AdminLoginPage from "./pages/admin/AdminLoginPage";
-import DashboardPage from "./pages/admin/DashboardPage";
-import ProductsAdminPage from "./pages/admin/ProductsAdminPage";
-import AddEditProductPage from "./pages/admin/AddEditProductPage";
-import AppointmentsAdminPage from "./pages/admin/AppointmentsAdminPage";
-import VisualsAdminPage from "./pages/admin/VisualsAdminPage";
-import CategoriesAdminPage from "./pages/admin/CategoriesAdminPage";
+// Lazy-loaded public pages
+const CollectionsPage = lazy(() => import("./pages/CollectionsPage"));
+const ProductDetailPage = lazy(() => import("./pages/ProductDetailPage"));
+const AppointmentPage = lazy(() => import("./pages/AppointmentPage"));
+const AboutPage = lazy(() => import("./pages/AboutPage"));
+const ContactPage = lazy(() => import("./pages/ContactPage"));
+
+// Lazy-loaded Admin imports
+const AdminLayout = lazy(() => import("./layouts/AdminLayout"));
+const AdminLoginPage = lazy(() => import("./pages/admin/AdminLoginPage"));
+const DashboardPage = lazy(() => import("./pages/admin/DashboardPage"));
+const ProductsAdminPage = lazy(() => import("./pages/admin/ProductsAdminPage"));
+const AddEditProductPage = lazy(() => import("./pages/admin/AddEditProductPage"));
+const AppointmentsAdminPage = lazy(() => import("./pages/admin/AppointmentsAdminPage"));
+const VisualsAdminPage = lazy(() => import("./pages/admin/VisualsAdminPage"));
+const CategoriesAdminPage = lazy(() => import("./pages/admin/CategoriesAdminPage"));
 
 // Scroll to top helper on navigation
 function ScrollToTop() {
@@ -55,32 +58,40 @@ export default function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <Routes>
-        {/* Public Storefront Routes */}
-        <Route element={<PublicLayout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/collections" element={<CollectionsPage />} />
-          <Route path="/products/:slug" element={<ProductDetailPage />} />
-          <Route path="/appointments" element={<AppointmentPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Route>
+      <Suspense
+        fallback={
+          <div className="min-h-[60vh] flex items-center justify-center bg-[#FAF8F5]">
+            <div className="w-7 h-7 rounded-full border-2 border-[#C9A96E] border-t-transparent animate-spin" />
+          </div>
+        }
+      >
+        <Routes>
+          {/* Public Storefront Routes */}
+          <Route element={<PublicLayout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/collections" element={<CollectionsPage />} />
+            <Route path="/products/:slug" element={<ProductDetailPage />} />
+            <Route path="/appointments" element={<AppointmentPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Route>
 
-        {/* Admin Login */}
-        <Route path="/admin/login" element={<AdminLoginPage />} />
+          {/* Admin Login */}
+          <Route path="/admin/login" element={<AdminLoginPage />} />
 
-        {/* Protected Admin Routes */}
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<DashboardPage />} />
-          <Route path="visuals" element={<VisualsAdminPage />} />
-          <Route path="categories" element={<CategoriesAdminPage />} />
-          <Route path="products" element={<ProductsAdminPage />} />
-          <Route path="products/new" element={<AddEditProductPage />} />
-          <Route path="products/:id/edit" element={<AddEditProductPage />} />
-          <Route path="appointments" element={<AppointmentsAdminPage />} />
-        </Route>
-      </Routes>
+          {/* Protected Admin Routes */}
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<DashboardPage />} />
+            <Route path="visuals" element={<VisualsAdminPage />} />
+            <Route path="categories" element={<CategoriesAdminPage />} />
+            <Route path="products" element={<ProductsAdminPage />} />
+            <Route path="products/new" element={<AddEditProductPage />} />
+            <Route path="products/:id/edit" element={<AddEditProductPage />} />
+            <Route path="appointments" element={<AppointmentsAdminPage />} />
+          </Route>
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }
