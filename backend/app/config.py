@@ -12,9 +12,9 @@ class Settings(BaseSettings):
     frontend_url: str = "http://localhost:5173,https://ms-fashion-closet.vercel.app"
     environment: str = "development"
     tls_allow_invalid_certs: bool = False
-    cloudinary_cloud_name: str = ""
-    cloudinary_api_key: str = ""
-    cloudinary_api_secret: str = ""
+    cloudinary_cloud_name: str = "iv29blwq"
+    cloudinary_api_key: str = "432749377965394"
+    cloudinary_api_secret: str = "6RvhNOiCsm2ZyDyn58h1RlkwA5U"
 
     class Config:
         env_file = ".env"

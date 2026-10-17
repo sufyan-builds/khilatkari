@@ -31,28 +31,7 @@ import { categoriesService } from "../../services/categories";
 import { productsService } from "../../services/products";
 import type { Category, ImageFramingConfig } from "../../types";
 import { getMediaUrl } from "../../utils/media";
-
-// Pre-packaged model photoshoot images for quick luxury selection
-const CATALOG_IMAGES = [
-  "/images/models/model-1.jpg",
-  "/images/models/model-2.jpg",
-  "/images/models/model-3.jpg",
-  "/images/models/model-4.jpg",
-  "/images/models/model-5.jpg",
-  "/images/models/model-6.jpg",
-  "/images/models/model-7.jpg",
-  "/images/models/model-8.jpg",
-  "/images/models/model-9.jpg",
-  "/images/models/model-10.jpg",
-  "/images/models/model-11.jpg",
-  "/images/models/model-12.jpg",
-  "/images/models/model-13.jpg",
-  "/images/models/model-14.jpg",
-  "/images/models/model-15.jpg",
-  "/images/models/model-16.jpg",
-  "/images/models/model-17.jpg",
-  "/images/models/model-18.jpg",
-];
+import { MODEL_CATALOG } from "../../data/models";
 
 export default function CategoriesAdminPage() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -976,24 +955,41 @@ export default function CategoriesAdminPage() {
                 <X size={16} />
               </button>
             </div>
+            <p className="text-xs text-[#6B5B4E]">
+              Select any of the {MODEL_CATALOG.length} high-resolution photoshoot models to use as the luxury cover.
+            </p>
             <div className="grid grid-cols-4 sm:grid-cols-6 gap-2.5 max-h-80 overflow-y-auto p-1">
-              {CATALOG_IMAGES.map((img) => (
-                <button
-                  key={img}
-                  type="button"
-                  onClick={() => {
-                    setFormCoverImage(img);
-                    setShowCatalogModal(false);
-                  }}
-                  className={`aspect-[3/4] overflow-hidden border-2 transition-all ${
-                    formCoverImage === img
-                      ? "border-[#C9A96E] ring-2 ring-[#C9A96E]/30"
-                      : "border-transparent hover:border-[#1C1814]"
-                  }`}
-                >
-                  <img src={img} alt="Catalog choice" className="w-full h-full object-cover" />
-                </button>
-              ))}
+              {MODEL_CATALOG.map((model) => {
+                const isSelected =
+                  formCoverImage === model.cloudinaryUrl ||
+                  formCoverImage === model.localUrl;
+                return (
+                  <button
+                    key={model.id}
+                    type="button"
+                    onClick={() => {
+                      setFormCoverImage(model.cloudinaryUrl);
+                      setShowCatalogModal(false);
+                    }}
+                    className={`relative aspect-[3/4] overflow-hidden border-2 transition-all cursor-pointer ${
+                      isSelected
+                        ? "border-[#C9A96E] ring-2 ring-[#C9A96E]/30"
+                        : "border-transparent hover:border-[#1C1814]"
+                    }`}
+                    title={`Model #${model.number} (${model.cleanStem})`}
+                  >
+                    <img
+                      src={getMediaUrl(model.cloudinaryUrl || model.localUrl)}
+                      alt={`Model ${model.number}`}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                    <span className="absolute bottom-1 right-1 bg-black/75 text-white text-[0.6rem] px-1 rounded-xs">
+                      #{model.number}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
             <div className="text-right pt-2 border-t border-[#E0D8CE]">
               <button

@@ -6,8 +6,7 @@ import { productsService } from "../../services/products";
 import { categoriesService } from "../../services/categories";
 import type { Product, PriceDisplayMode, ProductAvailability } from "../../types";
 import { getMediaUrl } from "../../utils/media";
-
-const AVAILABLE_MODEL_IMAGES = Array.from({ length: 18 }, (_, i) => `/images/models/model-${i + 1}.jpg`);
+import { MODEL_CATALOG } from "../../data/models";
 
 export default function AddEditProductPage() {
   const { id } = useParams<{ id: string }>();
@@ -17,6 +16,7 @@ export default function AddEditProductPage() {
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(isEdit);
   const [error, setError] = useState("");
+  const [showCatalogModal, setShowCatalogModal] = useState(false);
   const [availableCategories, setAvailableCategories] = useState<string[]>(
     CATEGORIES.filter((c) => c !== "All")
   );
@@ -850,25 +850,37 @@ export default function AddEditProductPage() {
 
               {/* Quick-Pick Model Photos from Products Folder */}
               <div className="bg-[#FAF8F5] border border-[#E0D8CE] p-3 rounded-xs">
-                <span className="text-[0.65rem] uppercase tracking-wider text-[#6B5B4E] font-semibold block mb-1.5">
-                  Quick-Pick Model Photos (Existing Catalog):
-                </span>
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-[0.65rem] uppercase tracking-wider text-[#6B5B4E] font-semibold">
+                    Photoshoot Models ({MODEL_CATALOG.length}):
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setShowCatalogModal(true)}
+                    className="text-[0.65rem] text-[#C9A96E] hover:text-[#1C1814] font-medium underline flex items-center gap-1 cursor-pointer"
+                  >
+                    <ImagePlus size={11} /> Browse All ({MODEL_CATALOG.length})
+                  </button>
+                </div>
                 <div className="flex flex-wrap gap-1 max-h-20 overflow-y-auto pr-1">
-                  {AVAILABLE_MODEL_IMAGES.map((img) => {
-                    const isAttached = form.images.includes(img);
+                  {MODEL_CATALOG.map((model) => {
+                    const isAttached =
+                      form.images.includes(model.cloudinaryUrl) ||
+                      form.images.includes(model.localUrl);
                     return (
                       <button
                         type="button"
-                        key={img}
-                        onClick={() => (isAttached ? null : handleAddImage(img))}
+                        key={model.id}
+                        onClick={() => (isAttached ? null : handleAddImage(model.cloudinaryUrl))}
                         disabled={isAttached}
                         className={`text-[0.65rem] px-2 py-0.5 border rounded-xs transition-colors ${
                           isAttached
                             ? "bg-gray-200 text-gray-400 border-gray-300 cursor-not-allowed"
                             : "bg-white text-[#1C1814] border-[#E0D8CE] hover:border-[#C9A96E] cursor-pointer"
                         }`}
+                        title={`Model #${model.number} (${model.cleanStem})`}
                       >
-                        + {img.replace("/images/models/", "")}
+                        + #{model.number}
                       </button>
                     );
                   })}
@@ -1155,6 +1167,68 @@ export default function AddEditProductPage() {
           </div>
         </form>
       </div>
+
+      {/* Model Photoshoot Catalog Quick Picker Modal */}
+      {showCatalogModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+          <div className="bg-white max-w-2xl w-full p-6 rounded-xs shadow-xl space-y-4 max-h-[85vh] flex flex-col">
+            <div className="flex items-center justify-between border-b border-[#E0D8CE] pb-3">
+              <h3 className="text-base font-semibold text-[#1C1814]" style={{ fontFamily: "var(--font-display)" }}>
+                Choose Model Photos for Piece
+              </h3>
+              <button onClick={() => setShowCatalogModal(false)} className="text-[#6B5B4E] hover:text-[#1C1814] text-lg font-bold cursor-pointer">
+                ✕
+              </button>
+            </div>
+            <p className="text-xs text-[#6B5B4E]">
+              Click any of the {MODEL_CATALOG.length} boutique photoshoot models to attach to this piece.
+            </p>
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 overflow-y-auto flex-1 p-1">
+              {MODEL_CATALOG.map((model) => {
+                const isAttached =
+                  form.images.includes(model.cloudinaryUrl) ||
+                  form.images.includes(model.localUrl);
+                return (
+                  <button
+                    key={model.id}
+                    type="button"
+                    onClick={() => {
+                      if (!isAttached) {
+                        handleAddImage(model.cloudinaryUrl);
+                      }
+                    }}
+                    className={`relative aspect-[3/4] border rounded-xs overflow-hidden group hover:border-[#C9A96E] transition-all cursor-pointer ${
+                      isAttached ? "ring-2 ring-emerald-500 border-emerald-500 opacity-80" : "border-[#E0D8CE]"
+                    }`}
+                    title={`Model #${model.number} (${model.cleanStem})`}
+                  >
+                    <img
+                      src={getMediaUrl(model.cloudinaryUrl || model.localUrl)}
+                      alt={`Model ${model.number}`}
+                      className="w-full h-full object-cover object-top"
+                      loading="lazy"
+                    />
+                    <span className={`absolute bottom-1 right-1 text-[0.6rem] px-1 rounded-xs font-semibold ${
+                      isAttached ? "bg-emerald-600 text-white" : "bg-black/75 text-white"
+                    }`}>
+                      #{model.number} {isAttached ? "✓" : ""}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+            <div className="flex justify-end pt-2 border-t border-[#E0D8CE]">
+              <button
+                type="button"
+                onClick={() => setShowCatalogModal(false)}
+                className="btn-primary text-xs px-4 py-2 cursor-pointer"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -26,28 +26,7 @@ import { homepageService, type HomepageContentConfig, type ImagePositionConfig }
 import { productsService } from "../../services/products";
 import { getMediaUrl } from "../../utils/media";
 import { StatementCTAPanel, AboutPagePanel, CollectionsPagePanel } from "./CmsPanels";
-
-// Pre-packaged model photoshoot images for quick selection
-const CATALOG_IMAGES = [
-  "/images/models/model-1.jpg",
-  "/images/models/model-2.jpg",
-  "/images/models/model-3.jpg",
-  "/images/models/model-4.jpg",
-  "/images/models/model-5.jpg",
-  "/images/models/model-6.jpg",
-  "/images/models/model-7.jpg",
-  "/images/models/model-8.jpg",
-  "/images/models/model-9.jpg",
-  "/images/models/model-10.jpg",
-  "/images/models/model-11.jpg",
-  "/images/models/model-12.jpg",
-  "/images/models/model-13.jpg",
-  "/images/models/model-14.jpg",
-  "/images/models/model-15.jpg",
-  "/images/models/model-16.jpg",
-  "/images/models/model-17.jpg",
-  "/images/models/model-18.jpg",
-];
+import { MODEL_CATALOG } from "../../data/models";
 
 export default function VisualsAdminPage() {
   const [content, setContent] = useState<HomepageContentConfig | null>(null);
@@ -202,48 +181,39 @@ export default function VisualsAdminPage() {
     setToast(null);
     try {
       const urls = await productsService.adminUpload(list);
-      if (urls.length > 0) {
-        // Update local state synchronously so handleSave picks up the new URL
-        let updatedContent: typeof content = null;
-        setContent((prev) => {
-          if (!prev) return prev;
-          const copy = { ...prev };
-          if (activeTab === "hero") {
-            const slides = [...copy.heroSlides];
-            const current = slides[activeSlideIdx] || slides[0];
-            if (current) {
-              slides[activeSlideIdx] = { ...current, imageUrl: urls[0] };
-              copy.heroSlides = slides;
-            }
-          } else if (activeTab === "experience") {
-            copy.experienceImage = { ...copy.experienceImage, imageUrl: urls[0] };
-          } else if (activeTab === "gallery") {
-            const strip = [...copy.galleryStrip];
-            const current = strip[activeSlideIdx] || strip[0];
-            if (current) {
-              strip[activeSlideIdx] = { ...current, imageUrl: urls[0] };
-              copy.galleryStrip = strip;
-            }
+      if (urls.length > 0 && content) {
+        const copy: HomepageContentConfig = JSON.parse(JSON.stringify(content));
+        if (activeTab === "hero") {
+          const slides = [...copy.heroSlides];
+          const current = slides[activeSlideIdx] || slides[0];
+          if (current) {
+            slides[activeSlideIdx] = { ...current, imageUrl: urls[0], mediaType: "image" };
+            copy.heroSlides = slides;
           }
-          updatedContent = copy;
-          return copy;
-        });
-        // Auto-save to MongoDB so the Cloudinary URL is persisted immediately
-        if (updatedContent) {
-          setSaving(true);
-          try {
-            const res = await homepageService.update(updatedContent);
-            if (res.success && res.data) {
-              setContent(res.data);
-              setToast({ type: "success", text: "Image uploaded and saved successfully!" });
-            } else {
-              setToast({ type: "error", text: "Image uploaded but could not be saved. Please click Save Changes." });
-            }
-          } catch {
-            setToast({ type: "error", text: "Image uploaded but save failed. Please click Save Changes to retry." });
-          } finally {
-            setSaving(false);
+        } else if (activeTab === "experience") {
+          copy.experienceImage = { ...copy.experienceImage, imageUrl: urls[0], mediaType: "image" };
+        } else if (activeTab === "gallery") {
+          const strip = [...copy.galleryStrip];
+          const current = strip[activeSlideIdx] || strip[0];
+          if (current) {
+            strip[activeSlideIdx] = { ...current, imageUrl: urls[0], mediaType: "image" };
+            copy.galleryStrip = strip;
           }
+        }
+        setContent(copy);
+        setSaving(true);
+        try {
+          const res = await homepageService.update(copy);
+          if (res.success && res.data) {
+            setContent(res.data);
+            setToast({ type: "success", text: "Image uploaded to cloud and persisted successfully!" });
+          } else {
+            setToast({ type: "error", text: "Image uploaded but could not be saved. Please click Save Changes." });
+          }
+        } catch {
+          setToast({ type: "error", text: "Image uploaded but save failed. Please click Save Changes to retry." });
+        } finally {
+          setSaving(false);
         }
       }
     } catch (err: any) {
@@ -261,48 +231,39 @@ export default function VisualsAdminPage() {
     setToast(null);
     try {
       const urls = await productsService.adminUpload(list);
-      if (urls.length > 0) {
-        // Update local state synchronously so handleSave picks up the new URL
-        let updatedContent: typeof content = null;
-        setContent((prev) => {
-          if (!prev) return prev;
-          const copy = { ...prev };
-          if (activeTab === "hero") {
-            const slides = [...copy.heroSlides];
-            const current = slides[activeSlideIdx] || slides[0];
-            if (current) {
-              slides[activeSlideIdx] = { ...current, mediaType: "video", videoUrl: urls[0] };
-              copy.heroSlides = slides;
-            }
-          } else if (activeTab === "experience") {
-            copy.experienceImage = { ...copy.experienceImage, mediaType: "video", videoUrl: urls[0] };
-          } else if (activeTab === "gallery") {
-            const strip = [...copy.galleryStrip];
-            const current = strip[activeSlideIdx] || strip[0];
-            if (current) {
-              strip[activeSlideIdx] = { ...current, mediaType: "video", videoUrl: urls[0] };
-              copy.galleryStrip = strip;
-            }
+      if (urls.length > 0 && content) {
+        const copy: HomepageContentConfig = JSON.parse(JSON.stringify(content));
+        if (activeTab === "hero") {
+          const slides = [...copy.heroSlides];
+          const current = slides[activeSlideIdx] || slides[0];
+          if (current) {
+            slides[activeSlideIdx] = { ...current, mediaType: "video", videoUrl: urls[0] };
+            copy.heroSlides = slides;
           }
-          updatedContent = copy;
-          return copy;
-        });
-        // Auto-save to MongoDB so the Cloudinary URL is persisted immediately
-        if (updatedContent) {
-          setSaving(true);
-          try {
-            const res = await homepageService.update(updatedContent);
-            if (res.success && res.data) {
-              setContent(res.data);
-              setToast({ type: "success", text: "Video uploaded and saved successfully!" });
-            } else {
-              setToast({ type: "error", text: "Video uploaded but could not be saved. Please click Save Changes." });
-            }
-          } catch {
-            setToast({ type: "error", text: "Video uploaded but save failed. Please click Save Changes to retry." });
-          } finally {
-            setSaving(false);
+        } else if (activeTab === "experience") {
+          copy.experienceImage = { ...copy.experienceImage, mediaType: "video", videoUrl: urls[0] };
+        } else if (activeTab === "gallery") {
+          const strip = [...copy.galleryStrip];
+          const current = strip[activeSlideIdx] || strip[0];
+          if (current) {
+            strip[activeSlideIdx] = { ...current, mediaType: "video", videoUrl: urls[0] };
+            copy.galleryStrip = strip;
           }
+        }
+        setContent(copy);
+        setSaving(true);
+        try {
+          const res = await homepageService.update(copy);
+          if (res.success && res.data) {
+            setContent(res.data);
+            setToast({ type: "success", text: "Video uploaded to cloud and persisted successfully!" });
+          } else {
+            setToast({ type: "error", text: "Video uploaded but could not be saved. Please click Save Changes." });
+          }
+        } catch {
+          setToast({ type: "error", text: "Video uploaded but save failed. Please click Save Changes to retry." });
+        } finally {
+          setSaving(false);
         }
       }
     } catch (err: any) {
@@ -313,12 +274,42 @@ export default function VisualsAdminPage() {
     }
   };
 
-  const handleSelectCatalogImage = (url: string) => {
-    updateActiveItem((item) => ({
-      ...item,
-      imageUrl: url,
-    }));
+  const handleSelectCatalogImage = async (url: string) => {
     setShowCatalogModal(false);
+    if (!content) return;
+    const copy: HomepageContentConfig = JSON.parse(JSON.stringify(content));
+    if (activeTab === "hero") {
+      const slides = [...copy.heroSlides];
+      const current = slides[activeSlideIdx] || slides[0];
+      if (current) {
+        slides[activeSlideIdx] = { ...current, imageUrl: url, mediaType: "image" };
+        copy.heroSlides = slides;
+      }
+    } else if (activeTab === "experience") {
+      copy.experienceImage = { ...copy.experienceImage, imageUrl: url, mediaType: "image" };
+    } else if (activeTab === "gallery") {
+      const strip = [...copy.galleryStrip];
+      const current = strip[activeSlideIdx] || strip[0];
+      if (current) {
+        strip[activeSlideIdx] = { ...current, imageUrl: url, mediaType: "image" };
+        copy.galleryStrip = strip;
+      }
+    }
+    setContent(copy);
+    setSaving(true);
+    try {
+      const res = await homepageService.update(copy);
+      if (res.success && res.data) {
+        setContent(res.data);
+        setToast({ type: "success", text: "Model photoshoot selected and persisted successfully!" });
+      } else {
+        setToast({ type: "error", text: "Model selected. Please click Save Changes to confirm." });
+      }
+    } catch {
+      setToast({ type: "error", text: "Model selected. Please click Save Changes to confirm." });
+    } finally {
+      setSaving(false);
+    }
   };
 
   // Hero Slide management
@@ -1188,12 +1179,12 @@ export default function VisualsAdminPage() {
 
       {/* ── STATEMENT CTA TAB ─────────────────────────────────────────── */}
       {activeTab === "statement" && content && (
-        <StatementCTAPanel content={content} setContent={setContent} uploading={uploading} setUploading={setUploading} setToast={setToast} CATALOG_IMAGES={CATALOG_IMAGES} />
+        <StatementCTAPanel content={content} setContent={setContent} uploading={uploading} setUploading={setUploading} setToast={setToast} />
       )}
 
       {/* ── ABOUT PAGE TAB ──────────────────────────────────────────────── */}
       {activeTab === "about" && content && (
-        <AboutPagePanel content={content} setContent={setContent} uploading={uploading} setUploading={setUploading} setToast={setToast} CATALOG_IMAGES={CATALOG_IMAGES} />
+        <AboutPagePanel content={content} setContent={setContent} uploading={uploading} setUploading={setUploading} setToast={setToast} />
       )}
 
       {/* ── COLLECTIONS PAGE TAB ──────────────────────────────────────── */}
@@ -1220,28 +1211,35 @@ export default function VisualsAdminPage() {
               </button>
             </div>
             <p className="text-xs text-[#6B5B4E]">
-              Select any of the 18 high-resolution boutique photoshoot models to use for this section.
+              Select any of the {MODEL_CATALOG.length} high-resolution boutique photoshoot models to use for this section.
             </p>
             <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 overflow-y-auto p-1 flex-1">
-              {CATALOG_IMAGES.map((imgUrl, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => handleSelectCatalogImage(imgUrl)}
-                  className={`relative aspect-[3/4] border rounded-xs overflow-hidden group hover:border-[#C9A96E] hover:shadow-md transition-all cursor-pointer ${
-                    currentItem?.imageUrl === imgUrl ? "ring-2 ring-[#C9A96E] border-[#C9A96E]" : "border-[#E0D8CE]"
-                  }`}
-                >
-                  <img
-                    src={imgUrl}
-                    alt={`Model ${i + 1}`}
-                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform"
-                  />
-                  <span className="absolute bottom-1 right-1 bg-black/70 text-white text-[0.6rem] px-1 rounded-xs">
-                    #{i + 1}
-                  </span>
-                </button>
-              ))}
+              {MODEL_CATALOG.map((model) => {
+                const isSelected =
+                  currentItem?.imageUrl === model.cloudinaryUrl ||
+                  currentItem?.imageUrl === model.localUrl;
+                return (
+                  <button
+                    key={model.id}
+                    type="button"
+                    onClick={() => handleSelectCatalogImage(model.cloudinaryUrl)}
+                    className={`relative aspect-[3/4] border rounded-xs overflow-hidden group hover:border-[#C9A96E] hover:shadow-md transition-all cursor-pointer ${
+                      isSelected ? "ring-2 ring-[#C9A96E] border-[#C9A96E]" : "border-[#E0D8CE]"
+                    }`}
+                    title={`Model #${model.number} (${model.cleanStem})`}
+                  >
+                    <img
+                      src={getMediaUrl(model.cloudinaryUrl || model.localUrl)}
+                      alt={`Model ${model.number}`}
+                      className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform"
+                      loading="lazy"
+                    />
+                    <span className="absolute bottom-1 right-1 bg-black/75 text-white text-[0.6rem] px-1 rounded-xs">
+                      #{model.number}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
             <div className="flex justify-end pt-2 border-t border-[#E0D8CE]">
               <button

@@ -102,33 +102,6 @@ DEFAULT_HOMEPAGE_CONTENT: Dict[str, Any] = {
 }
 
 
-def strip_legacy_model_urls(data: Any) -> Any:
-    """Purges obsolete /images/models/model-*.jpg references so they are never served or persisted for homepage."""
-    if isinstance(data, dict):
-        cleaned = {}
-        for k, v in data.items():
-            if isinstance(v, str) and "/images/models/model-" in v:
-                cleaned[k] = ""
-            else:
-                cleaned[k] = strip_legacy_model_urls(v)
-        return cleaned
-    elif isinstance(data, list):
-        cleaned_list = []
-        for item in data:
-            if isinstance(item, dict):
-                cleaned_item = strip_legacy_model_urls(item)
-                # Omit obsolete seeded gallery items that have no configured image/video
-                if str(cleaned_item.get("id", "")).startswith("strip-") and not cleaned_item.get("imageUrl") and not cleaned_item.get("videoUrl"):
-                    continue
-                cleaned_list.append(cleaned_item)
-            elif isinstance(item, str) and "/images/models/model-" in item:
-                continue
-            else:
-                cleaned_list.append(item)
-        return cleaned_list
-    return data
-
-
 def deep_merge(target: Dict[str, Any], source: Dict[str, Any]) -> Dict[str, Any]:
     """Recursively merges source into target without resurrecting defaults for cleared fields."""
     for key, value in source.items():
@@ -150,21 +123,8 @@ async def get_homepage_content() -> Dict[str, Any]:
     doc.pop("_id", None)
     doc.pop("key", None)
 
-    # Detect and purge any legacy model references that might have been saved in DB from prior seeds
-    doc_str = str(doc)
-    had_legacy = "/images/models/model-" in doc_str
-    doc = strip_legacy_model_urls(doc)
-
     # Merge saved doc over default copy so that all sections/keys are always present
     merged = deep_merge(default_copy, doc)
-
-    # If legacy URLs were present in MongoDB, persist the sanitized document back
-    if had_legacy:
-        await col.update_one(
-            {"key": "homepage_main"},
-            {"$set": {**merged, "key": "homepage_main"}},
-            upsert=True,
-        )
 
     # Ensure mediaType is present for backward compatibility
     for slide in merged.get("heroSlides", []):

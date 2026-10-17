@@ -20,6 +20,7 @@ import { productsService } from "../../services/products";
 import { homepageService } from "../../services/homepage";
 import { getMediaUrl } from "../../utils/media";
 import type { HomepageContentConfig, ImagePositionConfig } from "../../services/homepage";
+import { MODEL_CATALOG } from "../../data/models";
 
 /* ─────────────────────────────────────────────────────────────────
    Shared: Single Image Slot Editor (upload + zoom/pan controls)
@@ -28,7 +29,6 @@ interface ImageSlotEditorProps {
   label: string;
   slot: ImagePositionConfig | undefined;
   defaultSrc: string;
-  CATALOG_IMAGES: string[];
   uploading: boolean;
   setUploading: (v: boolean) => void;
   setToast: (t: { type: "success" | "error"; text: string } | null) => void;
@@ -42,7 +42,6 @@ function ImageSlotEditor({
   label,
   slot,
   defaultSrc,
-  CATALOG_IMAGES,
   uploading,
   setUploading,
   setToast,
@@ -211,18 +210,46 @@ function ImageSlotEditor({
               <h3 className="text-base font-semibold text-[#1C1814]">Choose from Photoshoot Catalog — {label}</h3>
               <button onClick={() => setShowPicker(false)} className="text-[#6B5B4E] hover:text-[#1C1814] text-lg font-bold cursor-pointer">✕</button>
             </div>
+            <p className="text-xs text-[#6B5B4E]">
+              Select any of the {MODEL_CATALOG.length} boutique photoshoot models to use for {label}.
+            </p>
             <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 overflow-y-auto flex-1 p-1">
-              {CATALOG_IMAGES.map((imgUrl, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => { update({ imageUrl: imgUrl }); setShowPicker(false); }}
-                  className={`relative aspect-[3/4] border rounded-xs overflow-hidden hover:border-[#C9A96E] hover:shadow-md transition-all cursor-pointer ${current.imageUrl === imgUrl ? "ring-2 ring-[#C9A96E] border-[#C9A96E]" : "border-[#E0D8CE]"}`}
-                >
-                  <img src={imgUrl} alt={`Model ${i + 1}`} className="w-full h-full object-cover object-top" />
-                  <span className="absolute bottom-1 right-1 bg-black/70 text-white text-[0.6rem] px-1 rounded-xs">#{i + 1}</span>
-                </button>
-              ))}
+              {MODEL_CATALOG.map((model) => {
+                const isSelected = current.imageUrl === model.cloudinaryUrl || current.imageUrl === model.localUrl;
+                return (
+                  <button
+                    key={model.id}
+                    type="button"
+                    onClick={async () => {
+                      const updated = { ...current, imageUrl: model.cloudinaryUrl };
+                      onChange(updated);
+                      setShowPicker(false);
+                      if (onSave) {
+                        try {
+                          await onSave(updated);
+                          setToast({ type: "success", text: `${label} model updated and saved successfully!` });
+                        } catch {
+                          setToast({ type: "error", text: `${label} model updated. Click Save Changes to confirm.` });
+                        }
+                      }
+                    }}
+                    className={`relative aspect-[3/4] border rounded-xs overflow-hidden hover:border-[#C9A96E] hover:shadow-md transition-all cursor-pointer ${
+                      isSelected ? "ring-2 ring-[#C9A96E] border-[#C9A96E]" : "border-[#E0D8CE]"
+                    }`}
+                    title={`Model #${model.number} (${model.cleanStem})`}
+                  >
+                    <img
+                      src={getMediaUrl(model.cloudinaryUrl || model.localUrl)}
+                      alt={`Model ${model.number}`}
+                      className="w-full h-full object-cover object-top"
+                      loading="lazy"
+                    />
+                    <span className="absolute bottom-1 right-1 bg-black/75 text-white text-[0.6rem] px-1 rounded-xs">
+                      #{model.number}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
             <div className="flex justify-end pt-2 border-t border-[#E0D8CE]">
               <button type="button" onClick={() => setShowPicker(false)} className="btn-outline text-xs px-4 py-2 cursor-pointer">Cancel</button>
@@ -285,12 +312,11 @@ interface PanelProps {
   uploading: boolean;
   setUploading: (v: boolean) => void;
   setToast: (t: { type: "success" | "error"; text: string } | null) => void;
-  CATALOG_IMAGES: string[];
   /** Receives the updated slot after upload; merges into full content and persists to MongoDB. */
   onSave?: (updated: ImagePositionConfig) => Promise<void>;
 }
 
-export function StatementCTAPanel({ content, setContent, uploading, setUploading, setToast, CATALOG_IMAGES }: PanelProps) {
+export function StatementCTAPanel({ content, setContent, uploading, setUploading, setToast }: PanelProps) {
   const stmt = content.statementSection || {};
 
   const update = (patch: Partial<typeof stmt>) =>
@@ -324,7 +350,6 @@ export function StatementCTAPanel({ content, setContent, uploading, setUploading
             label="Background Image"
             slot={stmt.backgroundImage}
             defaultSrc=""
-            CATALOG_IMAGES={CATALOG_IMAGES}
             uploading={uploading}
             setUploading={setUploading}
             setToast={setToast}
@@ -399,7 +424,7 @@ export function StatementCTAPanel({ content, setContent, uploading, setUploading
 /* ─────────────────────────────────────────────────────────────────
    Panel: About Page
 ───────────────────────────────────────────────────────────────── */
-export function AboutPagePanel({ content, setContent, uploading, setUploading, setToast, CATALOG_IMAGES }: PanelProps) {
+export function AboutPagePanel({ content, setContent, uploading, setUploading, setToast }: PanelProps) {
   const about = content.aboutPage || {};
 
   const update = (patch: Partial<typeof about>) =>
@@ -534,7 +559,6 @@ export function AboutPagePanel({ content, setContent, uploading, setUploading, s
               label={`Image Slot ${i + 1}`}
               slot={about[key]}
               defaultSrc={COLLAGE_DEFAULTS[i]}
-              CATALOG_IMAGES={CATALOG_IMAGES}
               uploading={uploading}
               setUploading={setUploading}
               setToast={setToast}

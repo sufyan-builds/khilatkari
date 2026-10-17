@@ -22,17 +22,23 @@ router = APIRouter(prefix="/api/admin/upload", tags=["admin-upload"])
 UPLOADS_DIR = Path(__file__).resolve().parent.parent.parent.parent / "uploads"
 UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
 
-ALLOWED_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".avif", ".gif"}
+ALLOWED_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".avif", ".gif", ".heic", ".heif"}
 ALLOWED_VIDEO_EXTENSIONS = {".mp4", ".webm", ".mov", ".ogg"}
 ALLOWED_EXTENSIONS = ALLOWED_IMAGE_EXTENSIONS | ALLOWED_VIDEO_EXTENSIONS
 
 ALLOWED_MIME_TYPES = {
-    # Images (SVG explicitly excluded)
+    # Images (mobile, cross-browser, SVG explicitly excluded)
     "image/jpeg",
+    "image/jpg",
+    "image/pjpeg",
     "image/png",
+    "image/x-png",
     "image/webp",
     "image/avif",
     "image/gif",
+    "image/heic",
+    "image/heif",
+    "application/octet-stream",  # Permitted when validated by file signature
     # Videos
     "video/mp4",
     "video/webm",
@@ -63,8 +69,14 @@ def validate_file_signature(chunk: bytes, ext: str) -> bool:
         return False
 
     if ext in {".jpg", ".jpeg"}:
-        # JPEG begins with SOI marker: 0xFF 0xD8 0xFF
-        return len(chunk) >= 3 and chunk.startswith(b"\xff\xd8\xff")
+        # JPEG begins with SOI marker: 0xFF 0xD8
+        return len(chunk) >= 2 and chunk.startswith(b"\xff\xd8")
+
+    if ext in {".heic", ".heif"}:
+        # ISO BMFF with ftyp box and heic/heix/mif1/msf1 brand
+        if len(chunk) >= 12 and chunk[4:8] == b"ftyp":
+            return any(b in chunk[8:32] for b in (b"heic", b"heix", b"mif1", b"msf1"))
+        return False
 
     if ext == ".png":
         # PNG 8-byte signature: \x89PNG\r\n\x1a\n
@@ -202,13 +214,19 @@ async def save_upload_stream(file: UploadFile) -> Tuple[bool, str, str]:
                 if not secure_url:
                     raise ValueError("Cloudinary upload response did not include secure_url")
                 return True, secure_url, ""
-            except Exception:
-                logger.exception("Cloudinary upload failed for file: %s", file.filename)
-                return False, f"Failed to upload '{file.filename}' to persistent cloud storage.", "500"
+            except Exception as e:
+                logger.exception("Cloudinary upload failed for file: %s (%s)", file.filename, e)
+                return False, f"Failed to upload '{file.filename}' to persistent cloud storage: {str(e)}", "500"
             finally:
                 temp_path.unlink(missing_ok=True)
 
-        # Fallback to local disk storage (e.g. local offline development)
+        # Prohibit ephemeral disk storage in production
+        is_prod = str(settings.environment).strip().lower() == "production" or bool(os.getenv("RENDER"))
+        if is_prod:
+            temp_path.unlink(missing_ok=True)
+            return False, "Persistent cloud storage is not configured. Ephemeral local storage is prohibited in production.", "500"
+
+        # Fallback to local disk storage strictly for offline local development
         dest_path = UPLOADS_DIR / safe_name
         try:
             if not dest_path.resolve().is_relative_to(UPLOADS_DIR.resolve()):
