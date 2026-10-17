@@ -17,6 +17,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { productsService } from "../../services/products";
+import { homepageService } from "../../services/homepage";
 import { getMediaUrl } from "../../utils/media";
 import type { HomepageContentConfig, ImagePositionConfig } from "../../services/homepage";
 
@@ -32,6 +33,8 @@ interface ImageSlotEditorProps {
   setUploading: (v: boolean) => void;
   setToast: (t: { type: "success" | "error"; text: string } | null) => void;
   onChange: (updated: ImagePositionConfig) => void;
+  /** Called with the just-updated slot immediately after onChange, so the parent can auto-save. */
+  onSave?: (updated: ImagePositionConfig) => Promise<void>;
   aspectClass?: string; // e.g. "aspect-[3/4]" or "aspect-square"
 }
 
@@ -44,6 +47,7 @@ function ImageSlotEditor({
   setUploading,
   setToast,
   onChange,
+  onSave,
   aspectClass = "aspect-[3/4]",
 }: ImageSlotEditorProps) {
   const fileRef = useRef<HTMLInputElement>(null);
@@ -65,8 +69,18 @@ function ImageSlotEditor({
     try {
       const urls = await productsService.adminUpload(Array.from(files));
       if (urls.length > 0) {
-        update({ imageUrl: urls[0] });
-        setToast({ type: "success", text: `${label} image updated.` });
+        const updated = { ...current, imageUrl: urls[0] };
+        onChange(updated);
+        if (onSave) {
+          try {
+            await onSave(updated);
+            setToast({ type: "success", text: `${label} image uploaded and saved successfully!` });
+          } catch {
+            setToast({ type: "error", text: `${label} image uploaded but save failed. Click Save Changes to retry.` });
+          }
+        } else {
+          setToast({ type: "success", text: `${label} image updated. Click Save Changes to persist.` });
+        }
       }
     } catch {
       setToast({ type: "error", text: `Failed to upload ${label} image.` });
@@ -272,6 +286,8 @@ interface PanelProps {
   setUploading: (v: boolean) => void;
   setToast: (t: { type: "success" | "error"; text: string } | null) => void;
   CATALOG_IMAGES: string[];
+  /** Receives the updated slot after upload; merges into full content and persists to MongoDB. */
+  onSave?: (updated: ImagePositionConfig) => Promise<void>;
 }
 
 export function StatementCTAPanel({ content, setContent, uploading, setUploading, setToast, CATALOG_IMAGES }: PanelProps) {
@@ -279,6 +295,18 @@ export function StatementCTAPanel({ content, setContent, uploading, setUploading
 
   const update = (patch: Partial<typeof stmt>) =>
     setContent((prev) => prev ? { ...prev, statementSection: { ...prev.statementSection, ...patch } } : prev);
+
+  // Auto-save after background image upload: merges updated slot into full content and persists immediately
+  const handleBgImageSave = async (updated: ImagePositionConfig) => {
+    const merged: HomepageContentConfig = {
+      ...content,
+      statementSection: { ...content.statementSection, backgroundImage: updated },
+    };
+    const res = await homepageService.update(merged);
+    if (res.success && res.data) {
+      setContent(res.data);
+    }
+  };
 
   return (
     <div className="space-y-8 max-w-4xl">
@@ -301,6 +329,7 @@ export function StatementCTAPanel({ content, setContent, uploading, setUploading
             setUploading={setUploading}
             setToast={setToast}
             aspectClass="aspect-[16/9]"
+            onSave={handleBgImageSave}
             onChange={(updated) => update({ backgroundImage: updated })}
           />
         </div>
@@ -378,6 +407,19 @@ export function AboutPagePanel({ content, setContent, uploading, setUploading, s
 
   const updateCollage = (key: "collageImage1" | "collageImage2" | "collageImage3" | "collageImage4", val: ImagePositionConfig) =>
     update({ [key]: val });
+
+  // Auto-save a specific collage slot immediately after upload
+  const makeCollageSaver = (key: "collageImage1" | "collageImage2" | "collageImage3" | "collageImage4") =>
+    async (updated: ImagePositionConfig) => {
+      const merged: HomepageContentConfig = {
+        ...content,
+        aboutPage: { ...content.aboutPage, [key]: updated },
+      };
+      const res = await homepageService.update(merged);
+      if (res.success && res.data) {
+        setContent(res.data);
+      }
+    };
 
   const COLLAGE_DEFAULTS = [
     "/images/models/model-16.jpg",
@@ -497,6 +539,7 @@ export function AboutPagePanel({ content, setContent, uploading, setUploading, s
               setUploading={setUploading}
               setToast={setToast}
               aspectClass={i === 0 || i === 3 ? "aspect-[3/4]" : "aspect-square"}
+              onSave={makeCollageSaver(key)}
               onChange={(updated) => updateCollage(key, updated)}
             />
           ))}

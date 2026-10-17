@@ -194,22 +194,60 @@ export default function VisualsAdminPage() {
     }));
   };
 
-  // Image replacement
+  // Image replacement — uploads to Cloudinary then immediately persists to MongoDB
   const handleUploadImage = async (files: FileList | File[]) => {
     const list = Array.from(files);
     if (list.length === 0) return;
     setUploading(true);
+    setToast(null);
     try {
       const urls = await productsService.adminUpload(list);
       if (urls.length > 0) {
-        updateActiveItem((item) => ({
-          ...item,
-          imageUrl: urls[0],
-        }));
-        setToast({ type: "success", text: "New image uploaded successfully!" });
+        // Update local state synchronously so handleSave picks up the new URL
+        let updatedContent: typeof content = null;
+        setContent((prev) => {
+          if (!prev) return prev;
+          const copy = { ...prev };
+          if (activeTab === "hero") {
+            const slides = [...copy.heroSlides];
+            const current = slides[activeSlideIdx] || slides[0];
+            if (current) {
+              slides[activeSlideIdx] = { ...current, imageUrl: urls[0] };
+              copy.heroSlides = slides;
+            }
+          } else if (activeTab === "experience") {
+            copy.experienceImage = { ...copy.experienceImage, imageUrl: urls[0] };
+          } else if (activeTab === "gallery") {
+            const strip = [...copy.galleryStrip];
+            const current = strip[activeSlideIdx] || strip[0];
+            if (current) {
+              strip[activeSlideIdx] = { ...current, imageUrl: urls[0] };
+              copy.galleryStrip = strip;
+            }
+          }
+          updatedContent = copy;
+          return copy;
+        });
+        // Auto-save to MongoDB so the Cloudinary URL is persisted immediately
+        if (updatedContent) {
+          setSaving(true);
+          try {
+            const res = await homepageService.update(updatedContent);
+            if (res.success && res.data) {
+              setContent(res.data);
+              setToast({ type: "success", text: "Image uploaded and saved successfully!" });
+            } else {
+              setToast({ type: "error", text: "Image uploaded but could not be saved. Please click Save Changes." });
+            }
+          } catch {
+            setToast({ type: "error", text: "Image uploaded but save failed. Please click Save Changes to retry." });
+          } finally {
+            setSaving(false);
+          }
+        }
       }
     } catch (err: any) {
-      setToast({ type: "error", text: "Failed to upload image from device." });
+      setToast({ type: "error", text: err?.response?.data?.message || "Failed to upload image from device." });
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -220,18 +258,55 @@ export default function VisualsAdminPage() {
     const list = Array.from(files);
     if (list.length === 0) return;
     setUploading(true);
+    setToast(null);
     try {
       const urls = await productsService.adminUpload(list);
       if (urls.length > 0) {
-        updateActiveItem((item) => ({
-          ...item,
-          mediaType: "video",
-          videoUrl: urls[0],
-        }));
-        setToast({ type: "success", text: "Video uploaded and attached successfully!" });
+        // Update local state synchronously so handleSave picks up the new URL
+        let updatedContent: typeof content = null;
+        setContent((prev) => {
+          if (!prev) return prev;
+          const copy = { ...prev };
+          if (activeTab === "hero") {
+            const slides = [...copy.heroSlides];
+            const current = slides[activeSlideIdx] || slides[0];
+            if (current) {
+              slides[activeSlideIdx] = { ...current, mediaType: "video", videoUrl: urls[0] };
+              copy.heroSlides = slides;
+            }
+          } else if (activeTab === "experience") {
+            copy.experienceImage = { ...copy.experienceImage, mediaType: "video", videoUrl: urls[0] };
+          } else if (activeTab === "gallery") {
+            const strip = [...copy.galleryStrip];
+            const current = strip[activeSlideIdx] || strip[0];
+            if (current) {
+              strip[activeSlideIdx] = { ...current, mediaType: "video", videoUrl: urls[0] };
+              copy.galleryStrip = strip;
+            }
+          }
+          updatedContent = copy;
+          return copy;
+        });
+        // Auto-save to MongoDB so the Cloudinary URL is persisted immediately
+        if (updatedContent) {
+          setSaving(true);
+          try {
+            const res = await homepageService.update(updatedContent);
+            if (res.success && res.data) {
+              setContent(res.data);
+              setToast({ type: "success", text: "Video uploaded and saved successfully!" });
+            } else {
+              setToast({ type: "error", text: "Video uploaded but could not be saved. Please click Save Changes." });
+            }
+          } catch {
+            setToast({ type: "error", text: "Video uploaded but save failed. Please click Save Changes to retry." });
+          } finally {
+            setSaving(false);
+          }
+        }
       }
     } catch (err: any) {
-      setToast({ type: "error", text: err.response?.data?.message || err.message || "Failed to upload video from device." });
+      setToast({ type: "error", text: err?.response?.data?.message || err?.message || "Failed to upload video from device." });
     } finally {
       setUploading(false);
       if (videoFileInputRef.current) videoFileInputRef.current.value = "";

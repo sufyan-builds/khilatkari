@@ -1,8 +1,11 @@
 import copy
+import logging
 from datetime import datetime, timezone
 from typing import Dict, Any
 from app.database import get_homepage_collection
 from app.schemas.homepage import HomepageContentUpdate
+
+logger = logging.getLogger(__name__)
 
 DEFAULT_HOMEPAGE_CONTENT: Dict[str, Any] = {
     "heroSlides": [
@@ -181,13 +184,24 @@ async def update_homepage_content(data: HomepageContentUpdate) -> Dict[str, Any]
     current = await get_homepage_content()
     update_dict = data.model_dump(exclude_unset=True)
 
-    # Purge any obsolete model URLs from payload
-    update_dict = strip_legacy_model_urls(update_dict)
+    # NOTE: strip_legacy_model_urls is intentionally NOT called on the incoming payload.
+    # It is only applied to data read from MongoDB (in get_homepage_content) to sanitise
+    # old seeded records. Calling it here would wipe valid admin-selected catalog image
+    # paths (/images/models/model-*.jpg), causing blank images on the public site.
 
     # Deep merge the update_dict into current
     deep_merge(current, update_dict)
 
     current["updatedAt"] = datetime.now(timezone.utc).isoformat()
+
+    # Diagnostic log — omits sensitive values but confirms what is being persisted
+    hero_slides = current.get("heroSlides", [])
+    logger.info(
+        "Homepage update: saving %d hero slide(s). Slide 0 imageUrl present: %s",
+        len(hero_slides),
+        bool(hero_slides[0].get("imageUrl") if hero_slides else False),
+    )
+
     await col.update_one(
         {"key": "homepage_main"},
         {"$set": {**current, "key": "homepage_main"}},
