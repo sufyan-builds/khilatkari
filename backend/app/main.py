@@ -122,6 +122,7 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
 
 DEFAULT_PRODUCTION_ORIGINS = [
     "https://ms-fashion-closet.vercel.app",
+    "https://khilatkari.vercel.app",
 ]
 
 # Regex matching any Vercel domain (*.vercel.app) for preview and production deployments

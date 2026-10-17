@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 1440
     admin_username: str = "sufian"
     admin_password_hash: str = ""
-    frontend_url: str = "http://localhost:5173,https://ms-fashion-closet.vercel.app"
+    frontend_url: str = "http://localhost:5173,https://ms-fashion-closet.vercel.app,https://khilatkari.vercel.app"
     environment: str = "development"
     tls_allow_invalid_certs: bool = False
     cloudinary_cloud_name: str = "iv29blwq"

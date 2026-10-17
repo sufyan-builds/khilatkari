@@ -22,7 +22,7 @@ services:
       - key: ADMIN_PASSWORD_HASH
         sync: false
       - key: FRONTEND_URL
-        value: https://ms-fashion-closet.vercel.app
+        value: https://khilatkari.vercel.app,https://ms-fashion-closet.vercel.app
       - key: ENVIRONMENT
         value: production
       - key: TLS_ALLOW_INVALID_CERTS
