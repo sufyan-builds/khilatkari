@@ -58,6 +58,18 @@ body {
   width: 100%;
 }
 
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: clip;
+  max-width: 100vw;
+}
+
+p, h1, h2, h3, h4, h5, h6, span, a, li, label {
+  overflow-wrap: break-word;
+}
+
 /* ============================================================
    Typography
    ============================================================ */
@@ -69,12 +81,15 @@ body {
 .font-urdu {
   font-family: var(--font-urdu);
   direction: rtl;
-  unicode-bidi: embed;
+  unicode-bidi: isolate;
+  display: inline-block;
+  line-height: normal;
+  vertical-align: baseline;
 }
 
 .text-display-xl {
   font-family: var(--font-display);
-  font-size: clamp(2.15rem, 5.5vw, 4.5rem);
+  font-size: clamp(2rem, 5.5vw, 4.5rem);
   line-height: 1.15;
   font-weight: 500;
   letter-spacing: -0.01em;
@@ -82,7 +97,7 @@ body {
 
 .text-display-lg {
   font-family: var(--font-display);
-  font-size: clamp(1.75rem, 4vw, 3.25rem);
+  font-size: clamp(1.6rem, 4vw, 3.25rem);
   line-height: 1.2;
   font-weight: 500;
   letter-spacing: -0.01em;
@@ -90,14 +105,14 @@ body {
 
 .text-display-md {
   font-family: var(--font-display);
-  font-size: clamp(1.35rem, 3.2vw, 2.25rem);
+  font-size: clamp(1.25rem, 3.2vw, 2.25rem);
   line-height: 1.25;
   font-weight: 500;
 }
 
 .text-display-sm {
   font-family: var(--font-display);
-  font-size: clamp(1.1rem, 2.2vw, 1.65rem);
+  font-size: clamp(1.05rem, 2.2vw, 1.65rem);
   line-height: 1.35;
   font-weight: 400;
 }

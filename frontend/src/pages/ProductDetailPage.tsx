@@ -184,7 +184,7 @@ export default function ProductDetailPage() {
                   <button
                     key={`vid-${vIdx}`}
                     onClick={() => setSelectedMedia({ type: "video", url: vid })}
-                    className={`relative w-20 h-28 flex-shrink-0 border-2 transition-all overflow-hidden bg-black/90 cursor-pointer group/vid ${
+                    className={`relative w-16 h-22 sm:w-20 sm:h-28 flex-shrink-0 border-2 transition-all overflow-hidden bg-black/90 cursor-pointer group/vid ${
                       selectedMedia.type === "video" && selectedMedia.url === vid
                         ? "border-[#C9A96E] shadow-sm"
                         : "border-transparent opacity-75 hover:opacity-100"
@@ -304,28 +304,28 @@ export default function ProductDetailPage() {
               )}
 
               {/* Specifications Matrix */}
-              <div className="bg-[#F2EDE6]/60 border border-[#E0D8CE] p-5 mb-8 space-y-3.5 text-sm">
+              <div className="bg-[#F2EDE6]/60 border border-[#E0D8CE] p-4 sm:p-5 mb-8 space-y-3 text-xs sm:text-sm">
                 {product.fabric && (
-                  <div className="flex justify-between border-b border-[#E0D8CE]/50 pb-2">
-                    <span className="text-[#9B8B7E]">Fabric:</span>
-                    <span className="font-medium text-[#1C1814]">{product.fabric}</span>
+                  <div className="flex justify-between items-baseline gap-3 border-b border-[#E0D8CE]/50 pb-2">
+                    <span className="text-[#9B8B7E] shrink-0">Fabric:</span>
+                    <span className="font-medium text-[#1C1814] text-right">{product.fabric}</span>
                   </div>
                 )}
                 {product.craftsmanship && (
-                  <div className="flex justify-between border-b border-[#E0D8CE]/50 pb-2">
-                    <span className="text-[#9B8B7E]">Work & Craftsmanship:</span>
-                    <span className="font-medium text-[#1C1814]">{product.craftsmanship}</span>
+                  <div className="flex justify-between items-baseline gap-3 border-b border-[#E0D8CE]/50 pb-2">
+                    <span className="text-[#9B8B7E] shrink-0">Work & Craftsmanship:</span>
+                    <span className="font-medium text-[#1C1814] text-right">{product.craftsmanship}</span>
                   </div>
                 )}
                 {product.color && (
-                  <div className="flex justify-between border-b border-[#E0D8CE]/50 pb-2">
-                    <span className="text-[#9B8B7E]">Colorway:</span>
-                    <span className="font-medium text-[#1C1814]">{product.color}</span>
+                  <div className="flex justify-between items-baseline gap-3 border-b border-[#E0D8CE]/50 pb-2">
+                    <span className="text-[#9B8B7E] shrink-0">Colorway:</span>
+                    <span className="font-medium text-[#1C1814] text-right">{product.color}</span>
                   </div>
                 )}
-                <div className="flex justify-between">
-                  <span className="text-[#9B8B7E]">Sizing & Fitting:</span>
-                  <span className="font-medium text-[#1C1814]">
+                <div className="flex justify-between items-baseline gap-3">
+                  <span className="text-[#9B8B7E] shrink-0">Sizing & Fitting:</span>
+                  <span className="font-medium text-[#1C1814] text-right">
                     {product.sizes && product.sizes.length > 0
                       ? product.sizes.join(", ")
                       : "Free Size (Custom Fitting)"}

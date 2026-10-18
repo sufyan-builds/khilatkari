@@ -367,7 +367,7 @@ export default function HomePage() {
 
         return (
           <section
-            className="relative h-[68vh] sm:h-[75vh] md:h-[82vh] min-h-[460px] sm:min-h-[500px] md:min-h-[560px] max-h-[740px] overflow-hidden"
+            className="relative min-h-[500px] sm:min-h-[520px] md:min-h-[560px] h-auto sm:h-[75vh] md:h-[82vh] max-h-none sm:max-h-[740px] overflow-hidden pt-16 sm:pt-0"
             id="hero"
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
@@ -413,7 +413,7 @@ export default function HomePage() {
                       transform: `scale(${slide.zoom ?? 1.0})`,
                       transformOrigin: `${slide.posX ?? 50}% ${slide.posY ?? 15}%`,
                     }}
-                    className="w-full h-full"
+                    className="w-full h-full text-transparent"
                   />
                 )}
               </div>
@@ -423,7 +423,7 @@ export default function HomePage() {
             <div className="absolute inset-0 bg-gradient-to-r from-[#1C1814]/85 via-[#1C1814]/45 to-transparent" />
 
             {/* Content */}
-            <div className="relative z-10 h-full container-main flex flex-col justify-center pt-6 pb-12 sm:py-0">
+            <div className="relative z-10 h-full container-main flex flex-col justify-center py-10 sm:py-0">
               <div className="max-w-2xl">
                 <div className="flex items-center gap-2 mb-2 sm:mb-3">
                   <p className="section-label text-[#C9A96E] tracking-[0.25em] text-[0.68rem] sm:text-xs">
@@ -431,7 +431,7 @@ export default function HomePage() {
                   </p>
                   <span className="text-[#C9A96E]/50 text-xs">&bull;</span>
                   <span
-                    className="font-urdu text-sm sm:text-base text-[#E8D5A8] tracking-normal select-none"
+                    className="font-urdu text-sm sm:text-base text-[#E8D5A8] tracking-normal select-none leading-normal inline-block"
                     title="خلعت کاری"
                   >
                     خلعت کاری
@@ -452,7 +452,7 @@ export default function HomePage() {
                   )}
                 </h1>
 
-                <p className="text-[#D4C8BC] text-xs sm:text-base md:text-lg leading-relaxed mb-6 sm:mb-8 max-w-lg line-clamp-3 sm:line-clamp-none">
+                <p className="text-[#D4C8BC] text-xs sm:text-base md:text-lg leading-relaxed mb-6 sm:mb-8 max-w-lg line-clamp-4 sm:line-clamp-none">
                   {activeSlide?.subtitle ||
                     "Handcrafted South Asian traditional wear — Chikankari, Kamdani, Bridal & more — presented through an exclusive private appointment experience in Lahore, Islamabad, Rawalpindi, and Peshawar."}
                 </p>
@@ -462,7 +462,7 @@ export default function HomePage() {
                     to="/appointments"
                     className="btn-gold py-2.5 sm:py-3.5 px-5 sm:px-6 text-xs sm:text-sm"
                   >
-                    Book a Private Appointment <ArrowRight size={15} />
+                    <span>Book a Private Appointment</span> <ArrowRight size={15} className="shrink-0" />
                   </Link>
                   <Link
                     to="/collections"
@@ -578,14 +578,14 @@ export default function HomePage() {
                         </div>
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-[#1C1814]/80 via-[#1C1814]/20 to-transparent" />
-                      <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
                         <h3
-                          className="text-white font-medium text-sm mb-1"
+                          className="text-white font-medium text-xs sm:text-sm mb-0.5 sm:mb-1"
                           style={{ fontFamily: "var(--font-display)" }}
                         >
                           {col.name}
                         </h3>
-                        <p className="text-[#D4C8BC] text-[0.7rem] leading-snug line-clamp-2">
+                        <p className="text-[#D4C8BC] text-[0.65rem] sm:text-[0.7rem] leading-snug line-clamp-2">
                           {col.homepageDescription || col.description || ""}
                         </p>
                       </div>
@@ -850,7 +850,7 @@ export default function HomePage() {
       <section className="py-12 md:py-16 bg-[#FAF8F5] border-y border-[#E0D8CE]" id="cities">
         <div className="container-main">
           <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 md:gap-10">
-            <p className="text-[0.65rem] sm:text-xs tracking-[0.18em] uppercase text-[#9B8B7E] font-medium mr-2">
+            <p className="w-full sm:w-auto text-center sm:text-left text-[0.65rem] sm:text-xs tracking-[0.18em] uppercase text-[#9B8B7E] font-medium sm:mr-2">
               Available In
             </p>
             {CITIES.map((city, i) => (
@@ -909,7 +909,7 @@ export default function HomePage() {
 
         return (
           <section
-            className={`relative py-28 md:py-40 overflow-hidden ${
+            className={`relative py-16 sm:py-24 md:py-36 overflow-hidden ${
               hasBg ? "" : "bg-gradient-to-r from-[#1C1814] via-[#2A231C] to-[#1C1814] border-t border-[#C9A96E]/20"
             }`}
             id="final-cta"

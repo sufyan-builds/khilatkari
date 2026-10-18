@@ -25,14 +25,14 @@ export default function Footer() {
                 </picture>
               </div>
               <div className="flex flex-col">
-                <div className="flex items-baseline gap-2">
+                <div className="flex flex-wrap items-baseline gap-2">
                   <span
                     className="text-xl sm:text-2xl font-semibold tracking-wide text-white"
                     style={{ fontFamily: "var(--font-display)" }}
                   >
                     KhilatKari
                   </span>
-                  <span className="font-urdu text-sm text-[#C9A96E]" title="خلعت کاری">
+                  <span className="font-urdu text-sm text-[#C9A96E] leading-normal inline-block" title="خلعت کاری">
                     خلعت کاری
                   </span>
                 </div>
