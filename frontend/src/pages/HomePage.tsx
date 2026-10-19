@@ -14,7 +14,7 @@ const INITIAL_HOMEPAGE_CONTENT: HomepageContentConfig = {
     {
       id: "hero-1789649398460",
       mediaType: "image",
-      imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/v1791391518/ms_fashions/screenshot_20251105_170619_instagram-cf5020c01f.jpg",
+      imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/v1791391510/ms_fashions/screenshot_20251105_170619_instagram-0fafd9b75e.jpg",
       zoom: 1.0,
       posX: 51.0,
       posY: 32.0,
@@ -34,7 +34,7 @@ const INITIAL_HOMEPAGE_CONTENT: HomepageContentConfig = {
     {
       id: "hero-1789712878469",
       mediaType: "image",
-      imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/v1791391875/ms_fashions/whatsapp-image-2026-09-16-at-10-21-11-pm-166e1d17c7.jpg",
+      imageUrl: "https://res.cloudinary.com/iv29blwq/image/upload/v1792347495/ms_fashions/models/model-34-whatsapp-image-2026-09-16-at-10-21-11-pm.jpg",
       zoom: 1.0,
       posX: 13.0,
       posY: 8.0,
