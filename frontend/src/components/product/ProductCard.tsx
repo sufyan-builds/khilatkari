@@ -30,6 +30,12 @@ export default function ProductCard({ product }: ProductCardProps) {
             alt={product.name}
             className="product-card-image"
             loading="lazy"
+            onError={(e) => {
+              const target = e.currentTarget;
+              if (!target.src.endsWith("/images/placeholder.jpg")) {
+                target.src = "/images/placeholder.jpg";
+              }
+            }}
           />
 
           {/* Badges container — neatly spaced to never collide */}

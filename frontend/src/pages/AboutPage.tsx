@@ -5,12 +5,87 @@ import { BRAND, WHATSAPP_URL, CITIES } from "../data/constants";
 import { homepageService, type AboutPageConfig, type ImagePositionConfig } from "../services/homepage";
 import { getMediaUrl } from "../utils/media";
 
-// Static defaults — used when CMS field is empty
+const STORAGE_KEY_CONTENT = "khilatkari_cached_homepage_content";
+
+const INITIAL_ABOUT_CONFIG: AboutPageConfig = {
+  heroHeadlineMain: "A Celebration of Authentic",
+  heroHeadlineItalic: "South Asian Heritage",
+  heroIntroText:
+    "KhilatKari was born out of a profound admiration for the timeless artistry of South Asian handcrafts, reimagined for the contemporary woman through an exclusive in-home experience.",
+  philosophyHeadline: "Why We Operate Exclusively by Appointment",
+  philosophyPara1:
+    "In an age of mass-produced, fast-fashion retail, true luxury has become rare. Browsing crowded store racks with hurried sales staff cannot do justice to a bridal ensemble adorned with months of delicate hand-embroidery.",
+  philosophyPara2:
+    "At KhilatKari, we replaced the conventional store with an intimate, private home viewing model. You and your family review our curated collections within the quiet comfort of your own living room across Lahore, Islamabad, Rawalpindi, and Peshawar.",
+  philosophyPara3:
+    "You feel the weight of pure chiffon, inspect the gleam of genuine metal Kamdani threads, and drape shawls under warm home lighting before making any decision.",
+  ctaHeadline: "Experience the Collection Firsthand",
+  ctaBodyText:
+    "Request your private appointment today and discover handcrafted luxury in the comfort of your own home.",
+  collageImage1: {
+    id: "about-col-1",
+    mediaType: "image",
+    imageUrl:
+      "https://res.cloudinary.com/iv29blwq/image/upload/v1791391867/ms_fashions/whatsapp-image-2026-09-15-at-4-36-34-pm-0e343c6b5e.jpg",
+    zoom: 1.0,
+    posX: 50.0,
+    posY: 0.0,
+  },
+  collageImage2: {
+    id: "about-col-2",
+    mediaType: "image",
+    imageUrl:
+      "https://res.cloudinary.com/iv29blwq/image/upload/v1792939208/ms_fashions/screenshot_20260719_141607_instagram-2b63948073.jpg",
+    zoom: 1.05,
+    posX: 67.0,
+    posY: 2.0,
+  },
+  collageImage3: {
+    id: "about-col-3",
+    mediaType: "image",
+    imageUrl:
+      "https://res.cloudinary.com/iv29blwq/image/upload/v1792939236/ms_fashions/screenshot_20260719_141645_instagram-b5554be515.jpg",
+    zoom: 1.0,
+    posX: 50.0,
+    posY: 18.0,
+  },
+  collageImage4: {
+    id: "about-col-4",
+    mediaType: "image",
+    imageUrl:
+      "https://res.cloudinary.com/iv29blwq/image/upload/v1791391857/ms_fashions/whatsapp-image-2026-09-15-at-4-36-32-pm-3aad42d659.jpg",
+    zoom: 1.0,
+    posX: 50.0,
+    posY: 39.0,
+  },
+};
+
+function getCachedAboutPageConfig(): AboutPageConfig {
+  if (typeof window !== "undefined") {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY_CONTENT);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed && parsed.aboutPage) {
+          return {
+            ...INITIAL_ABOUT_CONFIG,
+            ...parsed.aboutPage,
+          };
+        }
+      }
+    } catch {
+      // Ignore storage read errors
+    }
+  }
+  return INITIAL_ABOUT_CONFIG;
+}
+
+// Static defaults — initialized with verified brand admin images to eliminate flash
 const DEFAULT_COLLAGE: [string, string, string, string] = [
-  "/images/models/model-16.jpg",
-  "/images/models/model-4.jpg",
-  "/images/models/model-1.jpg",
-  "/images/models/model-12.jpg",
+  INITIAL_ABOUT_CONFIG.collageImage1?.imageUrl || "",
+  INITIAL_ABOUT_CONFIG.collageImage2?.imageUrl || "",
+  INITIAL_ABOUT_CONFIG.collageImage3?.imageUrl || "",
+  INITIAL_ABOUT_CONFIG.collageImage4?.imageUrl || "",
 ];
 
 const DEFAULT_COLLAGE_ALTS = [
@@ -40,6 +115,13 @@ function CollageImg({
       src={getMediaUrl(src)}
       alt={alt}
       className={className}
+      decoding="async"
+      onError={(e) => {
+        const target = e.currentTarget;
+        if (!target.src.endsWith("/images/placeholder.jpg")) {
+          target.src = "/images/placeholder.jpg";
+        }
+      }}
       style={{
         objectFit: "cover",
         objectPosition: `${posX}% ${posY}%`,
@@ -51,14 +133,24 @@ function CollageImg({
 }
 
 export default function AboutPage() {
-  const [cms, setCms] = useState<AboutPageConfig | null>(null);
+  const [cms, setCms] = useState<AboutPageConfig>(getCachedAboutPageConfig);
 
   useEffect(() => {
     homepageService
       .getPublic()
       .then((res) => {
-        if (res.success && res.data?.aboutPage) {
-          setCms(res.data.aboutPage);
+        const data = res.data;
+        if (res.success && data) {
+          const freshAbout = data.aboutPage;
+          if (freshAbout) {
+            setCms((prev) => {
+              if (JSON.stringify(prev) === JSON.stringify(freshAbout)) return prev;
+              return freshAbout;
+            });
+          }
+          try {
+            localStorage.setItem(STORAGE_KEY_CONTENT, JSON.stringify(data));
+          } catch {}
         }
       })
       .catch(() => {});

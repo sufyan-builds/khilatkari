@@ -316,7 +316,7 @@ interface PanelProps {
   onSave?: (updated: ImagePositionConfig) => Promise<void>;
 }
 
-export function StatementCTAPanel({ content, setContent, uploading, setUploading, setToast }: PanelProps) {
+export function StatementCTAPanel({ content, setContent, uploading, setUploading, setToast, onSave }: PanelProps) {
   const stmt = content.statementSection || {};
 
   const update = (patch: Partial<typeof stmt>) =>
@@ -324,13 +324,21 @@ export function StatementCTAPanel({ content, setContent, uploading, setUploading
 
   // Auto-save after background image upload: merges updated slot into full content and persists immediately
   const handleBgImageSave = async (updated: ImagePositionConfig) => {
+    if (onSave) {
+      await onSave(updated);
+      return;
+    }
     const merged: HomepageContentConfig = {
       ...content,
       statementSection: { ...content.statementSection, backgroundImage: updated },
+      expectedUpdatedAt: content.updatedAt,
     };
     const res = await homepageService.update(merged);
     if (res.success && res.data) {
       setContent(res.data);
+      try {
+        localStorage.setItem("khilatkari_cached_homepage_content", JSON.stringify(res.data));
+      } catch {}
     }
   };
 
@@ -424,7 +432,7 @@ export function StatementCTAPanel({ content, setContent, uploading, setUploading
 /* ─────────────────────────────────────────────────────────────────
    Panel: About Page
 ───────────────────────────────────────────────────────────────── */
-export function AboutPagePanel({ content, setContent, uploading, setUploading, setToast }: PanelProps) {
+export function AboutPagePanel({ content, setContent, uploading, setUploading, setToast, onSave }: PanelProps) {
   const about = content.aboutPage || {};
 
   const update = (patch: Partial<typeof about>) =>
@@ -436,21 +444,29 @@ export function AboutPagePanel({ content, setContent, uploading, setUploading, s
   // Auto-save a specific collage slot immediately after upload
   const makeCollageSaver = (key: "collageImage1" | "collageImage2" | "collageImage3" | "collageImage4") =>
     async (updated: ImagePositionConfig) => {
+      if (onSave) {
+        await onSave(updated);
+        return;
+      }
       const merged: HomepageContentConfig = {
         ...content,
         aboutPage: { ...content.aboutPage, [key]: updated },
+        expectedUpdatedAt: content.updatedAt,
       };
       const res = await homepageService.update(merged);
       if (res.success && res.data) {
         setContent(res.data);
+        try {
+          localStorage.setItem("khilatkari_cached_homepage_content", JSON.stringify(res.data));
+        } catch {}
       }
     };
 
   const COLLAGE_DEFAULTS = [
-    "/images/models/model-16.jpg",
-    "/images/models/model-4.jpg",
-    "/images/models/model-1.jpg",
-    "/images/models/model-12.jpg",
+    "https://res.cloudinary.com/iv29blwq/image/upload/v1791391867/ms_fashions/whatsapp-image-2026-09-15-at-4-36-34-pm-0e343c6b5e.jpg",
+    "https://res.cloudinary.com/iv29blwq/image/upload/v1792939208/ms_fashions/screenshot_20260719_141607_instagram-2b63948073.jpg",
+    "https://res.cloudinary.com/iv29blwq/image/upload/v1792939236/ms_fashions/screenshot_20260719_141645_instagram-b5554be515.jpg",
+    "https://res.cloudinary.com/iv29blwq/image/upload/v1791391857/ms_fashions/whatsapp-image-2026-09-15-at-4-36-32-pm-3aad42d659.jpg",
   ] as const;
 
   return (

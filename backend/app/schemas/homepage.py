@@ -85,6 +85,7 @@ class HomepageContentConfig(BaseModel):
     statementSection: Optional[StatementSectionConfig] = None
     aboutPage: Optional[AboutPageConfig] = None
     collectionsPage: Optional[CollectionsPageConfig] = None
+    updatedAt: Optional[str] = None
 
 
 class HomepageContentUpdate(BaseModel):
@@ -95,3 +96,4 @@ class HomepageContentUpdate(BaseModel):
     statementSection: Optional[StatementSectionConfig] = None
     aboutPage: Optional[AboutPageConfig] = None
     collectionsPage: Optional[CollectionsPageConfig] = None
+    expectedUpdatedAt: Optional[str] = None

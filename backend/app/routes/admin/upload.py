@@ -211,8 +211,17 @@ async def save_upload_stream(file: UploadFile) -> Tuple[bool, str, str]:
                     overwrite=True,
                 )
                 secure_url = res.get("secure_url")
-                if not secure_url:
-                    raise ValueError("Cloudinary upload response did not include secure_url")
+                returned_public_id = res.get("public_id")
+                returned_resource_type = res.get("resource_type")
+
+                if not secure_url or not isinstance(secure_url, str) or not secure_url.startswith("https://"):
+                    raise ValueError("Cloudinary upload response did not include a valid HTTPS secure_url")
+                if not returned_public_id:
+                    raise ValueError("Cloudinary upload response missing public_id")
+                if returned_resource_type and returned_resource_type != resource_type:
+                    raise ValueError(f"Cloudinary resource_type mismatch: expected {resource_type}, got {returned_resource_type}")
+
+                logger.info("Cloudinary upload verified successfully: %s (public_id: %s)", secure_url, returned_public_id)
                 return True, secure_url, ""
             except Exception as e:
                 logger.exception("Cloudinary upload failed for file: %s (%s)", file.filename, e)

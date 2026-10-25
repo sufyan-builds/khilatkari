@@ -8,6 +8,23 @@ import { categoriesService } from "../services/categories";
 import type { Product, Category } from "../types";
 import ProductCard from "../components/product/ProductCard";
 
+const STORAGE_KEY_CONTENT = "khilatkari_cached_homepage_content";
+
+function getCachedCollectionsConfig(): CollectionsPageConfig | null {
+  if (typeof window !== "undefined") {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY_CONTENT);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed && parsed.collectionsPage) {
+          return parsed.collectionsPage;
+        }
+      }
+    } catch {}
+  }
+  return null;
+}
+
 export default function CollectionsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
@@ -15,15 +32,21 @@ export default function CollectionsPage() {
   const [pages, setPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [cms, setCms] = useState<CollectionsPageConfig | null>(null);
+  const [cms, setCms] = useState<CollectionsPageConfig | null>(getCachedCollectionsConfig);
   const [dbCategories, setDbCategories] = useState<Category[]>([]);
 
   useEffect(() => {
     homepageService
       .getPublic()
       .then((res) => {
-        if (res.success && res.data?.collectionsPage) {
-          setCms(res.data.collectionsPage);
+        const data = res.data;
+        if (res.success && data) {
+          if (data.collectionsPage) {
+            setCms(data.collectionsPage);
+          }
+          try {
+            localStorage.setItem(STORAGE_KEY_CONTENT, JSON.stringify(data));
+          } catch {}
         }
       })
       .catch(() => {});

@@ -140,14 +140,24 @@ async def get_homepage_content() -> Dict[str, Any]:
 
 
 async def update_homepage_content(data: HomepageContentUpdate) -> Dict[str, Any]:
+    from fastapi import HTTPException
+
     col = get_homepage_collection()
     current = await get_homepage_content()
     update_dict = data.model_dump(exclude_unset=True)
 
-    # NOTE: strip_legacy_model_urls is intentionally NOT called on the incoming payload.
-    # It is only applied to data read from MongoDB (in get_homepage_content) to sanitise
-    # old seeded records. Calling it here would wipe valid admin-selected catalog image
-    # paths (/images/models/model-*.jpg), causing blank images on the public site.
+    expected_updated_at = update_dict.pop("expectedUpdatedAt", None)
+    if expected_updated_at and current.get("updatedAt"):
+        if current.get("updatedAt") != expected_updated_at:
+            logger.warning(
+                "Homepage concurrency conflict: client expected %s, current is %s",
+                expected_updated_at,
+                current.get("updatedAt"),
+            )
+            raise HTTPException(
+                status_code=409,
+                detail="Conflict: Homepage content has been updated by another action. Please refresh to load the latest version.",
+            )
 
     # Deep merge the update_dict into current
     deep_merge(current, update_dict)
@@ -162,11 +172,16 @@ async def update_homepage_content(data: HomepageContentUpdate) -> Dict[str, Any]
         bool(hero_slides[0].get("imageUrl") if hero_slides else False),
     )
 
-    await col.update_one(
+    res = await col.update_one(
         {"key": "homepage_main"},
         {"$set": {**current, "key": "homepage_main"}},
         upsert=True,
     )
+    if not res.acknowledged:
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to persist homepage updates to database.",
+        )
     current.pop("key", None)
     return current
 

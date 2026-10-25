@@ -62,6 +62,7 @@ export interface HomepageContentConfig {
   aboutPage?: AboutPageConfig;
   collectionsPage?: CollectionsPageConfig;
   updatedAt?: string;
+  expectedUpdatedAt?: string;
 }
 
 export const homepageService = {

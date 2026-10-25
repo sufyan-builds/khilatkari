@@ -28,6 +28,8 @@ import { getMediaUrl } from "../../utils/media";
 import { StatementCTAPanel, AboutPagePanel, CollectionsPagePanel } from "./CmsPanels";
 import { MODEL_CATALOG } from "../../data/models";
 
+const STORAGE_KEY_CONTENT = "khilatkari_cached_homepage_content";
+
 export default function VisualsAdminPage() {
   const [content, setContent] = useState<HomepageContentConfig | null>(null);
   const [loading, setLoading] = useState(true);
@@ -55,6 +57,15 @@ export default function VisualsAdminPage() {
   });
   const previewFrameRef = useRef<HTMLDivElement>(null);
 
+  // Ref tracking current content to prevent stale closures during async operations
+  const contentRef = useRef<HomepageContentConfig | null>(content);
+  useEffect(() => {
+    contentRef.current = content;
+  }, [content]);
+
+  // Monotonic sequence counter to ignore out-of-order async responses
+  const saveSeqRef = useRef(0);
+
   // Load content
   useEffect(() => {
     loadHomepageContent();
@@ -66,6 +77,9 @@ export default function VisualsAdminPage() {
       const res = await homepageService.getAdmin();
       if (res.success && res.data) {
         setContent(res.data);
+        try {
+          localStorage.setItem(STORAGE_KEY_CONTENT, JSON.stringify(res.data));
+        } catch {}
       }
     } catch (err: any) {
       setToast({ type: "error", text: "Failed to load homepage visual content." });
@@ -74,20 +88,55 @@ export default function VisualsAdminPage() {
     }
   };
 
-  const handleSave = async () => {
-    if (!content) return;
+  const persistContent = async (payload: HomepageContentConfig): Promise<boolean> => {
+    const seq = ++saveSeqRef.current;
     setSaving(true);
-    setToast(null);
     try {
-      const res = await homepageService.update(content);
+      const res = await homepageService.update({
+        ...payload,
+        expectedUpdatedAt: payload.updatedAt,
+      });
+      // If a newer save was started after this one, discard stale response
+      if (seq < saveSeqRef.current) {
+        return false;
+      }
       if (res.success && res.data) {
         setContent(res.data);
+        try {
+          localStorage.setItem(STORAGE_KEY_CONTENT, JSON.stringify(res.data));
+        } catch {}
+        return true;
+      }
+      return false;
+    } catch (err: any) {
+      if (seq < saveSeqRef.current) return false;
+      if (err?.response?.status === 409) {
+        setToast({
+          type: "error",
+          text: "Another change was saved recently. Content refreshed to avoid overwriting newer data.",
+        });
+        await loadHomepageContent();
+        return false;
+      }
+      throw err;
+    } finally {
+      if (seq === saveSeqRef.current) {
+        setSaving(false);
+      }
+    }
+  };
+
+  const handleSave = async () => {
+    const current = contentRef.current;
+    if (!current) return;
+    setToast(null);
+    try {
+      const saved = await persistContent(current);
+      if (saved) {
         setToast({ type: "success", text: "Homepage visual positioning and images saved successfully!" });
       }
     } catch (err: any) {
       setToast({ type: "error", text: err.response?.data?.message || "Failed to save visual content." });
-    } finally {
-      setSaving(false);
     }
   };
 
@@ -98,6 +147,9 @@ export default function VisualsAdminPage() {
       const res = await homepageService.reset();
       if (res.success && res.data) {
         setContent(res.data);
+        try {
+          localStorage.setItem(STORAGE_KEY_CONTENT, JSON.stringify(res.data));
+        } catch {}
         setToast({ type: "success", text: "Homepage visuals restored to original defaults." });
       }
     } catch (err: any) {
@@ -181,39 +233,32 @@ export default function VisualsAdminPage() {
     setToast(null);
     try {
       const urls = await productsService.adminUpload(list);
-      if (urls.length > 0 && content) {
-        const copy: HomepageContentConfig = JSON.parse(JSON.stringify(content));
+      const current = contentRef.current;
+      if (urls.length > 0 && current) {
+        const copy: HomepageContentConfig = JSON.parse(JSON.stringify(current));
         if (activeTab === "hero") {
           const slides = [...copy.heroSlides];
-          const current = slides[activeSlideIdx] || slides[0];
-          if (current) {
-            slides[activeSlideIdx] = { ...current, imageUrl: urls[0], mediaType: "image" };
+          const currentSlide = slides[activeSlideIdx] || slides[0];
+          if (currentSlide) {
+            slides[activeSlideIdx] = { ...currentSlide, imageUrl: urls[0], mediaType: "image" };
             copy.heroSlides = slides;
           }
         } else if (activeTab === "experience") {
           copy.experienceImage = { ...copy.experienceImage, imageUrl: urls[0], mediaType: "image" };
         } else if (activeTab === "gallery") {
           const strip = [...copy.galleryStrip];
-          const current = strip[activeSlideIdx] || strip[0];
-          if (current) {
-            strip[activeSlideIdx] = { ...current, imageUrl: urls[0], mediaType: "image" };
+          const currentFrame = strip[activeSlideIdx] || strip[0];
+          if (currentFrame) {
+            strip[activeSlideIdx] = { ...currentFrame, imageUrl: urls[0], mediaType: "image" };
             copy.galleryStrip = strip;
           }
         }
         setContent(copy);
-        setSaving(true);
-        try {
-          const res = await homepageService.update(copy);
-          if (res.success && res.data) {
-            setContent(res.data);
-            setToast({ type: "success", text: "Image uploaded to cloud and persisted successfully!" });
-          } else {
-            setToast({ type: "error", text: "Image uploaded but could not be saved. Please click Save Changes." });
-          }
-        } catch {
-          setToast({ type: "error", text: "Image uploaded but save failed. Please click Save Changes to retry." });
-        } finally {
-          setSaving(false);
+        const saved = await persistContent(copy);
+        if (saved) {
+          setToast({ type: "success", text: "Image uploaded to cloud and persisted successfully!" });
+        } else {
+          setToast({ type: "error", text: "Image uploaded. Please click Save Changes to confirm." });
         }
       }
     } catch (err: any) {
@@ -231,39 +276,32 @@ export default function VisualsAdminPage() {
     setToast(null);
     try {
       const urls = await productsService.adminUpload(list);
-      if (urls.length > 0 && content) {
-        const copy: HomepageContentConfig = JSON.parse(JSON.stringify(content));
+      const current = contentRef.current;
+      if (urls.length > 0 && current) {
+        const copy: HomepageContentConfig = JSON.parse(JSON.stringify(current));
         if (activeTab === "hero") {
           const slides = [...copy.heroSlides];
-          const current = slides[activeSlideIdx] || slides[0];
-          if (current) {
-            slides[activeSlideIdx] = { ...current, mediaType: "video", videoUrl: urls[0] };
+          const currentSlide = slides[activeSlideIdx] || slides[0];
+          if (currentSlide) {
+            slides[activeSlideIdx] = { ...currentSlide, mediaType: "video", videoUrl: urls[0] };
             copy.heroSlides = slides;
           }
         } else if (activeTab === "experience") {
           copy.experienceImage = { ...copy.experienceImage, mediaType: "video", videoUrl: urls[0] };
         } else if (activeTab === "gallery") {
           const strip = [...copy.galleryStrip];
-          const current = strip[activeSlideIdx] || strip[0];
-          if (current) {
-            strip[activeSlideIdx] = { ...current, mediaType: "video", videoUrl: urls[0] };
+          const currentFrame = strip[activeSlideIdx] || strip[0];
+          if (currentFrame) {
+            strip[activeSlideIdx] = { ...currentFrame, mediaType: "video", videoUrl: urls[0] };
             copy.galleryStrip = strip;
           }
         }
         setContent(copy);
-        setSaving(true);
-        try {
-          const res = await homepageService.update(copy);
-          if (res.success && res.data) {
-            setContent(res.data);
-            setToast({ type: "success", text: "Video uploaded to cloud and persisted successfully!" });
-          } else {
-            setToast({ type: "error", text: "Video uploaded but could not be saved. Please click Save Changes." });
-          }
-        } catch {
-          setToast({ type: "error", text: "Video uploaded but save failed. Please click Save Changes to retry." });
-        } finally {
-          setSaving(false);
+        const saved = await persistContent(copy);
+        if (saved) {
+          setToast({ type: "success", text: "Video uploaded to cloud and persisted successfully!" });
+        } else {
+          setToast({ type: "error", text: "Video uploaded. Please click Save Changes to confirm." });
         }
       }
     } catch (err: any) {
@@ -276,39 +314,32 @@ export default function VisualsAdminPage() {
 
   const handleSelectCatalogImage = async (url: string) => {
     setShowCatalogModal(false);
-    if (!content) return;
-    const copy: HomepageContentConfig = JSON.parse(JSON.stringify(content));
+    const current = contentRef.current;
+    if (!current) return;
+    const copy: HomepageContentConfig = JSON.parse(JSON.stringify(current));
     if (activeTab === "hero") {
       const slides = [...copy.heroSlides];
-      const current = slides[activeSlideIdx] || slides[0];
-      if (current) {
-        slides[activeSlideIdx] = { ...current, imageUrl: url, mediaType: "image" };
+      const currentSlide = slides[activeSlideIdx] || slides[0];
+      if (currentSlide) {
+        slides[activeSlideIdx] = { ...currentSlide, imageUrl: url, mediaType: "image" };
         copy.heroSlides = slides;
       }
     } else if (activeTab === "experience") {
       copy.experienceImage = { ...copy.experienceImage, imageUrl: url, mediaType: "image" };
     } else if (activeTab === "gallery") {
       const strip = [...copy.galleryStrip];
-      const current = strip[activeSlideIdx] || strip[0];
-      if (current) {
-        strip[activeSlideIdx] = { ...current, imageUrl: url, mediaType: "image" };
+      const currentFrame = strip[activeSlideIdx] || strip[0];
+      if (currentFrame) {
+        strip[activeSlideIdx] = { ...currentFrame, imageUrl: url, mediaType: "image" };
         copy.galleryStrip = strip;
       }
     }
     setContent(copy);
-    setSaving(true);
-    try {
-      const res = await homepageService.update(copy);
-      if (res.success && res.data) {
-        setContent(res.data);
-        setToast({ type: "success", text: "Model photoshoot selected and persisted successfully!" });
-      } else {
-        setToast({ type: "error", text: "Model selected. Please click Save Changes to confirm." });
-      }
-    } catch {
+    const saved = await persistContent(copy);
+    if (saved) {
+      setToast({ type: "success", text: "Model photoshoot selected and persisted successfully!" });
+    } else {
       setToast({ type: "error", text: "Model selected. Please click Save Changes to confirm." });
-    } finally {
-      setSaving(false);
     }
   };
 

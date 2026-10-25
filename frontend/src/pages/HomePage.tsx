@@ -139,7 +139,44 @@ const INITIAL_HOMEPAGE_CONTENT: HomepageContentConfig = {
   aboutPage: {
     heroHeadlineMain: "A Celebration of Authentic",
     heroHeadlineItalic: "South Asian Heritage",
-    heroIntroText: "KhilatKari was born out of a profound admiration for the timeless artistry of South Asian handcrafts, reimagined for the contemporary woman through an exclusive in-home experience.",
+    heroIntroText:
+      "KhilatKari was born out of a profound admiration for the timeless artistry of South Asian handcrafts, reimagined for the contemporary woman through an exclusive in-home experience.",
+    collageImage1: {
+      id: "about-col-1",
+      mediaType: "image",
+      imageUrl:
+        "https://res.cloudinary.com/iv29blwq/image/upload/v1791391867/ms_fashions/whatsapp-image-2026-09-15-at-4-36-34-pm-0e343c6b5e.jpg",
+      zoom: 1.0,
+      posX: 50.0,
+      posY: 0.0,
+    },
+    collageImage2: {
+      id: "about-col-2",
+      mediaType: "image",
+      imageUrl:
+        "https://res.cloudinary.com/iv29blwq/image/upload/v1792939208/ms_fashions/screenshot_20260719_141607_instagram-2b63948073.jpg",
+      zoom: 1.05,
+      posX: 67.0,
+      posY: 2.0,
+    },
+    collageImage3: {
+      id: "about-col-3",
+      mediaType: "image",
+      imageUrl:
+        "https://res.cloudinary.com/iv29blwq/image/upload/v1792939236/ms_fashions/screenshot_20260719_141645_instagram-b5554be515.jpg",
+      zoom: 1.0,
+      posX: 50.0,
+      posY: 18.0,
+    },
+    collageImage4: {
+      id: "about-col-4",
+      mediaType: "image",
+      imageUrl:
+        "https://res.cloudinary.com/iv29blwq/image/upload/v1791391857/ms_fashions/whatsapp-image-2026-09-15-at-4-36-32-pm-3aad42d659.jpg",
+      zoom: 1.0,
+      posX: 50.0,
+      posY: 39.0,
+    },
   },
 };
 
@@ -407,6 +444,12 @@ export default function HomePage() {
                     loading={i === 0 ? "eager" : "lazy"}
                     fetchPriority={i === 0 ? "high" : "auto"}
                     decoding="async"
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      if (!target.src.endsWith("/images/placeholder.jpg")) {
+                        target.src = "/images/placeholder.jpg";
+                      }
+                    }}
                     style={{
                       objectFit: "cover",
                       objectPosition: `${slide.posX ?? 50}% ${slide.posY ?? 15}%`,
@@ -560,6 +603,13 @@ export default function HomePage() {
                         <img
                           src={getMediaUrl(col.coverImage)}
                           alt={col.name}
+                          loading="lazy"
+                          onError={(e) => {
+                            const target = e.currentTarget;
+                            if (!target.src.endsWith("/images/placeholder.jpg")) {
+                              target.src = "/images/placeholder.jpg";
+                            }
+                          }}
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                           style={{
                             objectPosition: `${framing?.posX ?? 50}% ${framing?.posY ?? 0}%`,
@@ -695,6 +745,13 @@ export default function HomePage() {
                     <img
                       src={getMediaUrl(exp.imageUrl)}
                       alt={exp.title || "Private appointment experience"}
+                      loading="lazy"
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        if (!target.src.endsWith("/images/placeholder.jpg")) {
+                          target.src = "/images/placeholder.jpg";
+                        }
+                      }}
                       style={{
                         objectFit: "cover",
                         objectPosition: `${exp.posX ?? 50}% ${exp.posY ?? 15}%`,
@@ -807,6 +864,13 @@ export default function HomePage() {
                   <img
                     src={getMediaUrl(item.imageUrl)}
                     alt={item.title || "KhilatKari handcrafted collection"}
+                    loading="lazy"
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      if (!target.src.endsWith("/images/placeholder.jpg")) {
+                        target.src = "/images/placeholder.jpg";
+                      }
+                    }}
                     style={{
                       objectFit: "cover",
                       objectPosition: `${item.posX ?? 50}% ${item.posY ?? 15}%`,

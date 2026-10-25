@@ -174,6 +174,12 @@ export default function ProductDetailPage() {
                     <img
                       src={getMediaUrl(img)}
                       alt={`${product.name} view ${idx + 1}`}
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        if (!target.src.endsWith("/images/placeholder.jpg")) {
+                          target.src = "/images/placeholder.jpg";
+                        }
+                      }}
                       className="w-full h-full object-cover object-top"
                     />
                   </button>
@@ -227,8 +233,14 @@ export default function ProductDetailPage() {
                 </div>
               ) : (
                 <img
-                  src={getMediaUrl(selectedMedia.url || product.images?.[0] || "/images/models/model-1.jpg")}
+                  src={getMediaUrl(selectedMedia.url || product.images?.[0] || "/images/placeholder.jpg")}
                   alt={product.name}
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    if (!target.src.endsWith("/images/placeholder.jpg")) {
+                      target.src = "/images/placeholder.jpg";
+                    }
+                  }}
                   className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
                 />
               )}
